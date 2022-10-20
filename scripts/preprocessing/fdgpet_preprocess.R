@@ -33,8 +33,17 @@ fdg_data_clean  = fdg_data %>%
   mutate(across(HIST_LP:HIST_PALN, ~ as.factor(.x))) %>%
   
   mutate(TRIAL_STATUS = ifelse(TRIAL_STATUS == "WITHDRAWN", NA, TRIAL_STATUS),
-         TRIAL_STATUS = ifelse(TRIAL_STATUS == "", NA, TRIAL_STATUS))
+         TRIAL_STATUS = ifelse(TRIAL_STATUS == "", NA, TRIAL_STATUS)) %>%
+  
+  filter(!is.na(CANC_ENDO) & !is.na(CANC_CER)) %>%
+
+  mutate(CANC = as.factor(if_else(CANC_ENDO == 1, "endo", "cer"))) %>%
+  select(-c(CANC_ENDO, CANC_CER))
 
 
 saveRDS(fdg_data_clean, "./data/fdgpet_data.rds")
-|
+
+ggplot(fdg_data_clean,
+       aes(x = CANC,
+           y = RP_SUV)) +
+  geom_boxplot()
