@@ -1,31 +1,48 @@
 library(pacman)
-p_load(tidyverse, infer)
+p_load(tidyverse, infer, ggpubr)
 
-fdg = readRDS('./data/fdgpet_allPooled.rds')
+data = readRDS('./data/quant_allPooled.rds')
 
-# SUV in LP, RP, PALN in CER
-res.aov = aov(SUV ~ region, fdg)
+# FDG SUV in LP, RP, PALN in CER
+res.aov = aov(FDG_SUV ~ region, data)
 summary(res.aov)
 TukeyHSD(res.aov)
 
-g_suv = ggplot(fdg,
+g_fdg_suv = ggplot(data,
        aes(x = region,
-           y = SUV)) +
+           y = FDG_SUV)) +
   geom_boxplot(outlier.shape = NA) +
   geom_point(position = position_jitter(width = 0.1),
              alpha = 0.5) +
   scale_x_discrete(label = c('Left Pelvis', 'Para-aortic', 'Right Pelvis')) +
   theme_classic() +
   theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1)) +
-  ylab('SUVmax') +
+  ylab('FDG SUVmax') +
   xlab('') 
 
-# ADC in LP, RP, PALN
-res.aov = aov(ADC ~ region, fdg)
+# FEC SUV in LP, RP, PALN in CER
+res.aov = aov(FEC_SUV ~ region, data)
 summary(res.aov)
 TukeyHSD(res.aov)
 
-g_adc = ggplot(fdg,
+g_fec_suv = ggplot(data,
+                   aes(x = region,
+                       y = FEC_SUV)) +
+  geom_boxplot(outlier.shape = NA) +
+  geom_point(position = position_jitter(width = 0.1),
+             alpha = 0.5) +
+  scale_x_discrete(label = c('Left Pelvis', 'Para-aortic', 'Right Pelvis')) +
+  theme_classic() +
+  theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1)) +
+  ylab('FEC SUVmax') +
+  xlab('') 
+
+# ADC in LP, RP, PALN
+res.aov = aov(ADC ~ region, data)
+summary(res.aov)
+TukeyHSD(res.aov)
+
+g_adc = ggplot(data,
        aes(x = region,
            y = ADC)) +
   geom_boxplot(outlier.shape = NA) +
@@ -37,11 +54,11 @@ g_adc = ggplot(fdg,
   ylab('ADCmean') +
   xlab('') 
 
-g = ggarrange(g_suv, g_adc,
+g = ggarrange(g_fdg_suv, g_fec_suv, g_adc,
           nrow = 1,
-          ncol = 2)
+          ncol = 3)
 
-ggsave('./figures/SUV_ADC_byRegion.png',
+ggsave('./figures/FDG_FEC_ADC_byRegion.png',
        g,
        height = 5,
        width = 5,

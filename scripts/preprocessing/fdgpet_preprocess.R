@@ -1,35 +1,63 @@
 library(pacman)
 p_load(tidyverse)
 
-fdg_data = as_tibble(read.csv("./data/fdgpet_data.csv", header = T))
+data = as_tibble(read.csv("./data/fdgpet_data.csv", header = T))
 
-fdg_data_clean  = fdg_data %>%
+data_clean  = data %>%
   
-  mutate(RP_SUV_CR = rowMeans(select(.,SUV_RP_1_CR, SUV_RP_2_CR), na.rm = T),
-         LP_SUV_CR = rowMeans(select(.,SUV_LP_1_CR, SUV_LP_2_CR), na.rm = T),
-         PALN_SUV_CR = rowMeans(select(.,SUV_PALN_1_CR, SUV_PALN_2_CR), na.rm = T)) %>%
-  select(-c(SUV_LP_1_CR:SUV_PALN_2_CR)) %>% 
+  #get means of all CR for FDG
+  mutate(FDG_SUV_RP_CR = rowMeans(select(.,FDG_SUV_RP_1_CR, FDG_SUV_RP_2_CR), na.rm = T),
+         FDG_SUV_LP_CR = rowMeans(select(.,FDG_SUV_LP_1_CR, FDG_SUV_LP_2_CR), na.rm = T),
+         FDG_SUV_PALN_CR = rowMeans(select(.,FDG_SUV_PALN_1_CR, FDG_SUV_PALN_2_CR), na.rm = T)) %>%
+  select(-c(FDG_SUV_LP_1_CR:FDG_SUV_PALN_2_CR)) %>% 
   
-  mutate(RP_SUV = case_when(is.na(RP_SUV_CR) ~ RP_SUV,
-                            TRUE ~ RP_SUV_CR),
-         LP_SUV = case_when(is.na(LP_SUV_CR) ~ LP_SUV,
-                            TRUE ~ LP_SUV_CR),
-         PALN_SUV = case_when(is.na(PALN_SUV_CR) ~ PALN_SUV,
-                            TRUE ~ PALN_SUV_CR)) %>%
-  select(-c(RP_SUV_CR:PALN_SUV_CR)) %>%
+  #get means of all CR for FEC
+  mutate(FEC_SUV_RP_CR = rowMeans(select(.,FEC_SUV_RP_1_CR, FEC_SUV_RP_2_CR), na.rm = T),
+         FEC_SUV_LP_CR = rowMeans(select(.,FEC_SUV_LP_1_CR, FEC_SUV_LP_2_CR), na.rm = T),
+         FEC_SUV_PALN_CR = rowMeans(select(.,FEC_SUV_PALN_1_CR, FEC_SUV_PALN_2_CR), na.rm = T)) %>%
+  select(-c(FEC_SUV_LP_1_CR:FEC_SUV_PALN_2_CR)) %>% 
   
-  mutate(RP_ADC = rowMeans(select(., ADC_RP_1, ADC_RP_2), na.rm = T),
-         LP_ADC = rowMeans(select(., ADC_LP_1, ADC_LP_2), na.rm = T),
-         PALN_ADC = rowMeans(select(., ADC_PALN_1, ADC_PALN_2), na.rm = T)) %>%
-  select(-c(ADC_LP_1:ADC_PALN_2)) %>%
+  #get means of all CR for ADC
+  mutate(ADC_PT_CR = rowMeans(select(., ADC_PT_1_CR, ADC_PT_2_CR), na.rm = T),
+         ADC_RP_CR = rowMeans(select(., ADC_RP_1_CR, ADC_RP_2_CR), na.rm = T),
+         ADC_LP_CR = rowMeans(select(., ADC_LP_1_CR, ADC_LP_2_CR), na.rm = T),
+         ADC_PALN_CR = rowMeans(select(., ADC_PALN_1_CR, ADC_PALN_2_CR), na.rm = T)) %>%
+  select(-c(ADC_PT_1_CR:ADC_PALN_2_CR)) %>%
   
-  mutate(across(PT_SUV:PALN_SIZE, ~ ifelse(.x == "", NA, .x))) %>%
-  mutate(across(RP_SIZE:PALN_SIZE, ~ str_trim(.x, side = "both"))) %>% 
-  separate(RP_SIZE, into = c("RP_LA", "RP_SA"), sep = " x ") %>%
-  separate(LP_SIZE, into = c("LP_LA", "LP_SA"), sep = " x ") %>%
-  separate(PALN_SIZE, into = c("PALN_LA", "PALN_SA"), sep = " x ") %>%
+  #FDG - if CR is NA, take Tara's read; else take CR
+  mutate(FDG_SUV_RP = case_when(is.na(FDG_SUV_RP_CR) ~ FDG_SUV_RP,
+                            TRUE ~ FDG_SUV_RP_CR),
+         FDG_SUV_LP = case_when(is.na(FDG_SUV_LP_CR) ~ FDG_SUV_LP,
+                            TRUE ~ FDG_SUV_LP_CR),
+         FDG_SUV_PALN = case_when(is.na(FDG_SUV_PALN_CR) ~ FDG_SUV_PALN,
+                            TRUE ~ FDG_SUV_PALN_CR)) %>%
+  select(-c(FDG_SUV_RP_CR:FDG_SUV_PALN_CR)) %>%
   
-  mutate(across(PT_SUV:PALN_SA, ~ as.numeric(.x))) %>%
+  #FEC - if CR is NA, take Tara's read; else take CR
+  mutate(FEC_SUV_RP = case_when(is.na(FEC_SUV_RP_CR) ~ FEC_SUV_RP,
+                                TRUE ~ FEC_SUV_RP_CR),
+         FEC_SUV_LP = case_when(is.na(FEC_SUV_LP_CR) ~ FEC_SUV_LP,
+                                TRUE ~ FEC_SUV_LP_CR),
+         FEC_SUV_PALN = case_when(is.na(FEC_SUV_PALN_CR) ~ FEC_SUV_PALN,
+                                  TRUE ~ FEC_SUV_PALN_CR)) %>%
+  select(-c(FEC_SUV_RP_CR:FEC_SUV_PALN_CR)) %>%
+  
+  rename(ADC_PT = ADC_PT_CR, ADC_RP = ADC_RP_CR, ADC_LP = ADC_LP_CR, ADC_PALN = ADC_PALN_CR) %>%
+  relocate(ADC_PT:ADC_PALN, .after = FEC_SUV_PALN) %>%
+
+  #remove ""
+  mutate(across(FDG_SUV_PT:FDG_PALN_SIZE, ~ ifelse(.x == "", NA, .x))) %>%
+  
+  #split LN dimensions for FEC and FDG
+  mutate(across(FEC_RP_SIZE:FDG_PALN_SIZE, ~ str_trim(.x, side = "both"))) %>% 
+  separate(FEC_RP_SIZE, into = c("FEC_RP_LA", "FEC_RP_SA"), sep = " x ") %>%
+  separate(FEC_LP_SIZE, into = c("FEC_LP_LA", "FEC_LP_SA"), sep = " x ") %>%
+  separate(FEC_PALN_SIZE, into = c("FEC_PALN_LA", "FEC_PALN_SA"), sep = " x ") %>%
+  separate(FDG_RP_SIZE, into = c("FDG_RP_LA", "FDG_RP_SA"), sep = " x ") %>%
+  separate(FDG_LP_SIZE, into = c("FDG_LP_LA", "FDG_LP_SA"), sep = " x ") %>%
+  separate(FDG_PALN_SIZE, into = c("FDG_PALN_LA", "FDG_PALN_SA"), sep = " x ") %>%
+  
+  mutate(across(FDG_SUV_PT:FDG_PALN_SA, ~ as.numeric(.x))) %>%
   mutate(across(HIST_LP:HIST_PALN, ~ as.factor(.x))) %>%
   
   mutate(TRIAL_STATUS = ifelse(TRIAL_STATUS == "WITHDRAWN", NA, TRIAL_STATUS),
@@ -41,9 +69,6 @@ fdg_data_clean  = fdg_data %>%
   select(-c(CANC_ENDO, CANC_CER))
 
 
-saveRDS(fdg_data_clean, "./data/fdgpet_data.rds")
+saveRDS(data_clean, "./data/processed_quant_data.rds")
 
-ggplot(fdg_data_clean,
-       aes(x = CANC,
-           y = RP_SUV)) +
-  geom_boxplot()
+
