@@ -5,11 +5,11 @@ Codebase for analysis of quantitative measures from FDG-PET/CT and DW-MRI scans.
 
 ## Todo
 Initial analysis:
-1. Calculate NTR and STAR
-2. T-test analysis + bp
-3. Expand t-test by endo + cer cancer
-4. ROC analysis of SUVmax, NTR, STAR
-5. Build a logistic regression model with cross-validation
+- [x] Calculate NTR and STAR
+- [x] T-test analysis + bp
+- [ ] Expand t-test by endo + cer cancer
+- [ ] ROC analysis of SUVmax, NTR, STAR
+- [x] Build a logistic regression model with cross-validation
 
 Repeat with ADCmean.
 

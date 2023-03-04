@@ -1,0 +1,236 @@
+\begin{thebibliography}{10}
+\expandafter\ifx\csname url\endcsname\relax
+  \def\url#1{\burl{#1}}\fi
+\expandafter\ifx\csname urlprefix\endcsname\relax\def\urlprefix{URL }\fi
+\providecommand{\bibinfo}[2]{#2}
+\providecommand{\eprint}[2][]{\url{#2}}
+\providecommand{\doi}[1]{\url{https://doi.org/#1}}
+\bibcommenthead
+
+\bibitem{moriceEndometrialCancer2016}
+\bibinfo{author}{Morice, P.}, \bibinfo{author}{Leary, A.},
+  \bibinfo{author}{Creutzberg, C.}, \bibinfo{author}{{Abu-Rustum}, N.} \&
+  \bibinfo{author}{Darai, E.}
+\newblock \bibinfo{title}{Endometrial cancer}.
+\newblock \emph{\bibinfo{journal}{Lancet (London, England)}}
+  \textbf{\bibinfo{volume}{387}}~(10023), \bibinfo{pages}{1094--1108}
+  (\bibinfo{year}{2016}).
+\newblock \doi{10.1016/S0140-6736(15)00130-0} .
+
+\bibitem{siegelCancerStatistics20222022}
+\bibinfo{author}{Siegel, R.~L.}, \bibinfo{author}{Miller, K.~D.},
+  \bibinfo{author}{Fuchs, H.~E.} \& \bibinfo{author}{Jemal, A.}
+\newblock \bibinfo{title}{Cancer statistics, 2022}.
+\newblock \emph{\bibinfo{journal}{CA: A Cancer Journal for Clinicians}}
+  \textbf{\bibinfo{volume}{72}}~(1), \bibinfo{pages}{7--33}
+  (\bibinfo{year}{2022}).
+\newblock \doi{10.3322/caac.21708} .
+
+\bibitem{querleuAuditPreoperativeEarly2006}
+\bibinfo{author}{Querleu, D.} \emph{et~al.}
+\newblock \bibinfo{title}{Audit of preoperative and early complications of
+  laparoscopic lymph node dissection in 1000 gynecologic cancer patients}.
+\newblock \emph{\bibinfo{journal}{American Journal of Obstetrics and
+  Gynecology}} \textbf{\bibinfo{volume}{195}}~(5), \bibinfo{pages}{1287--1292}
+  (\bibinfo{year}{2006}).
+\newblock \doi{10.1016/j.ajog.2006.03.043} .
+
+\bibitem{achouriComplicationsLymphadenectomyGynecologic2013}
+\bibinfo{author}{Achouri, A.} \emph{et~al.}
+\newblock \bibinfo{title}{Complications of lymphadenectomy for gynecologic
+  cancer}.
+\newblock \emph{\bibinfo{journal}{European Journal of Surgical Oncology
+  (EJSO)}} \textbf{\bibinfo{volume}{39}}~(1), \bibinfo{pages}{81--86}
+  (\bibinfo{year}{2013}).
+\newblock \doi{10.1016/j.ejso.2012.10.011} .
+
+\bibitem{bollineniHighDiagnosticValue2016}
+\bibinfo{author}{Bollineni, V.~R.}, \bibinfo{author}{{Ytre-Hauge}, S.},
+  \bibinfo{author}{{Bollineni-Balabay}, O.}, \bibinfo{author}{Salvesen, H.~B.}
+  \& \bibinfo{author}{Haldorsen, I.~S.}
+\newblock \bibinfo{title}{High {{Diagnostic Value}} of {{18F-FDG PET}}/{{CT}}
+  in {{Endometrial Cancer}}: {{Systematic Review}} and {{Meta-Analysis}} of the
+  {{Literature}}}.
+\newblock \emph{\bibinfo{journal}{Journal of Nuclear Medicine}}
+  \textbf{\bibinfo{volume}{57}}~(6), \bibinfo{pages}{879--885}
+  (\bibinfo{year}{2016}).
+\newblock \doi{10.2967/jnumed.115.170597} .
+
+\bibitem{salaRoleDynamicContrastenhanced2010}
+\bibinfo{author}{Sala, E.}, \bibinfo{author}{Rockall, A.},
+  \bibinfo{author}{Rangarajan, D.} \& \bibinfo{author}{{Kubik-Huch}, R.~A.}
+\newblock \bibinfo{title}{The role of dynamic contrast-enhanced and diffusion
+  weighted magnetic resonance imaging in the female pelvis}.
+\newblock \emph{\bibinfo{journal}{European Journal of Radiology}}
+  \textbf{\bibinfo{volume}{76}}~(3), \bibinfo{pages}{367--385}
+  (\bibinfo{year}{2010}).
+\newblock \doi{10.1016/j.ejrad.2010.01.026} .
+
+\bibitem{huDiagnosticAccuracyPreoperative2019}
+\bibinfo{author}{Hu, J.} \emph{et~al.}
+\newblock \bibinfo{title}{Diagnostic accuracy of preoperative {{18F-FDG PET}}
+  or {{PET}}/{{CT}} in detecting pelvic and para-aortic lymph node metastasis
+  in patients with endometrial cancer: A systematic review and meta-analysis}.
+\newblock \emph{\bibinfo{journal}{Archives of Gynecology and Obstetrics}}
+  \textbf{\bibinfo{volume}{300}}~(3), \bibinfo{pages}{519--529}
+  (\bibinfo{year}{2019}).
+\newblock \doi{10.1007/s00404-019-05207-8} .
+
+\bibitem{garauRole18FFDGPET2020}
+\bibinfo{author}{Garau, L.~M.} \emph{et~al.}
+\newblock \bibinfo{title}{The role of {{18F-FDG PET}}/{{CT}} in endometrial
+  adenocarcinoma: A review of the literature and recent advances}.
+\newblock \emph{\bibinfo{journal}{Clinical and Translational Imaging}}
+  \textbf{\bibinfo{volume}{8}}~(5), \bibinfo{pages}{357--364}
+  (\bibinfo{year}{2020}).
+\newblock \doi{10.1007/s40336-020-00385-x} .
+
+\bibitem{antonsenSUVmax18FDGPET2013}
+\bibinfo{author}{Antonsen, S.~L.} \emph{et~al.}
+\newblock \bibinfo{title}{{{SUVmax}} of {{18FDG PET}}/{{CT}} as a predictor of
+  high-risk endometrial cancer patients}.
+\newblock \emph{\bibinfo{journal}{Gynecologic Oncology}}
+  \textbf{\bibinfo{volume}{129}}~(2), \bibinfo{pages}{298--303}
+  (\bibinfo{year}{2013}).
+\newblock \doi{10.1016/j.ygyno.2013.01.019} .
+
+\bibitem{husbyMetabolicTumorVolume2015}
+\bibinfo{author}{Husby, J.~A.} \emph{et~al.}
+\newblock \bibinfo{title}{Metabolic {{Tumor Volume}} on {{18F-FDG PET}}/{{CT
+  Improves Preoperative Identification}} of {{High-Risk Endometrial Carcinoma
+  Patients}}}.
+\newblock \emph{\bibinfo{journal}{Journal of Nuclear Medicine}}
+  \textbf{\bibinfo{volume}{56}}~(8), \bibinfo{pages}{1191--1198}
+  (\bibinfo{year}{2015}).
+\newblock \doi{10.2967/jnumed.115.159913} .
+
+\bibitem{kimComparisonFDGPET2016}
+\bibinfo{author}{Kim, H.~J.}, \bibinfo{author}{Cho, A.}, \bibinfo{author}{Yun,
+  M.}, \bibinfo{author}{Kim, Y.~T.} \& \bibinfo{author}{Kang, W.~J.}
+\newblock \bibinfo{title}{Comparison of {{FDG PET}}/{{CT}} and {{MRI}} in lymph
+  node staging of endometrial cancer}.
+\newblock \emph{\bibinfo{journal}{Annals of Nuclear Medicine}}
+  \textbf{\bibinfo{volume}{30}}~(2), \bibinfo{pages}{104--113}
+  (\bibinfo{year}{2016}).
+\newblock \doi{10.1007/s12149-015-1037-8} .
+
+\bibitem{rechichiMyometrialInvasionEndometrial2010}
+\bibinfo{author}{Rechichi, G.} \emph{et~al.}
+\newblock \bibinfo{title}{Myometrial invasion in endometrial cancer: Diagnostic
+  performance of diffusion-weighted {{MR}} imaging at 1.5-{{T}}}.
+\newblock \emph{\bibinfo{journal}{European Radiology}}
+  \textbf{\bibinfo{volume}{20}}~(3), \bibinfo{pages}{754--762}
+  (\bibinfo{year}{2010}).
+\newblock \doi{10.1007/s00330-009-1597-x} .
+
+\bibitem{beddyEvaluationDepthMyometrial2012}
+\bibinfo{author}{Beddy, P.} \emph{et~al.}
+\newblock \bibinfo{title}{Evaluation of {{Depth}} of {{Myometrial Invasion}}
+  and {{Overall Staging}} in {{Endometrial Cancer}}: {{Comparison}} of
+  {{Diffusion-weighted}} and {{Dynamic Contrast-enhanced MR Imaging}}}.
+\newblock \emph{\bibinfo{journal}{Radiology}}
+  \textbf{\bibinfo{volume}{262}}~(2), \bibinfo{pages}{530--537}
+  (\bibinfo{year}{2012}).
+\newblock \doi{10.1148/radiol.11110984} .
+
+\bibitem{koplayDiagnosticEfficacyDiffusionweighted2014}
+\bibinfo{author}{Koplay, M.} \emph{et~al.}
+\newblock \bibinfo{title}{Diagnostic efficacy of diffusion-weighted {{MRI}} for
+  pre-operative assessment of myometrial and cervical invasion and pelvic lymph
+  node metastasis in endometrial carcinoma}.
+\newblock \emph{\bibinfo{journal}{Journal of Medical Imaging and Radiation
+  Oncology}} \textbf{\bibinfo{volume}{58}}~(5), \bibinfo{pages}{538--546}
+  (\bibinfo{year}{2014}).
+\newblock \doi{10.1111/1754-9485.12209} .
+
+\bibitem{nakaiDetectionEvaluationPelvic2008}
+\bibinfo{author}{Nakai, G.} \emph{et~al.}
+\newblock \bibinfo{title}{Detection and {{Evaluation}} of {{Pelvic Lymph
+  Nodes}} in {{Patients With Gynecologic Malignancies Using Body
+  Diffusion-Weighted Magnetic Resonance Imaging}}}.
+\newblock \emph{\bibinfo{journal}{Journal of Computer Assisted Tomography}}
+  \textbf{\bibinfo{volume}{32}}~(5), \bibinfo{pages}{764--768}
+  (\bibinfo{year}{2008}).
+\newblock \doi{10.1097/RCT.0b013e318153fd43} .
+
+\bibitem{royValueDiffusionweightedImaging2010}
+\bibinfo{author}{Roy, C.}, \bibinfo{author}{Bierry, G.},
+  \bibinfo{author}{Matau, A.}, \bibinfo{author}{Bazille, G.} \&
+  \bibinfo{author}{Pasquali, R.}
+\newblock \bibinfo{title}{Value of diffusion-weighted imaging to detect small
+  malignant pelvic lymph nodes at 3~{{T}}}.
+\newblock \emph{\bibinfo{journal}{European Radiology}}
+  \textbf{\bibinfo{volume}{20}}~(8), \bibinfo{pages}{1803--1811}
+  (\bibinfo{year}{2010}).
+\newblock \doi{10.1007/s00330-010-1736-4} .
+
+\bibitem{chenDiscriminationMetastaticHyperplastic2011}
+\bibinfo{author}{Chen, Y.~B.}, \bibinfo{author}{Liao, J.},
+  \bibinfo{author}{Xie, R.}, \bibinfo{author}{Chen, G.~L.} \&
+  \bibinfo{author}{Chen, G.}
+\newblock \bibinfo{title}{Discrimination of metastatic from hyperplastic pelvic
+  lymph nodes in patients with cervical cancer by diffusion-weighted magnetic
+  resonance imaging}.
+\newblock \emph{\bibinfo{journal}{Abdominal Imaging}}
+  \textbf{\bibinfo{volume}{36}}~(1), \bibinfo{pages}{102--109}
+  (\bibinfo{year}{2011}).
+\newblock \doi{10.1007/s00261-009-9590-z} .
+
+\bibitem{rechichiADCMapsPrediction2013}
+\bibinfo{author}{Rechichi, G.} \emph{et~al.}
+\newblock \bibinfo{title}{{{ADC}} maps in the prediction of pelvic lymph nodal
+  metastatic regions in endometrial cancer}.
+\newblock \emph{\bibinfo{journal}{European Radiology}}
+  \textbf{\bibinfo{volume}{23}}~(1), \bibinfo{pages}{65--74}
+  (\bibinfo{year}{2013}).
+\newblock \doi{10.1007/s00330-012-2575-2} .
+
+\bibitem{trousilAlterationsCholinePhospholipid2014}
+\bibinfo{author}{Trousil, S.} \emph{et~al.}
+\newblock \bibinfo{title}{Alterations of {{Choline Phospholipid Metabolism}} in
+  {{Endometrial Cancer Are Caused}} by {{Choline Kinase Alpha Overexpression}}
+  and a {{Hyperactivated Deacylation Pathway}}}.
+\newblock \emph{\bibinfo{journal}{Cancer Research}}
+  \textbf{\bibinfo{volume}{74}}~(23), \bibinfo{pages}{6867--6877}
+  (\bibinfo{year}{2014}).
+\newblock \doi{10.1158/0008-5472.CAN-13-2409} .
+
+\bibitem{contractorUse11CCholine2011}
+\bibinfo{author}{Contractor, K.} \emph{et~al.}
+\newblock \bibinfo{title}{Use of [{{11C}}]{{Choline PET-CT}} as a {{Noninvasive
+  Method}} for {{Detecting Pelvic Lymph Node Status}} from {{Prostate Cancer}}
+  and {{Relationship}} with {{Choline Kinase Expression}}}.
+\newblock \emph{\bibinfo{journal}{Clinical Cancer Research}}
+  \textbf{\bibinfo{volume}{17}}~(24), \bibinfo{pages}{7673--7683}
+  (\bibinfo{year}{2011}).
+\newblock \doi{10.1158/1078-0432.CCR-11-2048} .
+
+\bibitem{torizukaImagingGynecologicTumors2003}
+\bibinfo{author}{Torizuka, T.} \emph{et~al.}
+\newblock \bibinfo{title}{Imaging of {{Gynecologic Tumors}}: {{Comparison}} of
+  {{11C-Choline PET}} with {{18F-FDG PET}}}.
+\newblock \emph{\bibinfo{journal}{Journal of Nuclear Medicine}}
+  \textbf{\bibinfo{volume}{44}}~(7), \bibinfo{pages}{1051--1056}
+  (\bibinfo{year}{2003}) .
+
+\bibitem{sofueRoleCarbon11Choline2009}
+\bibinfo{author}{Sofue, K.} \emph{et~al.}
+\newblock \bibinfo{title}{Role of carbon-11 choline {{PET}}/{{CT}} in the
+  management of uterine carcinoma: Initial experience}.
+\newblock \emph{\bibinfo{journal}{Annals of Nuclear Medicine}}
+  \textbf{\bibinfo{volume}{23}}~(3), \bibinfo{pages}{235--243}
+  (\bibinfo{year}{2009}).
+\newblock \doi{10.1007/s12149-009-0230-z} .
+
+\bibitem{rockallDiagnosticAccuracyFECPET2021}
+\bibinfo{author}{Rockall, A.~G.} \emph{et~al.}
+\newblock \bibinfo{title}{Diagnostic {{Accuracy}} of {{FEC-PET}}/{{CT}},
+  {{FDG-PET}}/{{CT}}, and {{Diffusion-Weighted MRI}} in {{Detection}} of
+  {{Nodal Metastases}} in {{Surgically Treated Endometrial}} and {{Cervical
+  Carcinoma}}}.
+\newblock \emph{\bibinfo{journal}{Clinical Cancer Research}}
+  \textbf{\bibinfo{volume}{27}}~(23), \bibinfo{pages}{6457--6466}
+  (\bibinfo{year}{2021}).
+\newblock \doi{10.1158/1078-0432.CCR-21-1834} .
+
+\end{thebibliography}
