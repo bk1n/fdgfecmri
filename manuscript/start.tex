@@ -154,32 +154,34 @@ This study forms part of the secondary analysis of the prospective UK MAPPING st
     Statistical analysis was performed in R. 
     Patients were stratified into two cohorts by their diagnosis of endometrial or cervical cancer. Nodes from all regions were grouped together for analysis.
     Nodal-to-tumour ratios (NTR) were calculated by dividing the nodal quantitative measure (SUVmax or ADCmean) by the quantitative measure from the primary tumour. 
-    SUVmax-to-ADCmean ratio (STAR) was also calculated by dividing the SUVmax by the ADCmean of the corresponding node. 
-    SUVmax-to-SA diameter ratio (STSA) was calculated by dividing the SUVmax by the SA diameter for FDG-PET/CT and FEC-PET/CT.
+    SUVmax-to-ADCmean ratio (STAR) was calculated by dividing the SUVmax by the ADCmean of the corresponding node. 
+    SUVmax-to-SA diameter ratio (STSA) was calculated by dividing the SUVmax by the SA diameter of each node for FDG-PET/CT and FEC-PET/CT.
     %Additionally, readings from left pelvis and right pelvis were combined into a 'pelvic' group and readings from left pelvis, right pelvis, and para-aortic regions were combined into an ‘all’ group for analysis.
     The Mann-Whitney U-test was selected to compare quantitative measures in histologically confirmed benign versus malignant lymph nodes.
     One-way ANOVA with Tukey's post-hoc test was used to determine significance when comparing left pelvic, right pelvic, and para-aortic regions.
     P-values were adjusted using the false-discovery rate (FDR) method.
 
-    Pairwise Pearson correlation coefficients were calculated between features and P-values were adjusted using the false-discovery rate method. 
+    Pairwise Pearson correlation coefficients were calculated between features and p-values were adjusted using the false-discovery rate method. 
 
     To determine if a regression model could assist in diagnosing benign from malignant lymph nodes, univariate and multivariate logistic regression models were built. 
-    Due to the low number of nodes for cervical cancer and FEC-PET/CT, only FDG-PET/CT and DW-MRI data from endometrial cancer was considered when building models.
-    Additionally, due to strong correlation between features,   calculated variables (NTR, STAR, STSA) were excluded as features. 
+    Due to the low number of measurements for cervical cancer and FEC-PET/CT, only FDG-PET/CT and DW-MRI data from endometrial cancer was considered when building models.
+    Additionally, due to strong correlation between features, calculated variables (NTR, STAR, STSA) were excluded as features. 
 
-    A multivariate logistic regression model with L1 regularisation penalty (LASSO) was employed. Logistic LASSO regression shrinks non-predictive coefficients to zero and often produces more powerful models, especially on smaller datasets. 
+    A multivariate logistic regression model with L1 regularisation penalty (LASSO) was employed. %Logistic LASSO regression shrinks non-predictive coefficients to zero and often produces more powerful models, especially on smaller datasets. 
     Rows with any NAs were omitted prior to analysis, leaving a total of 57 nodes for analysis.
     Logistic regression predicts a probability of malignancy between zero (benign) and one (malignant). 
     The dataset was randomly split into train and test sets at a 70\%/30\% split. 
-    Features in the training set was scaled between 0 and 1, and the same scaling function was applied to the test set. 
+    Features in the training set were scaled between 0 and 1, and the same scaling function was applied to the test set. 
     The 'glmnet' package was used to find the optimal value of lambda by cross-validation. A logistic regression model with alpha set to 1.0 for the L1 penalty was fit to the training data and used to predict probabilities for the test data. Optimal cutoff probability was found through maximisation of the F1-score. This process was repeated 5,000 times to retrieve the average optimal probability cutoffs and lambda. 
-    The model was refit using these hyperparameters and  inference was run another 5,000 times to estimate model performance.
+    The model was refit using these hyperparameters and inference was run another 5,000 times to estimate model performance.
 
-    Logistic LASSO regression shrunk all variables excluding SUVmax and SA diameter from FDG-PET/CT to zero. 
+    Logistic LASSO regression shrunk all coefficients of features, excluding SUVmax and SA diameter, from FDG-PET/CT to zero. 
     To determine if simpler models would perform better, univariate logistic regression was undertaken on these features using the 'glm' package in R.  
     Rows with NAs were omitted prior to analysis, leaving a total of 104 nodes for analysis and the dataset was randomly split into train and test sets at a 70\%/30\% split. 
     Logistic regression models were fit to SUVmax and SA diameter separately. 
     Optimal cutoffs and model performance were determined as with logistic LASSO regression. 
+
+    Optimal cut-offs for all quantitative measures were determined using the 'cutpointr' package in R. Cutpoints were selected through maximisation of the F1 score. Stratified bootstrapping was repeated 2000 times. Out of bag estimates of area under the curve (AUC), sensitivity, and specificity were calculated. %check this makes sense
 
     % ROC analysis ?? redo with FEC etc
 
@@ -192,15 +194,27 @@ This study forms part of the secondary analysis of the prospective UK MAPPING st
         % overview of FDG... byRegion
         % rationale for splitting / merging
 
+    SUVmax and ADCmean of lymph nodes in endometrial and cervical cancer was analysed. No significant difference was found between regions in SUVmax or ADCmean on FDG-PET/CT and DW-MRI (Figure _). The pelvic region on FEC-PET/CT was significantly higher than left and right pelvis. Therefore, quantitative measures from lymph nodes were merged between regions for FDG-PET/CT and DW-MRI. Interestingly, average SUVmax of all nodes on FDG-PET/CT was significantly higher in endometrial than in cervical cancer (Figure _). 
+
     % overview of quants in endo
+    Quantitative measures, both raw and calculated, were compared in benign and malignant lymph nodes in endometrial cancer. All raw and calculated measures were significantly higher in malignant than benign lymph nodes on FDG-PET/CT (Figure _A). Short-axis diameter, SUVmax, and STAR were all significantly elevated in malignant lymph nodes on FEC-PET/CT (Figure _B). ADCmean and ADCmean NTR was not significantly different between benign and malignant lymph nodes in endometrial cancer (Figure _A).
+
     % overview of quants in cer
+    Low numbers of measured nodes in cervical cancer limit the power of statisttical analysis. No calculated or raw measures were significantly different between benign and malignant nodes on FDG-PET/CT and FEC-PET/CT, although mean measures were higher in malignant nodes (Figure _). Interestingly, ADCmean and ADCmean NTR were significantly lower in malignant nodes in cervical cancer (Figure _B).
+
     % overview of quants in pt endo/cer
+    Previous literature has shown elevated primary tumour SUVmax and depressed ADCmean in patients presenting with malignant lymph nodes \cite{}. SUVmax of the primary tumour was significantly elevated on FDG-PET/CT but not on FEC-PET/CT, with no significant difference found on DW-MRI (Figure _). No significant difference in any quantitative measure was found in primary tumours of the cervix.   
 
     % correlations between features!
+    Pearson correlations coefficients were calculated between quantitative measures in endometrial cancer (Figure _). %double check this is endometrial cancer only TODO
+    Short-axis diameter, long-axis diameter, and SUVmax of the lymph node were highly correlated between FDG-PET/CT and FEC-PET/CT, but did not correlate well with SUVmax of the primary tumour. SUVmax of the primary tumour correlated weakly with SUVmax of the lymph node.
+    Furthermore, these measures were not correlated with ADCmean of the primary tumour or lymph node, except for tumour SUVmax which was inversely correlated with tumour ADCmean.
+    % TODO - suggests that maybe we'd get different results if we had more patients SUVmax for FEC-PET/CT!
 
     \subsection{Diagnostic performance of quantitative measures}
     % overview of diagnostic performance of quants
         % table!
+    
         
     \subsection{Diagnostic performance of models}
 
