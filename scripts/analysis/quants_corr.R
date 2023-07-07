@@ -1,5 +1,5 @@
 library(pacman)
-p_load(tidyverse, infer, Hmisc, PerformanceAnalytics, ComplexHeatmap)
+p_load(tidyverse, infer, Hmisc, ComplexHeatmap)
 
 fdg =  read_csv('./data/quant_allPooled.csv')
 

@@ -8,6 +8,9 @@ res.aov = aov(FDG_SUV ~ region, data)
 summary(res.aov)
 TukeyHSD(res.aov)
 
+geom_signif(comparisons = split(t(combn(levels(data$egi), 2)), seq(nrow(t(combn(levels(iris$Species), 2))))), 
+            map_signif_level = TRUE)
+
 g_fdg_suv = ggplot(data,
        aes(x = region,
            y = FDG_SUV)) +
@@ -32,6 +35,8 @@ g_fec_suv = ggplot(data,
   geom_point(position = position_jitter(width = 0.1),
              alpha = 0.5) +
   scale_x_discrete(label = c('Left Pelvis', 'Para-aortic', 'Right Pelvis')) +
+  geom_signif(comparisons = list(c('lp', 'rp'), c('paln')),
+              annotations = c(paste('p =', TukeyHSD(res.aov)$region[1:3,'p adj'],3))) + 
   theme_classic() +
   theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1)) +
   ylab('FEC SUVmax') +

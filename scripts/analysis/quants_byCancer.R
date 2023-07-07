@@ -6,9 +6,12 @@ data = readRDS('./data/quant_allPooled.rds')
 fdg_features = c('FDG_SUV', 'FDG_SA', 'FDG_LA', 'FDG_NTR', 'FDG_STAR', 'FDG_SNSA')
 fec_features = c('FEC_SUV', 'FEC_SA', 'FEC_LA', 'FEC_NTR', 'FEC_STAR', 'FEC_SNSA')
 adc_features = c('ADC', 'ADC_NTR')
+
+quant_row_1 = c('FDG_SUV', 'FDG_SA', 'FDG_LA', 'FDG_NTR', 'FDG_STAR', 'FDG_SNSA', 'ADC')
+quant_row_2 = c('FEC_SUV', 'FEC_SA', 'FEC_LA', 'FEC_NTR', 'FEC_STAR', 'FEC_SNSA', 'ADC_NTR')
+
 pt_features = c('FDG_SUV_PT', 'FEC_SUV_PT', 'ADC_PT')
 canc = c('cer', 'endo')
-
 
 plot_myCustomGG = function(feature){
   plt_data = data %>%
@@ -62,15 +65,15 @@ plot_myCustomGG = function(feature){
 
 canc = 'cer'
 gg_cer_pt = lapply(pt_features, plot_myCustomGG)
-gg_cer_fdg = lapply(fdg_features, plot_myCustomGG)
-gg_cer_fec = lapply(fec_features, plot_myCustomGG)
-gg_cer_adc = lapply(adc_features, plot_myCustomGG) 
+gg_cer_r1 = lapply(quant_row_1, plot_myCustomGG)
+gg_cer_r2 = lapply(quant_row_2, plot_myCustomGG)
+# gg_cer_adc = lapply(adc_features, plot_myCustomGG) 
 
 canc = 'endo'
 gg_endo_pt = lapply(pt_features, plot_myCustomGG)
-gg_endo_fdg = lapply(fdg_features, plot_myCustomGG)
-gg_endo_fec = lapply(fec_features, plot_myCustomGG)
-gg_endo_adc = lapply(adc_features, plot_myCustomGG) 
+gg_endo_r1 = lapply(quant_row_1, plot_myCustomGG)
+gg_endo_r2 = lapply(quant_row_2, plot_myCustomGG)
+# gg_endo_adc = lapply(adc_features, plot_myCustomGG)
 
 #PT in ENDO, CER
 g = ggarrange(plotlist = c(gg_endo_pt, gg_cer_pt), 
@@ -85,42 +88,42 @@ ggsave('./figures/quants_pt_byCancer.png',
        dpi = 300,
        bg = 'white')
 
-#FDG, FEC in ENDO
-g = ggarrange(plotlist = c(gg_endo_fdg, gg_endo_fec), 
-              ncol = length(fdg_features), 
+#FDG, FEC, ADC in ENDO
+g = ggarrange(plotlist = c(gg_endo_r1, gg_endo_r2), 
+              ncol = length(gg_endo_r1), 
               nrow = 2,
-              labels = c('A', rep('', length(fdg_features) - 1), 'B')) 
+              labels = c('A', rep('', length(gg_endo_r1) - 2), 'C', 'B')) 
 ggsave('./figures/fdg_fec_inEndo.png',
        g,
-       width = 12,
+       width = 13,
        height =8,
        units = 'in',
        dpi = 300,
        bg = 'white')
 
-# FDG, FEC in CER
-g = ggarrange(plotlist = c(gg_cer_fdg, gg_cer_fec), 
-              ncol = length(fdg_features), 
+# FDG, FEC, ADC in CER
+g = ggarrange(plotlist = c(gg_cer_r1, gg_cer_r2),
+              ncol = length(gg_cer_r1),
               nrow = 2,
-              labels = c('A', rep('', length(fdg_features) - 1), 'B')) 
+              labels = c('A', rep('', length(gg_cer_r1) - 2), 'C', 'B'))
 ggsave('./figures/fdg_fec_inCer.png',
        g,
-       width = 12,
+       width = 13,
        height = 8,
        units = 'in',
        dpi = 300,
        bg = 'white')
 
 #ADC in ENDO,CER
-g = ggarrange(plotlist = c(gg_endo_adc, gg_cer_adc), 
-              ncol = length(adc_features), 
-              nrow = 2,
-              labels = c('A', rep('', length(adc_features) - 1), 'B')) 
-ggsave('./figures/ADC_byCancer.png',
-       g,
-       width = 4,
-       height = 8,
-       units = 'in',
-       dpi = 300,
-       bg = 'white')
+# g = ggarrange(plotlist = c(gg_endo_adc, gg_cer_adc), 
+#               ncol = length(adc_features), 
+#               nrow = 2,
+#               labels = c('A', rep('', length(adc_features) - 1), 'B')) 
+# ggsave('./figures/ADC_byCancer.png',
+#        g,
+#        width = 4,
+#        height = 8,
+#        units = 'in',
+#        dpi = 300,
+#        bg = 'white')
 

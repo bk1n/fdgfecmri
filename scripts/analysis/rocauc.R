@@ -1,12 +1,16 @@
 library(pacman)
 p_load(tidyverse, cutpointr)
 
-df = readRDS('./data/fdgpet_allPooled.rds') 
+df = readRDS('./data/quant_allPooled.rds')
+
+df = df %>%
+  select(!contains('PT'))
 
 df_cer = df %>% filter(CANC == 'cer')
 df_endo = df %>% filter(CANC == 'endo')
 
 get_opt_cut = function(measure){
+  print(paste('Getting cutpoint for:', measure))
   x = pull(df[,measure])
   class = df$HIST
   opt_cut = cutpointr(df_endo,
@@ -39,7 +43,7 @@ get_boot_data = function(summ){
 }
 
 plt_df = do.call(rbind, lapply(res.opt_cut, get_boot_data))
-logit_res = read.csv('./figures/tables/lr.model_fullRes.csv')
+logit_res = read.csv('./figures/tables/lr.model_optCutOff_fullRes_SUV.csv')
 
 plt_logit = logit_res %>%
   select(optimal_SUVcutoff, auc, sens, spec) %>%
@@ -60,6 +64,10 @@ dp_df = plt_df_full %>%
 
 write.csv(dp_df, './figures/optimalCP_byMeasure.csv', row.names = F)
 
+dp_df = dp_df %>%
+  arrange(name) %>%
+  mutate(name = factor(name, levels = name))
+
 g_auc = ggplot(plt_df_full,
        aes(x = name,
            y = auc)) +
@@ -70,13 +78,14 @@ g_auc = ggplot(plt_df_full,
              color = 'red') +
   theme_classic() +
   xlab('') +
-  ylab('Area Under Curve (AUC)')
+  ylab('Area Under Curve (AUC)') +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ggsave('./figures/AUC_byMeasure.png',
        g_auc,
        width = 5,
        height = 5,
        units = 'in',
-       dpi = 300)
+       dpi = 300) 
 
 g_sens = ggplot(plt_df_full,
        aes(x = name,
@@ -88,7 +97,8 @@ g_sens = ggplot(plt_df_full,
              color = 'red') +
   theme_classic() +
   xlab('') +
-  ylab('Sensitivity')
+  ylab('Sensitivity') +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ggsave('./figures/Sens_byMeasure.png',
        g_sens,
        width = 5,
@@ -106,7 +116,9 @@ g_spec = ggplot(plt_df_full,
              color = 'red') +
   theme_classic() +
   xlab('Measure') +
-  ylab('Specificity')
+  ylab('Specificity') +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+g_spec
 ggsave('./figures/Spec_byMeasure.png',
        g_spec,
        width = 5,
@@ -115,7 +127,9 @@ ggsave('./figures/Spec_byMeasure.png',
        dpi = 300)
 
 library(ggpubr)
-g = ggarrange(g_auc, g_sens, g_spec, nrow = 3)
+g = ggarrange(g_auc, 
+              g_sens , 
+              g_spec, nrow = 3)
 
 ggsave('./figures/AllPerformance_byMeasure.png',
        g,
@@ -135,10 +149,21 @@ get_proc = function(measure){
 }
 
 roc_plt_df = do.call(rbind, lapply(cols_endo, get_proc))
-lr = read.csv('./figures/tables/lr_roc_results.csv')
+lr = read.csv('./figures/tables/lr_roc_results_SUV.csv')
 roc_plt_df = rbind(roc_plt_df, lr)
 
-g_roc = ggplot(roc_plt_df,
+roc_plt = roc_plt_df %>%
+  mutate(measure_type = case_when(grepl('FDG', name) ~ 'FDG',
+                                  grepl('FEC', name) ~ 'FEC',
+                                  grepl('ADC', name) ~ 'ADC',
+                                  name == 'LR' ~ 'LR')) %>%
+  mutate(name = gsub('FDG_', '', name),
+         name = gsub('FEC_', '', name),
+         name = gsub('ADC_', '', name)) %>%
+  mutate(measure_type = factor(measure_type, levels = c('FDG', 'FEC', 'ADC', 'LR'))) %>%
+  mutate(name = factor(name, levels = c('SUV', 'STAR', 'SNSA', 'NTR', 'SA', 'LA', 'ADC', 'LR')))
+
+g_roc = ggplot(roc_plt,
        aes(x = fpr,
            y = 1 - fnr,
            color = name)) +
@@ -151,9 +176,12 @@ g_roc = ggplot(roc_plt_df,
             color = 'red',
             alpha = 0.5) + 
   theme_classic() +
-  xlab('Specificity') +
-  ylab('Specificity') +
-  scale_color_discrete(name = 'Measure')
+  xlab('1 - Specificity') +
+  ylab('Sensitivity') +
+  scale_color_discrete(name = 'Quantitative \nMeasure') +
+  scale_linetype_manual(name = 'Measure Type',
+                        values = c('solid', 'twodash', 'dotdash', 'dashed')) +
+  facet_wrap(~ measure_type)
 
 ggsave('./figures/ROC_byMeasure.png',
        g_roc,

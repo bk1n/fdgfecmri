@@ -1,7 +1,7 @@
 library(pacman)
-p_load(tidyverse, infer, ggsignif)
+p_load(tidyverse, infer, ggsignif, ggpubr)
 
-data = readRDS('./data/quant_allPooled.rds')
+data = read_csv('./data/quant_allPooled.csv')
 
 #FDG_SUV in CER vs ENDO
 g_fdg_suv = ggplot(data,
@@ -11,7 +11,7 @@ g_fdg_suv = ggplot(data,
   geom_point(position = position_jitter(width = 0.1),
              alpha = 0.5) +
   geom_signif(comparisons = list(c('cer', 'endo')),
-              annotations = c(paste0('p = ', signif(t_test(data, FDG_SUV ~ CANC)$p_value,3), '***'))) +
+              annotations = c(paste0('p = ', signif(wilcox.test(FDG_SUV ~ CANC, data=data, na.rm=TRUE, paired=FALSE, exact=FALSE, conf.int=TRUE)$p.value,3), '*'))) +
   scale_x_discrete(label = c('Cervical', 'Endometrial')) +
   ylab('FDG SUVmax') +
   xlab('') +
@@ -25,7 +25,7 @@ g_fec_suv = ggplot(data,
   geom_point(position = position_jitter(width = 0.1),
              alpha = 0.5) +
   geom_signif(comparisons = list(c('cer', 'endo')),
-              annotations = c(paste0('p = ', signif(t_test(data, FEC_SUV ~ CANC)$p_value,3), ''))) +
+              annotations = c(paste0('p = ', signif(wilcox.test(FEC_SUV ~ CANC, data=data, na.rm=TRUE, paired=FALSE, exact=FALSE, conf.int=TRUE)$p.value,3), ''))) +
   scale_x_discrete(label = c('Cervical', 'Endometrial')) +
   ylab('FEC SUVmax') +
   xlab('') +
@@ -39,7 +39,7 @@ g_adc = ggplot(data,
   geom_point(position = position_jitter(width = 0.1),
              alpha = 0.5) +
   geom_signif(comparisons = list(c('cer', 'endo')),
-              annotations = c(paste('p =', signif(t_test(data, ADC ~ CANC)$p_value,3)))) +
+              annotations = c(paste('p =', signif(wilcox.test(ADC ~ CANC, data=data, na.rm=TRUE, paired=FALSE, exact=FALSE, conf.int=TRUE)$p.value,3)))) +
   scale_x_discrete(label = c('Cervical', 'Endometrial')) +
   ylab('ADCmean') +
   xlab('') +
