@@ -55,7 +55,7 @@ Most studies to date have used visual assessment of the level of uptake in nodes
 %here, I think that giving a brief overview of visual assessment performance would be better
 and reports on the utility of SUVmax in the detection of nodal involvement are limited. 
 %then, move the section below to discussion
-Kim et al. retrospectively assessed SUVmax in histologically confirmed benign and malignant lymph nodes and reported moderate sensitivity (69\%) and high specificity (92\%) when using an SUVmax cut-off of 2.8 
+Kim et al.\ retrospectively assessed SUVmax in histologically confirmed benign and malignant lymph nodes and reported moderate sensitivity (69\%) and high specificity (92\%) when using an SUVmax cut-off of 2.8 
 \cite{kimComparisonFDGPET2016}. \\
 
 Diffusion-weighted MRI (DW-MRI) detects changes in the diffusion properties of water in tissues which is primarily influenced by cellular density and the nuclear-to-cytoplasm ratio and can therefore enhance subtle underlying abnormalities in tissues. DW-MRI is established for routine use in endometrial cancer staging and is shown to be promising in diagnosing extent of myometrial invasion adjunct to conventional T2-weighted imaging 
@@ -181,11 +181,13 @@ This study forms part of the secondary analysis of the prospective UK MAPPING st
     Logistic regression models were fit to SUVmax and SA diameter separately. 
     Optimal cutoffs and model performance were determined as with logistic LASSO regression. 
 
-    Optimal cut-offs for all quantitative measures were determined using the 'cutpointr' package in R. Cutpoints were selected through maximisation of the F1 score. Stratified bootstrapping was repeated 2000 times. Out of bag estimates of area under the curve (AUC), sensitivity, and specificity were calculated. %check this makes sense
+    Optimal cut-offs for all quantitative measures were determined using the 'cutpointr' package in R. Cutpoints were selected through maximisation of the F1 score. Stratified bootstrapping was repeated 2000 times. Out of bag estimates of area under the curve (AUC), sensitivity, and specificity were calculated. %check this makes sense 
+    % with direction >= for FDG + FEC, and <= ADC
 
-    % ROC analysis ?? redo with FEC etc
+    Receiver operating characteristic (ROC) analysis was applied, using the 'pROC' package in R, to each quantitative measure to generate ROC curves. 
 
     % Interobserver agreement!!
+    Interobserver agreement for each FDG-PET/CT, FEC-PET/CT, and DW-MRI was evaluated by calculating intraclass correlation coefficients (ICC) for endometrial and cervical cancer cohorts separately using the R package ‘irr’. A two-way model was used and agreement between readers was evaluated. Confidence level of the interval was set at 95\%.
 
 \section{Results}
     \subsection{Demographics}
@@ -195,28 +197,29 @@ This study forms part of the secondary analysis of the prospective UK MAPPING st
     % overview of FDG... byCancer 
         % overview of FDG... byRegion
         % rationale for splitting / merging
-
-    SUVmax and ADCmean of lymph nodes in endometrial and cervical cancer was analysed. No significant difference was found between regions in SUVmax or ADCmean on FDG-PET/CT and DW-MRI (Figure _). The pelvic region on FEC-PET/CT was significantly higher than left and right pelvis. Therefore, quantitative measures from lymph nodes were merged between regions for FDG-PET/CT and DW-MRI. Interestingly, average SUVmax of all nodes on FDG-PET/CT was significantly higher in endometrial than in cervical cancer (Figure _). 
-
+    SUVmax and ADCmean of lymph nodes in endometrial and cervical cancer was analysed. No significant difference was found between regions in SUVmax or ADCmean on FDG-PET/CT and DW-MRI (Figure). Lymph nodes of the para-aortic region on FEC-PET/CT had significantly higher SUVmax than left and right pelvis. Interestingly, average SUVmax of all nodes on FDG-PET/CT was significantly higher in endometrial than in cervical cancer (Figure).
+    
     % overview of quants in endo
-    Quantitative measures, both raw and calculated, were compared in benign and malignant lymph nodes in endometrial cancer. All raw and calculated measures were significantly higher in malignant than benign lymph nodes on FDG-PET/CT (Figure _A). Short-axis diameter, SUVmax, and STAR were all significantly elevated in malignant lymph nodes on FEC-PET/CT (Figure _B). ADCmean and ADCmean NTR was not significantly different between benign and malignant lymph nodes in endometrial cancer (Figure _A).
+    Quantitative measures, both raw and calculated, were compared in benign and malignant lymph nodes in endometrial cancer. All raw and calculated measures were significantly higher in malignant than benign lymph nodes on FDG-PET/CT (Figure A). Short-axis diameter, SUVmax, and STAR were all significantly elevated in malignant lymph nodes on FEC-PET/CT (Figure B). ADCmean and ADCmean NTR was not significantly different between benign and malignant lymph nodes in endometrial cancer (Figure C).
 
     % overview of quants in cer
-    Low numbers of measured nodes in cervical cancer limit the power of statisttical analysis. No calculated or raw measures were significantly different between benign and malignant nodes on FDG-PET/CT and FEC-PET/CT, although mean measures were higher in malignant nodes (Figure _). Interestingly, ADCmean and ADCmean NTR were significantly lower in malignant nodes in cervical cancer (Figure _B).
+    Low numbers of measured nodes in cervical cancer may limit the power of statistical analysis. No calculated or raw measures were significantly different between benign and malignant nodes on FDG-PET/CT and FEC-PET/CT, although mean measures were higher in malignant nodes (Figure ). Interestingly, ADCmean and ADCmean NTR were significantly lower in malignant nodes in cervical cancer (Figure B).
 
     % overview of quants in pt endo/cer
-    Previous literature has shown elevated primary tumour SUVmax and depressed ADCmean in patients presenting with malignant lymph nodes \cite{}. SUVmax of the primary tumour was significantly elevated on FDG-PET/CT but not on FEC-PET/CT, with no significant difference found on DW-MRI (Figure _). No significant difference in any quantitative measure was found in primary tumours of the cervix.   
+    Previous literature has shown elevated primary tumour SUVmax and depressed ADCmean in patients presenting with malignant lymph nodes \cite{}. SUVmax of the primary tumour was significantly elevated on FDG-PET/CT but not on FEC-PET/CT, with no significant difference found on DW-MRI (Figure ). No significant difference in any quantitative measure was found in primary tumours of the cervix.   
 
     % correlations between features!
-    Pearson correlations coefficients were calculated between quantitative measures in endometrial cancer (Figure _). %double check this is endometrial cancer only TODO
+    Pearson correlations coefficients were calculated between quantitative measures in endometrial cancer (Figure).
     Short-axis diameter, long-axis diameter, and SUVmax of the lymph node were highly correlated between FDG-PET/CT and FEC-PET/CT, but did not correlate well with SUVmax of the primary tumour. SUVmax of the primary tumour correlated weakly with SUVmax of the lymph node.
-    Furthermore, these measures were not correlated with ADCmean of the primary tumour or lymph node, except for tumour SUVmax which was inversely correlated with tumour ADCmean.
-    % TODO - suggests that maybe we'd get different results if we had more patients SUVmax for FEC-PET/CT!
+    Furthermore, these measures were not correlated with ADCmean of the primary tumour or lymph node, except for tumour SUVmax which was inversely correlated with tumour ADCmean. 
+    % TODO - DISCUSSION - suggests that maybe we'd get different results if we had more patients SUVmax for FEC-PET/CT!
 
     \subsection{Diagnostic performance of quantitative measures}
     % overview of diagnostic performance of quants
         % table!
-        
+    Diagnostic performance of each measure, along with optimal cutpoints, in endometrial cancer is summarised in Figure (). SUVmax from FDG-PET/CT showed relatively high sensitivity and specificity, with the highest AUC of the quantitative measures. AUC of SUVmax from FEC-PET/CT was lower than on FDG-PET/CT. Large error bars for FEC-PET/CT quantitative measures suggest low sample numbers may be restricting analysis and optimal cutpoints should be interpreted with caution. ADCmean showed high sensitivity, very low specificity, and very low AUC suggesting a high ADCmean cutpoint may reliably be able to diagnose patients with benign lymph nodes. 
+
+    Of the calculated measures, STAR had the highest AUC for FDG-PET/CT with similar performance to SUVmax. 
         
     \subsection{Diagnostic performance of models}
 

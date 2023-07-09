@@ -11,8 +11,13 @@ df_endo = df %>% filter(CANC == 'endo')
 
 get_opt_cut = function(measure){
   print(paste('Getting cutpoint for:', measure))
-  x = pull(df[,measure])
-  class = df$HIST
+  x = pull(df_endo[,measure])
+  class = df_endo$HIST
+  if(measure == 'ADC' | measure == 'ADC_NTR'){
+    dir = '<='
+  } else {
+    dir = '>='
+  }
   opt_cut = cutpointr(df_endo,
           x = x,
           class = class,
@@ -21,7 +26,7 @@ get_opt_cut = function(measure){
           metric = F1_score,
           pos_class = 1,
           neg_class = 0, 
-          direction = '>=',
+          direction = dir,
           boot_runs = 2000,
           boot_stratify = T)
   
@@ -62,7 +67,7 @@ dp_df = plt_df_full %>%
   summarise(across(everything(), ~mean(.x, na.rm = T))) %>%
   arrange(sens)
 
-write.csv(dp_df, './figures/optimalCP_byMeasure.csv', row.names = F)
+write.csv(dp_df, './figures/tables/optimalCP_byMeasure.csv', row.names = F)
 
 dp_df = dp_df %>%
   arrange(name) %>%

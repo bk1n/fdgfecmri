@@ -1,8 +1,11 @@
-This is BibTeX, Version 0.99d (TeX Live 2022)
+This is BibTeX, Version 0.99d
 Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
 The top-level auxiliary file: start.aux
+Reallocating 'name_of_file' (item size: 1) to 18 items.
 The style file: sn-standardNature.bst
+Reallocating 'name_of_file' (item size: 1) to 8 items.
 Database file #1: MAPPING.bib
+Warning--I didn't find a database entry for ""
 You've used 23 entries,
             2718 wiz_defined-function locations,
             1256 strings with 20516 characters,
@@ -44,3 +47,4 @@ warning$ -- 0
 while$ -- 69
 width$ -- 25
 write$ -- 306
+(There was 1 warning)
