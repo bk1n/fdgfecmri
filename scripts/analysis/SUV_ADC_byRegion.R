@@ -8,9 +8,6 @@ res.aov = aov(FDG_SUV ~ region, data)
 summary(res.aov)
 TukeyHSD(res.aov)
 
-geom_signif(comparisons = split(t(combn(levels(data$egi), 2)), seq(nrow(t(combn(levels(iris$Species), 2))))), 
-            map_signif_level = TRUE)
-
 g_fdg_suv = ggplot(data,
        aes(x = region,
            y = FDG_SUV)) +
@@ -18,8 +15,15 @@ g_fdg_suv = ggplot(data,
   geom_point(position = position_jitter(width = 0.1),
              alpha = 0.5) +
   scale_x_discrete(label = c('Left Pelvis', 'Para-aortic', 'Right Pelvis')) +
+  geom_signif(
+    comparisons = list(c('paln', 'lp'), 
+                       c('rp', 'lp'),
+                       c('rp', 'paln')),
+    annotations = c(paste('p =', signif(TukeyHSD(res.aov)$region[1:3,'p adj'], digits = 2))),
+    y_position = c(30,38,34)
+  ) + 
   theme_classic() +
-  theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1)) +
+  theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1, size = 10)) +
   ylab('FDG SUVmax') +
   xlab('') 
 
@@ -35,10 +39,15 @@ g_fec_suv = ggplot(data,
   geom_point(position = position_jitter(width = 0.1),
              alpha = 0.5) +
   scale_x_discrete(label = c('Left Pelvis', 'Para-aortic', 'Right Pelvis')) +
-  geom_signif(comparisons = list(c('lp', 'rp'), c('paln')),
-              annotations = c(paste('p =', TukeyHSD(res.aov)$region[1:3,'p adj'],3))) + 
+  geom_signif(
+    comparisons = list(c('paln', 'lp'), 
+                       c('rp', 'lp'),
+                       c('rp', 'paln')),
+    annotations = c(paste('p =', signif(TukeyHSD(res.aov)$region[1:3,'p adj'], digits = 2))),
+    y_position = c(9,11,10)
+    ) + 
   theme_classic() +
-  theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1)) +
+  theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1,size = 10)) +
   ylab('FEC SUVmax') +
   xlab('') 
 
@@ -54,14 +63,22 @@ g_adc = ggplot(data,
   geom_point(position = position_jitter(width = 0.1),
              alpha = 0.5) +
   scale_x_discrete(label = c('Left Pelvis', 'Para-aortic', 'Right Pelvis')) +
+  geom_signif(
+    comparisons = list(c('paln', 'lp'), 
+                       c('rp', 'lp'),
+                       c('rp', 'paln')),
+    annotations = c(paste('p =', signif(TukeyHSD(res.aov)$region[1:3,'p adj'], digits = 2))),
+    y_position = c(2000,2400,2200)
+  ) + 
   theme_classic() +
-  theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1)) +
+  theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1, size = 10)) +
   ylab('ADCmean') +
   xlab('') 
 
 g = ggarrange(g_fdg_suv, g_fec_suv, g_adc,
           nrow = 1,
           ncol = 3)
+g
 
 ggsave('./figures/FDG_FEC_ADC_byRegion.png',
        g,

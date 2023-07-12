@@ -15,7 +15,8 @@ g_fdg_suv = ggplot(data,
   scale_x_discrete(label = c('Cervical', 'Endometrial')) +
   ylab('FDG SUVmax') +
   xlab('') +
-  theme_classic() 
+  theme_classic() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 10))
 
 #FEC SUV in CER vs ENDO
 g_fec_suv = ggplot(data,
@@ -29,7 +30,8 @@ g_fec_suv = ggplot(data,
   scale_x_discrete(label = c('Cervical', 'Endometrial')) +
   ylab('FEC SUVmax') +
   xlab('') +
-  theme_classic() 
+  theme_classic() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 10))
 
 #ADC in CER vs ENDO
 g_adc = ggplot(data,
@@ -43,13 +45,15 @@ g_adc = ggplot(data,
   scale_x_discrete(label = c('Cervical', 'Endometrial')) +
   ylab('ADCmean') +
   xlab('') +
-  theme_classic() 
+  theme_classic() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 10))
 
 # can't group together SUVmax in CER + ENDO!
 
 g = ggarrange(g_fdg_suv, g_fec_suv, g_adc, 
           ncol = 3,
           nrow = 1)
+g
 
 ggsave('./figures/FDG_FEC_ADC_byCancer.png',
        g,
