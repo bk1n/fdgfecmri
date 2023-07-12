@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (MiKTeX 23.4) (preloaded format=pdflatex 2023.7.7)  12 JUL 2023 16:40
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (MiKTeX 23.4) (preloaded format=pdflatex 2023.7.7)  12 JUL 2023 21:11
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -558,6 +558,10 @@ LaTeX Info: Redefining \cite on input line 694.
 \c@example=\count326
 \c@remark=\count327
 \c@definition=\count328
+ (C:\Users\bgkin\AppData\Local\Programs\MiKTeX\tex/latex/tools\xr.sty
+Package: xr 2020-05-10 v5.06 eXternal References (DPC)
+)
+Package xr Info: IMPORTING LABELS FROM supplementary.aux on input line 17.
  (C:\Users\bgkin\AppData\Local\Programs\MiKTeX\tex/latex/placeins\placeins.sty
 Package: placeins 2005/04/18  v 2.2
 ) (C:\Users\bgkin\AppData\Local\Programs\MiKTeX\tex/latex/l3backend\l3backend-pdftex.def
@@ -567,31 +571,31 @@ File: l3backend-pdftex.def 2023-03-30 L3 backend support: PDF output (pdfTeX)
 ) (start.aux)
 \openout1 = `start.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 20.
-LaTeX Font Info:    ... okay on input line 20.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 20.
-LaTeX Font Info:    ... okay on input line 20.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 20.
-LaTeX Font Info:    ... okay on input line 20.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 20.
-LaTeX Font Info:    ... okay on input line 20.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 20.
-LaTeX Font Info:    ... okay on input line 20.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 20.
-LaTeX Font Info:    ... okay on input line 20.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 20.
-LaTeX Font Info:    ... okay on input line 20.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 20.
-LaTeX Font Info:    ... okay on input line 20.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 20.
-LaTeX Font Info:    ... okay on input line 20.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 24.
+LaTeX Font Info:    ... okay on input line 24.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 24.
+LaTeX Font Info:    ... okay on input line 24.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 24.
+LaTeX Font Info:    ... okay on input line 24.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 24.
+LaTeX Font Info:    ... okay on input line 24.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 24.
+LaTeX Font Info:    ... okay on input line 24.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 24.
+LaTeX Font Info:    ... okay on input line 24.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 24.
+LaTeX Font Info:    ... okay on input line 24.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 24.
+LaTeX Font Info:    ... okay on input line 24.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 24.
+LaTeX Font Info:    ... okay on input line 24.
 \footinsA=\insert252
 \c@footnoteA=\count330
-LaTeX Font Info:    Redeclaring symbol font `AMSa' on input line 20.
+LaTeX Font Info:    Redeclaring symbol font `AMSa' on input line 24.
 LaTeX Font Info:    Overwriting symbol font `AMSa' in version `normal'
-(Font)                  U/msa/m/n --> U/msa/m/n on input line 20.
+(Font)                  U/msa/m/n --> U/msa/m/n on input line 24.
 LaTeX Font Info:    Overwriting symbol font `AMSa' in version `bold'
-(Font)                  U/msa/m/n --> U/msa/m/n on input line 20.
+(Font)                  U/msa/m/n --> U/msa/m/n on input line 24.
 
 *geometry* driver: auto-detecting
 *geometry* detected driver: pdftex
@@ -648,63 +652,63 @@ Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 48
 File: epstopdf-sys.cfg 2021/03/18 v2.0 Configuration of epstopdf for MiKTeX
 ))
 \c@lstlisting=\count337
-Package hyperref Info: Link coloring ON on input line 20.
+Package hyperref Info: Link coloring ON on input line 24.
  (start.out) (start.out)
 \@outlinefile=\write3
 \openout3 = `start.out'.
 
-LaTeX Font Info:    Calculating math sizes for size <12.045> on input line 30.
+LaTeX Font Info:    Calculating math sizes for size <12.045> on input line 34.
 
 
 LaTeX Font Warning: Font shape `OT1/cmr/bx/n' in size <8.43146> not available
-(Font)              size <8> substituted on input line 30.
+(Font)              size <8> substituted on input line 34.
 
 
 LaTeX Font Warning: Font shape `OML/cmm/b/it' in size <8.43146> not available
-(Font)              size <8> substituted on input line 30.
+(Font)              size <8> substituted on input line 34.
 
 
 LaTeX Font Warning: Font shape `OMS/cmsy/b/n' in size <8.43146> not available
-(Font)              size <8> substituted on input line 30.
+(Font)              size <8> substituted on input line 34.
 
 
 LaTeX Font Warning: Font shape `U/rsfs/m/n' in size <8.43146> not available
-(Font)              size <8> substituted on input line 30.
+(Font)              size <8> substituted on input line 34.
 
 
 LaTeX Font Warning: Font shape `OT1/cmr/m/n' in size <8.43146> not available
-(Font)              size <8> substituted on input line 30.
+(Font)              size <8> substituted on input line 34.
 
-LaTeX Font Info:    Calculating math sizes for size <11.04124> on input line 30.
+LaTeX Font Info:    Calculating math sizes for size <11.04124> on input line 34.
 
 LaTeX Font Warning: Font shape `OT1/cmr/bx/n' in size <5.52061> not available
-(Font)              size <6> substituted on input line 30.
+(Font)              size <6> substituted on input line 34.
 
 
 LaTeX Font Warning: Font shape `OML/cmm/b/it' in size <5.52061> not available
-(Font)              size <6> substituted on input line 30.
+(Font)              size <6> substituted on input line 34.
 
 
 LaTeX Font Warning: Font shape `OMS/cmsy/b/n' in size <5.52061> not available
-(Font)              size <6> substituted on input line 30.
+(Font)              size <6> substituted on input line 34.
 
 
 LaTeX Font Warning: Font shape `U/rsfs/m/n' in size <5.52061> not available
-(Font)              size <6> substituted on input line 30.
+(Font)              size <6> substituted on input line 34.
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 30--30
+Underfull \hbox (badness 10000) in paragraph at lines 34--34
  \OT1/cmr/m/n/9 This will be an absr-ract test! 
  []
 
-LaTeX Font Info:    Calculating math sizes for size <10.03749> on input line 30.
+LaTeX Font Info:    Calculating math sizes for size <10.03749> on input line 34.
 
-Underfull \hbox (badness 10000) in paragraph at lines 33--38
+Underfull \hbox (badness 10000) in paragraph at lines 37--42
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 39--44
+Underfull \hbox (badness 10000) in paragraph at lines 43--48
 
  []
 
@@ -714,27 +718,27 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
  [1{C:/Users/bgkin/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map}
 
 ]
-Underfull \hbox (badness 10000) in paragraph at lines 45--50
+Underfull \hbox (badness 10000) in paragraph at lines 49--54
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 51--55
+Underfull \hbox (badness 10000) in paragraph at lines 55--59
 []\OT1/cmr/m/n/10 Integrated positron emis-sion tomog-ra-phy/-com-puted tomog-ra-phy
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 51--55
+Underfull \hbox (badness 10000) in paragraph at lines 55--59
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 56--63
+Underfull \hbox (badness 10000) in paragraph at lines 60--67
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 64--72
+Underfull \hbox (badness 10000) in paragraph at lines 68--76
 
  []
 
@@ -745,17 +749,17 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 Overfull \vbox (1.44444pt too high) has occurred while \output is active []
 
  [2]
-Underfull \hbox (badness 10000) in paragraph at lines 73--83
+Underfull \hbox (badness 10000) in paragraph at lines 77--87
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 84--85
+Underfull \hbox (badness 10000) in paragraph at lines 88--89
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 86--88
+Underfull \hbox (badness 10000) in paragraph at lines 90--92
 
  []
 
@@ -784,28 +788,14 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 Overfull \vbox (1.44444pt too high) has occurred while \output is active []
 
  [6]
-<../figures//tables/demographics.png, id=157, 526.21594pt x 1266.23062pt>
-File: ../figures//tables/demographics.png Graphic file (type png)
-<use ../figures//tables/demographics.png>
-Package pdftex.def Info: ../figures//tables/demographics.png  used on input line 201.
-(pdftex.def)             Requested size: 169.29388pt x 407.36604pt.
 
+Package hyperref Warning: Suppressing link with empty target on input line 201.
 
-LaTeX Warning: `h' float specifier changed to `ht'.
-
-<../figures//FDG_FEC_ADC_byRegion.png, id=158, 361.35pt x 361.35pt>
-File: ../figures//FDG_FEC_ADC_byRegion.png Graphic file (type png)
-<use ../figures//FDG_FEC_ADC_byRegion.png>
-Package pdftex.def Info: ../figures//FDG_FEC_ADC_byRegion.png  used on input line 209.
-(pdftex.def)             Requested size: 169.29388pt x 169.29417pt.
-
-LaTeX Warning: `h' float specifier changed to `ht'.
-
-<../figures//FDG_FEC_ADC_byCancer.png, id=160, 361.35pt x 361.35pt>
-File: ../figures//FDG_FEC_ADC_byCancer.png Graphic file (type png)
-<use ../figures//FDG_FEC_ADC_byCancer.png>
-Package pdftex.def Info: ../figures//FDG_FEC_ADC_byCancer.png  used on input line 216.
-(pdftex.def)             Requested size: 169.29388pt x 169.29417pt.
+<../figures//FDG_FEC_ADC_byRegion_byCancer_combined.png, id=157, 722.7pt x 361.35pt>
+File: ../figures//FDG_FEC_ADC_byRegion_byCancer_combined.png Graphic file (type png)
+<use ../figures//FDG_FEC_ADC_byRegion_byCancer_combined.png>
+Package pdftex.def Info: ../figures//FDG_FEC_ADC_byRegion_byCancer_combined.png  used on input line 206.
+(pdftex.def)             Requested size: 338.58778pt x 169.29417pt.
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
@@ -816,104 +806,104 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 Overfull \vbox (1.44444pt too high) has occurred while \output is active []
 
  [7]
-<../figures//fdg_fec_inEndo.png, id=176, 939.51pt x 578.16pt>
+<../figures//fdg_fec_inEndo.png, id=173, 939.51pt x 578.16pt>
 File: ../figures//fdg_fec_inEndo.png Graphic file (type png)
 <use ../figures//fdg_fec_inEndo.png>
-Package pdftex.def Info: ../figures//fdg_fec_inEndo.png  used on input line 234.
+Package pdftex.def Info: ../figures//fdg_fec_inEndo.png  used on input line 226.
 (pdftex.def)             Requested size: 338.58778pt x 208.35799pt.
 
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
-
-Overfull \vbox (1.44444pt too high) has occurred while \output is active []
-
- [8 <../figures//tables/demographics.png>]
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-<../figures//fdg_fec_inCer.png, id=185, 939.51pt x 578.16pt>
+<../figures//fdg_fec_inCer.png, id=174, 939.51pt x 578.16pt>
 File: ../figures//fdg_fec_inCer.png Graphic file (type png)
 <use ../figures//fdg_fec_inCer.png>
-Package pdftex.def Info: ../figures//fdg_fec_inCer.png  used on input line 246.
+Package pdftex.def Info: ../figures//fdg_fec_inCer.png  used on input line 239.
 (pdftex.def)             Requested size: 338.58778pt x 208.35799pt.
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-<../figures//quants_pt_byCancer.png, id=187, 433.62pt x 578.16pt>
-File: ../figures//quants_pt_byCancer.png Graphic file (type png)
-<use ../figures//quants_pt_byCancer.png>
-Package pdftex.def Info: ../figures//quants_pt_byCancer.png  used on input line 261.
-(pdftex.def)             Requested size: 253.94083pt x 338.58835pt.
-
-LaTeX Warning: `h' float specifier changed to `ht'.
-
-
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
-
-Overfull \vbox (1.44444pt too high) has occurred while \output is active []
-
- [9 <../figures//FDG_FEC_ADC_byRegion.png> <../figures//FDG_FEC_ADC_byCancer.png>]
-<../figures//pairwise_corr_raw.png, id=197, 433.62pt x 397.485pt>
+<../figures//pairwise_corr_raw.png, id=176, 433.62pt x 397.485pt>
 File: ../figures//pairwise_corr_raw.png Graphic file (type png)
 <use ../figures//pairwise_corr_raw.png>
-Package pdftex.def Info: ../figures//pairwise_corr_raw.png  used on input line 276.
+Package pdftex.def Info: ../figures//pairwise_corr_raw.png  used on input line 256.
 (pdftex.def)             Requested size: 253.94083pt x 232.77948pt.
-
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
 
+Package hyperref Warning: Suppressing link with empty target on input line 262.
+
+
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
 
 Overfull \vbox (1.44444pt too high) has occurred while \output is active []
 
- [10 <../figures//fdg_fec_inEndo.png>]
+ [8 <../figures//FDG_FEC_ADC_byRegion_byCancer_combined.png>]
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
 
 Overfull \vbox (1.44444pt too high) has occurred while \output is active []
 
- [11 <../figures//fdg_fec_inCer.png>]
+ [9 <../figures//fdg_fec_inEndo.png>]
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
 
 Overfull \vbox (1.44444pt too high) has occurred while \output is active []
 
- [12 <../figures//quants_pt_byCancer.png>]
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
-
-Overfull \vbox (1.44444pt too high) has occurred while \output is active []
-
- [13 <../figures//pairwise_corr_raw.png (PNG copy)>]
-<../figures//AllPerformance_byMeasure.png, id=219, 361.35pt x 650.43pt>
+ [10 <../figures//fdg_fec_inCer.png> <../figures//pairwise_corr_raw.png (PNG copy)>]
+<../figures//AllPerformance_byMeasure.png, id=200, 361.35pt x 650.43pt>
 File: ../figures//AllPerformance_byMeasure.png Graphic file (type png)
 <use ../figures//AllPerformance_byMeasure.png>
-Package pdftex.def Info: ../figures//AllPerformance_byMeasure.png  used on input line 289.
+Package pdftex.def Info: ../figures//AllPerformance_byMeasure.png  used on input line 272.
 (pdftex.def)             Requested size: 253.94083pt x 457.09427pt.
 
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-<../figures//ROC_byMeasure.png, id=220, 361.35pt x 361.35pt>
+<../figures//ROC_byMeasure.png, id=201, 361.35pt x 361.35pt>
 File: ../figures//ROC_byMeasure.png Graphic file (type png)
 <use ../figures//ROC_byMeasure.png>
-Package pdftex.def Info: ../figures//ROC_byMeasure.png  used on input line 296.
+Package pdftex.def Info: ../figures//ROC_byMeasure.png  used on input line 279.
 (pdftex.def)             Requested size: 253.94083pt x 253.94127pt.
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-<../figures//lr.model_plt_endo_SUV.png, id=222, 1505.625pt x 1505.625pt>
+<../figures//lr.model_plt_endo_SUV.png, id=205, 1505.625pt x 1505.625pt>
 File: ../figures//lr.model_plt_endo_SUV.png Graphic file (type png)
 <use ../figures//lr.model_plt_endo_SUV.png>
-Package pdftex.def Info: ../figures//lr.model_plt_endo_SUV.png  used on input line 311.
+Package pdftex.def Info: ../figures//lr.model_plt_endo_SUV.png  used on input line 294.
 (pdftex.def)             Requested size: 169.29388pt x 169.29509pt.
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
 
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+
+Overfull \vbox (1.44444pt too high) has occurred while \output is active []
+
+ [11
+
+]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+
+Overfull \vbox (1.44444pt too high) has occurred while \output is active []
+
+ [12 <../figures//AllPerformance_byMeasure.png>]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+
+Overfull \vbox (1.44444pt too high) has occurred while \output is active []
+
+ [13 <../figures//ROC_byMeasure.png> <../figures//lr.model_plt_endo_SUV.png>]
+Underfull \hbox (badness 1019) in paragraph at lines 301--302
+\OT1/cmr/m/n/10 modal-ity. FDG-PET/CT and FEC-PET/CT had excel-lent inter-ob-server
+ []
+
+(start.bbl
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
 
@@ -927,57 +917,32 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 
 Overfull \vbox (1.44444pt too high) has occurred while \output is active []
 
- [15 <../figures//AllPerformance_byMeasure.png>]
+ [15])
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
 
 Overfull \vbox (1.44444pt too high) has occurred while \output is active []
 
- [16 <../figures//ROC_byMeasure.png> <../figures//lr.model_plt_endo_SUV.png>]
-Underfull \hbox (badness 1019) in paragraph at lines 318--319
-\OT1/cmr/m/n/10 modal-ity. FDG-PET/CT and FEC-PET/CT had excel-lent inter-ob-server
- []
-
-(start.bbl
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
-
-Overfull \vbox (1.44444pt too high) has occurred while \output is active []
-
- [17
-
-]
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
-
-Overfull \vbox (1.44444pt too high) has occurred while \output is active []
-
- [18])
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
-
-Overfull \vbox (1.44444pt too high) has occurred while \output is active []
-
- [19] (start.aux)
+ [16] (start.aux)
 
 LaTeX Font Warning: Size substitutions with differences
 (Font)              up to 1.28pt have occurred.
 
 Package rerunfilecheck Info: File `start.out' has not changed.
-(rerunfilecheck)             Checksum: A6EC1FCDAE7B38C6F7F0A80D96003E61;3013.
+(rerunfilecheck)             Checksum: FDBA7DFFFA0C4F1A2D912EA5C22F306E;3018.
  ) 
 Here is how much of TeX's memory you used:
- 14872 strings out of 476331
- 234601 string characters out of 5787766
+ 14869 strings out of 476331
+ 234508 string characters out of 5787766
  1863660 words of memory out of 5000000
  34964 multiletter control sequences out of 15000+600000
  535714 words of font info for 126 fonts, out of 8000000 for 9000
  1151 hyphenation exceptions out of 8191
- 90i,11n,90p,1043b,641s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 90i,11n,90p,872b,641s stack positions out of 10000i,1000n,20000p,200000b,200000s
 <C:/Users/bgkin/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx10.pfb><C:/Users/bgkin/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx12.pfb><C:/Users/bgkin/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx8.pfb><C:/Users/bgkin/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx9.pfb><C:/Users/bgkin/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi8.pfb><C:/Users/bgkin/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/Users/bgkin/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr12.pfb><C:/Users/bgkin/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr17.pfb><C:/Users/bgkin/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr7.pfb><C:/Users/bgkin/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr8.pfb><C:/Users/bgkin/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr9.pfb><C:/Users/bgkin/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmti10.pfb>
-Output written on start.pdf (19 pages, 2582874 bytes).
+Output written on start.pdf (16 pages, 2219741 bytes).
 PDF statistics:
- 358 PDF objects out of 1000 (max. 8388607)
- 73 named destinations out of 1000 (max. 500000)
- 195 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 340 PDF objects out of 1000 (max. 8388607)
+ 68 named destinations out of 1000 (max. 500000)
+ 180 words of extra memory for PDF output out of 10000 (max. 10000000)
 

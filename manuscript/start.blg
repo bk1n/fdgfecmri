@@ -5,46 +5,44 @@ Reallocating 'name_of_file' (item size: 1) to 18 items.
 The style file: sn-standardNature.bst
 Reallocating 'name_of_file' (item size: 1) to 8 items.
 Database file #1: MAPPING.bib
-Warning--I didn't find a database entry for ""
-You've used 23 entries,
+You've used 24 entries,
             2718 wiz_defined-function locations,
-            1256 strings with 20516 characters,
-and the built_in function-call counts, 10844 in all, are:
-= -- 785
-> -- 260
+            1265 strings with 21115 characters,
+and the built_in function-call counts, 11302 in all, are:
+= -- 820
+> -- 268
 < -- 0
-+ -- 130
-- -- 65
-* -- 1411
-:= -- 1188
-add.period$ -- 91
-call.type$ -- 23
-change.case$ -- 23
++ -- 134
+- -- 67
+* -- 1469
+:= -- 1239
+add.period$ -- 95
+call.type$ -- 24
+change.case$ -- 24
 chr.to.int$ -- 0
-cite$ -- 23
-duplicate$ -- 928
-empty$ -- 1034
-format.name$ -- 88
-if$ -- 2171
+cite$ -- 24
+duplicate$ -- 967
+empty$ -- 1080
+format.name$ -- 91
+if$ -- 2264
 int.to.chr$ -- 0
-int.to.str$ -- 23
-missing$ -- 226
-newline$ -- 147
-num.names$ -- 23
-pop$ -- 165
+int.to.str$ -- 24
+missing$ -- 235
+newline$ -- 153
+num.names$ -- 24
+pop$ -- 171
 preamble$ -- 1
 purify$ -- 0
 quote$ -- 0
-skip$ -- 110
+skip$ -- 114
 stack$ -- 0
-substring$ -- 602
-swap$ -- 927
+substring$ -- 633
+swap$ -- 964
 text.length$ -- 0
 text.prefix$ -- 0
 top$ -- 0
 type$ -- 0
 warning$ -- 0
-while$ -- 69
-width$ -- 25
-write$ -- 306
-(There was 1 warning)
+while$ -- 72
+width$ -- 26
+write$ -- 319

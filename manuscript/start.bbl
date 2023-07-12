@@ -233,4 +233,14 @@
   (\bibinfo{year}{2021}).
 \newblock \doi{10.1158/1078-0432.CCR-21-1834} .
 
+\bibitem{moharamzadDiagnosticPerformanceApparent2021}
+\bibinfo{author}{Moharamzad, Y.} \emph{et~al.}
+\newblock \bibinfo{title}{Diagnostic performance of apparent diffusion
+  coefficient ({{ADC}}) for differentiating endometrial carcinoma from benign
+  lesions: A systematic review and meta-analysis}.
+\newblock \emph{\bibinfo{journal}{Abdominal Radiology}}
+  \textbf{\bibinfo{volume}{46}}~(3), \bibinfo{pages}{1115--1128}
+  (\bibinfo{year}{2021}).
+\newblock \doi{10.1007/s00261-020-02734-w} .
+
 \end{thebibliography}

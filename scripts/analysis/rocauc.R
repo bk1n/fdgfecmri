@@ -48,19 +48,25 @@ get_boot_data = function(summ){
 }
 
 plt_df = do.call(rbind, lapply(res.opt_cut, get_boot_data))
-logit_res = read.csv('./figures/tables/lr.model_optCutOff_fullRes_SUV.csv')
+logit_suv_res = read.csv('./figures/tables/lr.model_optCutOff_fullRes_SUV.csv')
+logit_sa_res = read.csv('./figures/tables/lr.model_optCutOff_fullRes_SA.csv')
 
-plt_logit = logit_res %>%
+plt_logit_suv = logit_suv_res %>%
   select(optimal_SUVcutoff, auc, sens, spec) %>%
   rename(optimal_cutpoint = optimal_SUVcutoff)
-plt_logit$name = 'LR'
+plt_logit_suv$name = 'LR_SUV'
+
+plt_logit_sa = logit_sa_res %>%
+  select(optimal_SUVcutoff, auc, sens, spec) %>%
+  rename(optimal_cutpoint = optimal_SUVcutoff)
+plt_logit_sa$name = 'LR_SA'
 
 plt_df_full = plt_df %>%
   select(optimal_cutpoint, AUC_oob, sensitivity_oob, specificity_oob, name) %>%
   rename(auc = AUC_oob,
          sens = sensitivity_oob,
          spec = specificity_oob) %>%
-  rbind(., plt_logit) %>%
+  rbind(., plt_logit_suv, plt_logit_sa) %>%
   mutate()
 
 dp_df = plt_df_full %>%
@@ -70,7 +76,6 @@ dp_df = plt_df_full %>%
 
 write.csv(plt_df_full, './figures/tables/full_roc_results_plt_df_full.csv', row.names = F)
 write.csv(dp_df, './figures/tables/optimalCP_byMeasure.csv', row.names = F)
-
 
 #### RUN FROM HERE
 
@@ -91,7 +96,8 @@ ylabs = c('FDG_SUV_PT' = 'FDG SUVmax',
           'FEC_SNSA' = 'FEC SNSA',
           'ADC' = 'ADCmean',
           'ADC_NTR' = 'ADCmean NTR',
-          'LR' = 'LR')
+          'LR_SUV' = 'LR (SUV)',
+          'LR_SA' = 'LR (SA)')
 
 plt_df_full = read.csv('./figures/tables/full_roc_results_plt_df_full.csv') %>%
   select(-1) 
@@ -104,13 +110,13 @@ dp_df = dp_df %>%
   mutate(measure_type = case_when(grepl('FDG', name) ~ 'FDG-PET/CT',
                                   grepl('FEC', name) ~ 'FEC-PET/CT',
                                   grepl('ADC', name) ~ 'DW-MRI',
-                                  name == 'LR' ~ 'LR'))
+                                  grepl('LR', name) ~ 'LR'))
 
 plt_df_full = plt_df_full %>%
   mutate(measure_type = case_when(grepl('FDG', name) ~ 'FDG-PET/CT',
                                   grepl('FEC', name) ~ 'FEC-PET/CT',
                                   grepl('ADC', name) ~ 'DW-MRI',
-                                  name == 'LR' ~ 'LR')) %>%
+                                  grepl('LR', name) ~ 'LR')) %>%
   mutate(name = ylabs[name]) 
 
 g_opt = ggplot(dp_df,
@@ -212,8 +218,9 @@ get_proc = function(measure){
 }
 
 roc_plt_df = do.call(rbind, lapply(cols_endo, get_proc))
-lr = read.csv('./figures/tables/lr_roc_results_SUV.csv')
-roc_plt_df = rbind(roc_plt_df, lr)
+lr_suv = read.csv('./figures/tables/lr_roc_results_SUV.csv') %>% mutate(name = 'LR (SUV)')
+lr_sa = read.csv('./figures/tables/lr_roc_results_SA.csv') %>% mutate(name = 'LR (SA)')
+roc_plt_df = rbind(roc_plt_df, lr_suv, lr_sa)
 
 roc_plt = roc_plt_df %>%
   mutate(measure_type = case_when(grepl('FDG', name) ~ 'FDG-PET/CT',
@@ -229,7 +236,7 @@ roc_plt = roc_plt_df %>%
                           name == 'ADC' ~ 'ADCmean',
                           .default = name)) %>%
   mutate(measure_type = factor(measure_type, levels = c('FDG-PET/CT', 'FEC-PET/CT', 'DW-MRI', 'LR'))) %>%
-  mutate(name = factor(name, levels = c('SUVmax', 'STAR', 'SNSA', 'NTR', 'SA (mm)', 'LA (mm)', 'ADCmean', 'LR')))
+  mutate(name = factor(name, levels = c('SUVmax', 'STAR', 'SNSA', 'NTR', 'SA (mm)', 'LA (mm)', 'ADCmean', 'LR (SA)', 'LR (SUV)')))
 
 g_roc = ggplot(roc_plt,
        aes(x = fpr,
@@ -248,7 +255,7 @@ g_roc = ggplot(roc_plt,
   xlab('1 - Specificity') +
   ylab('Sensitivity') +
   scale_color_brewer(name = 'Quantitative \nMeasure',
-                     palette = 'Dark2',
+                     palette = 'Set1',
                      direction = -1) +
   scale_linetype_manual(name = 'Measure Type',
                         values = c('solid', 'twodash', 'dotdash', 'dashed')) +
