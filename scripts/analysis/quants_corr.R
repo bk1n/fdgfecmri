@@ -14,6 +14,27 @@ sig = pairwise_corr$P
 sig[is.na(sig)] = 0
 sig = p.adjust(sig, method='fdr') %>% matrix(ncol=length(colnames(pairwise_corr$P)))
 
+ylabs = c('FDG_SUV_PT' = 'FDG SUVmax',
+          'FEC_SUV_PT' = 'FEC SUVmax',
+          'ADC_PT' = 'PT ADCmean',
+          'FDG_SUV' = 'FDG SUVmax',
+          'FDG_SA' = 'FDG SA (mm)',
+          'FDG_LA' = 'FDG LA (mm)',
+          'FDG_NTR' = 'FDG SUVmax NTR',
+          'FDG_STAR' = 'FDG STAR',
+          'FDG_SNSA' = 'FDG SNSA',
+          'FEC_SUV' = 'FEC SUVmax',
+          'FEC_SA' = 'FEC SA (mm)',
+          'FEC_LA' = 'FEC LA (mm)',
+          'FEC_NTR' = 'FEC SUVmax NTR',
+          'FEC_STAR' = 'FEC STAR',
+          'FEC_SNSA' = 'FEC SNSA',
+          'ADC' = 'ADCmean',
+          'ADC_NTR' = 'ADCmean NTR')
+
+colnames(pairwise_corr$r) = ylabs[as.character(colnames(pairwise_corr$r))]
+rownames(pairwise_corr$r) = ylabs[as.character(rownames(pairwise_corr$r))]
+
 png('./figures/pairwise_corr_raw.png',
     width = 6,
     height = 5.5,

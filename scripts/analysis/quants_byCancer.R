@@ -3,17 +3,15 @@ p_load(tidyverse, infer, ggpubr, ggsignif, pROC, cutpointr)
 
 data = readRDS('./data/quant_allPooled.rds')
 
-fdg_features = c('FDG_SUV', 'FDG_SA', 'FDG_LA', 'FDG_NTR', 'FDG_STAR', 'FDG_SNSA')
-fec_features = c('FEC_SUV', 'FEC_SA', 'FEC_LA', 'FEC_NTR', 'FEC_STAR', 'FEC_SNSA')
-adc_features = c('ADC', 'ADC_NTR')
-
 quant_row_1 = c('FDG_SUV', 'FDG_SA', 'FDG_LA', 'FDG_NTR', 'FDG_STAR', 'FDG_SNSA', 'ADC')
 quant_row_2 = c('FEC_SUV', 'FEC_SA', 'FEC_LA', 'FEC_NTR', 'FEC_STAR', 'FEC_SNSA', 'ADC_NTR')
+
+opt_cut = read_csv('./figures/tables/optimalCP_byMeasure.csv')
 
 pt_features = c('FDG_SUV_PT', 'FEC_SUV_PT', 'ADC_PT')
 canc = c('cer', 'endo')
 
-plot_myCustomGG = function(feature){
+plot_myCustomGG = function(feature, show_opt_cut = F){
   plt_data = data %>%
     filter(CANC == canc)
   
@@ -35,6 +33,24 @@ plot_myCustomGG = function(feature){
             'ADC' = expression(ADC[mean]),
             'ADC_NTR' = expression(ADC[mean]~NTR))
   
+  ylabs = c('FDG_SUV_PT' = 'FDG SUVmax',
+            'FEC_SUV_PT' = 'FEC SUVmax',
+            'ADC_PT' = 'ADCmean',
+            'FDG_SUV' = 'FDG SUVmax',
+            'FDG_SA' = 'FDG SA (mm)',
+            'FDG_LA' = 'FDG LA (mm)',
+            'FDG_NTR' = 'FDG SUVmax NTR',
+            'FDG_STAR' = 'FDG STAR',
+            'FDG_SNSA' = 'FDG SNSA',
+            'FEC_SUV' = 'FEC SUVmax',
+            'FEC_SA' = 'FEC SA (mm)',
+            'FEC_LA' = 'FEC LA (mm)',
+            'FEC_NTR' = 'FEC SUVmax NTR',
+            'FEC_STAR' = 'FEC STAR',
+            'FEC_SNSA' = 'FEC SNSA',
+            'ADC' = 'ADCmean',
+            'ADC_NTR' = 'ADCmean NTR')
+  
   print(feature)
 
   p = signif(wilcox.test(pull(plt_data[,feature]) ~ plt_data$HIST)$p.value,2)
@@ -52,13 +68,24 @@ plot_myCustomGG = function(feature){
          aes(x = HIST,
              y = !!rlang::sym(feature))) +
     geom_boxplot(outlier.shape = NA) +
-    geom_point(position = position_jitter(width = 0.1)) +
+    geom_point(position = position_jitter(width = 0.1), alpha = .7) +
     geom_signif(comparisons = list(c('0','1')),
                 annotations = c(p)) +
     ylab(ylabs[feature]) +
     xlab('') +
     scale_x_discrete(label = c('B', 'M')) +
     theme_classic()
+  
+  if(show_opt_cut){
+    oc = opt_cut %>%
+      filter(name == feature) %>%
+      pull(optimal_cutpoint)
+    g = g + 
+      geom_hline(yintercept = oc,
+                 color = 'red',
+                 linetype = 'dashed',
+                 linewidth = 1)
+  }
 
   return(g)
 }
@@ -71,8 +98,8 @@ gg_cer_r2 = lapply(quant_row_2, plot_myCustomGG)
 
 canc = 'endo'
 gg_endo_pt = lapply(pt_features, plot_myCustomGG)
-gg_endo_r1 = lapply(quant_row_1, plot_myCustomGG)
-gg_endo_r2 = lapply(quant_row_2, plot_myCustomGG)
+gg_endo_r1 = lapply(quant_row_1, plot_myCustomGG, T)
+gg_endo_r2 = lapply(quant_row_2, plot_myCustomGG, T)
 # gg_endo_adc = lapply(adc_features, plot_myCustomGG)
 
 #PT in ENDO, CER

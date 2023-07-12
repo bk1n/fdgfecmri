@@ -60,18 +60,68 @@ plt_df_full = plt_df %>%
   rename(auc = AUC_oob,
          sens = sensitivity_oob,
          spec = specificity_oob) %>%
-  rbind(., plt_logit)
+  rbind(., plt_logit) %>%
+  mutate()
 
 dp_df = plt_df_full %>%
   group_by(name) %>%
   summarise(across(everything(), ~mean(.x, na.rm = T))) %>%
   arrange(sens)
 
+write.csv(plt_df_full, './figures/tables/full_roc_results_plt_df_full.csv', row.names = F)
 write.csv(dp_df, './figures/tables/optimalCP_byMeasure.csv', row.names = F)
+
+
+#### RUN FROM HERE
+
+ylabs = c('FDG_SUV_PT' = 'FDG SUVmax',
+          'FEC_SUV_PT' = 'FEC SUVmax',
+          'ADC_PT' = 'PT ADCmean',
+          'FDG_SUV' = 'FDG SUVmax',
+          'FDG_SA' = 'FDG SA (mm)',
+          'FDG_LA' = 'FDG LA (mm)',
+          'FDG_NTR' = 'FDG SUVmax NTR',
+          'FDG_STAR' = 'FDG STAR',
+          'FDG_SNSA' = 'FDG SNSA',
+          'FEC_SUV' = 'FEC SUVmax',
+          'FEC_SA' = 'FEC SA (mm)',
+          'FEC_LA' = 'FEC LA (mm)',
+          'FEC_NTR' = 'FEC SUVmax NTR',
+          'FEC_STAR' = 'FEC STAR',
+          'FEC_SNSA' = 'FEC SNSA',
+          'ADC' = 'ADCmean',
+          'ADC_NTR' = 'ADCmean NTR',
+          'LR' = 'LR')
+
+plt_df_full = read.csv('./figures/tables/full_roc_results_plt_df_full.csv') %>%
+  select(-1) 
+dp_df = read.csv('./figures/tables/optimalCP_byMeasure.csv')
 
 dp_df = dp_df %>%
   arrange(name) %>%
-  mutate(name = factor(name, levels = name))
+  mutate(name = ylabs[name]) %>%
+  mutate(name = factor(name, levels = name)) %>%
+  mutate(measure_type = case_when(grepl('FDG', name) ~ 'FDG-PET/CT',
+                                  grepl('FEC', name) ~ 'FEC-PET/CT',
+                                  grepl('ADC', name) ~ 'DW-MRI',
+                                  name == 'LR' ~ 'LR'))
+
+plt_df_full = plt_df_full %>%
+  mutate(measure_type = case_when(grepl('FDG', name) ~ 'FDG-PET/CT',
+                                  grepl('FEC', name) ~ 'FEC-PET/CT',
+                                  grepl('ADC', name) ~ 'DW-MRI',
+                                  name == 'LR' ~ 'LR')) %>%
+  mutate(name = ylabs[name]) 
+
+g_opt = ggplot(dp_df,
+       aes(x = name,
+           y = '   ')) +
+  geom_text(aes(label = signif(optimal_cutpoint, digits = 3)), angle = 45)  +
+  theme_classic() +
+  xlab('') +
+  ylab('Optimal \nCutpoint') +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  facet_grid(~ measure_type, space = 'free', scales = 'free_x')
 
 g_auc = ggplot(plt_df_full,
        aes(x = name,
@@ -84,7 +134,9 @@ g_auc = ggplot(plt_df_full,
   theme_classic() +
   xlab('') +
   ylab('Area Under Curve (AUC)') +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  theme(axis.text.x = element_blank()) +
+  facet_grid(~ measure_type, space = 'free', scales = 'free_x')
 ggsave('./figures/AUC_byMeasure.png',
        g_auc,
        width = 5,
@@ -103,7 +155,10 @@ g_sens = ggplot(plt_df_full,
   theme_classic() +
   xlab('') +
   ylab('Sensitivity') +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  theme(axis.text.x = element_blank()) +
+  facet_grid(~ measure_type, space = 'free', scales = 'free_x')
+
 ggsave('./figures/Sens_byMeasure.png',
        g_sens,
        width = 5,
@@ -122,7 +177,9 @@ g_spec = ggplot(plt_df_full,
   theme_classic() +
   xlab('Measure') +
   ylab('Specificity') +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  facet_grid(~ measure_type, space = 'free', scales = 'free_x')
+
 g_spec
 ggsave('./figures/Spec_byMeasure.png',
        g_spec,
@@ -133,8 +190,9 @@ ggsave('./figures/Spec_byMeasure.png',
 
 library(ggpubr)
 g = ggarrange(g_auc, 
-              g_sens , 
-              g_spec, nrow = 3)
+              g_sens, 
+              g_spec, nrow = 3, heights = c(0.8, 0.8, 1))
+g
 
 ggsave('./figures/AllPerformance_byMeasure.png',
        g,
@@ -158,21 +216,27 @@ lr = read.csv('./figures/tables/lr_roc_results_SUV.csv')
 roc_plt_df = rbind(roc_plt_df, lr)
 
 roc_plt = roc_plt_df %>%
-  mutate(measure_type = case_when(grepl('FDG', name) ~ 'FDG',
-                                  grepl('FEC', name) ~ 'FEC',
-                                  grepl('ADC', name) ~ 'ADC',
+  mutate(measure_type = case_when(grepl('FDG', name) ~ 'FDG-PET/CT',
+                                  grepl('FEC', name) ~ 'FEC-PET/CT',
+                                  grepl('ADC', name) ~ 'DW-MRI',
                                   name == 'LR' ~ 'LR')) %>%
   mutate(name = gsub('FDG_', '', name),
          name = gsub('FEC_', '', name),
          name = gsub('ADC_', '', name)) %>%
-  mutate(measure_type = factor(measure_type, levels = c('FDG', 'FEC', 'ADC', 'LR'))) %>%
-  mutate(name = factor(name, levels = c('SUV', 'STAR', 'SNSA', 'NTR', 'SA', 'LA', 'ADC', 'LR')))
+  mutate(name = case_when(name == 'SUV' ~'SUVmax', 
+                          name == 'SA' ~ 'SA (mm)',
+                          name == 'LA' ~ 'LA (mm)',
+                          name == 'ADC' ~ 'ADCmean',
+                          .default = name)) %>%
+  mutate(measure_type = factor(measure_type, levels = c('FDG-PET/CT', 'FEC-PET/CT', 'DW-MRI', 'LR'))) %>%
+  mutate(name = factor(name, levels = c('SUVmax', 'STAR', 'SNSA', 'NTR', 'SA (mm)', 'LA (mm)', 'ADCmean', 'LR')))
 
 g_roc = ggplot(roc_plt,
        aes(x = fpr,
            y = 1 - fnr,
            color = name)) +
-  geom_line(alpha = 0.8) +
+  geom_line(alpha = 0.7,
+            linewidth = 1) +
   geom_line(inherit.aes = F,
             data = data.frame(x = seq(0,1), y = seq(0,1)),
             aes(x=x,
@@ -183,10 +247,13 @@ g_roc = ggplot(roc_plt,
   theme_classic() +
   xlab('1 - Specificity') +
   ylab('Sensitivity') +
-  scale_color_discrete(name = 'Quantitative \nMeasure') +
+  scale_color_brewer(name = 'Quantitative \nMeasure',
+                     palette = 'Dark2',
+                     direction = -1) +
   scale_linetype_manual(name = 'Measure Type',
                         values = c('solid', 'twodash', 'dotdash', 'dashed')) +
   facet_wrap(~ measure_type)
+g_roc
 
 ggsave('./figures/ROC_byMeasure.png',
        g_roc,

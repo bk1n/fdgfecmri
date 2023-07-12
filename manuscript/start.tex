@@ -44,7 +44,7 @@ Accurate pre-operative staging of lymph nodes would therefore have a significant
 
 Multi parametric magnetic resonance imaging (MRI) is currently considered the optimal imaging technique for local tumour staging of endometrial cancer through assessment of myometrial and cervical invasion but the major limitation of all imaging techniques is poor detection of metastatic lymph nodes 
 \cite{moriceEndometrialCancer2016}. 
-Morphological signs of nodal involvement, including size criteria, on CT and MRI vary and are unreliable markers of malignancy
+Morphological signs of nodal involvement, including size criteria, on CT and MRI vary and have been found to be unreliable markers of malignancy
 \cite{salaRoleDynamicContrastenhanced2010}. 
 Tumour may have spread to non-enlarged nodes (micrometastases) and nodes can enlarge due to benign conditions. Functional imaging techniques that can detect changes in the microenvironment and metabolic properties of tissues pose an alternative strategy for diagnosis of lymph node status. \\
 
@@ -55,9 +55,8 @@ Low sensitivity of FDG-PET/CT is considered to be the main limitation of the ima
 
 Maximum standardised uptake value (SUVmax) is a semi-quantitative measure derived from FDG-PET/CT scans that represents relative glucose uptake in tissues. SUVmax of the primary tumour has been shown to be higher in patients with higher grade endometrial cancer, myometrial invasion, cervical invasion, and lymph node metastasis  
 \cite{antonsenSUVmax18FDGPET2013,husbyMetabolicTumorVolume2015}. 
-Most studies to date have used visual assessment of the level of uptake in nodes compared to background 
+Reports on the utility of SUVmax in the detection of nodal involvement are limited and most studies to date have used visual assessment of the level of uptake in nodes compared to background.
 %here, I think that giving a brief overview of visual assessment performance would be better
-and reports on the utility of SUVmax in the detection of nodal involvement are limited. 
 %then, move the section below to discussion
 Kim et al.\ retrospectively assessed SUVmax in histologically confirmed benign and malignant lymph nodes and reported moderate sensitivity (69\%) and high specificity (92\%) when using an SUVmax cut-off of 2.8 
 \cite{kimComparisonFDGPET2016}. \\
@@ -148,7 +147,7 @@ This study forms part of the secondary analysis of the prospective UK MAPPING st
     The mean SUVmax from FDG-PET/CT, SUVmax from FEC-PET/CT, and ADCmean of the primary tumour from both readers was calculated and included in the final analysis. 
     Reads in regions that had corresponding nodal histology were included in the analysis.
 
-    Where data for both were recorded, nodal-to-tumour ratio (NTR) was calculated by dividing nodal by tumour SUVmax or ADCmean for all measurement methods. SUVmax:ADCmean ratio (STAR) was calculated by dividing nodal SUVmax by nodal ADCmean for FDG-PET/CT and FEC-PET/CT. Finally, for FDG-PET/CT and FEC-PET/CT, SUVmax:SA diameter (STSA) ratio was calculated with SA diameter from the corresponding measurement method.
+    Where data for both were recorded, nodal-to-tumour ratio (NTR) was calculated by dividing nodal by tumour SUVmax or ADCmean for all measurement methods. SUVmax:ADCmean ratio (STAR) was calculated by dividing nodal SUVmax by nodal ADCmean for FDG-PET/CT and FEC-PET/CT. Finally, for FDG-PET/CT and FEC-PET/CT, SUVmax normalised to SA diameter (SNSA) was calculated with SA diameter from the corresponding measurement method.
 
     A total of 270 nodes had histology and were included in the final dataset, of which 178 and 82 were from endometrial cancer and cervical cancer patients, respectively. 
     115 left pelvic, 119 right pelvic, and 36 para-aortic nodes were included in the final dataset.
@@ -159,7 +158,7 @@ This study forms part of the secondary analysis of the prospective UK MAPPING st
     Patients were stratified into two cohorts by their diagnosis of endometrial or cervical cancer. Nodes from all regions were grouped together for analysis.
     Nodal-to-tumour ratios (NTR) were calculated by dividing the nodal quantitative measure (SUVmax or ADCmean) by the quantitative measure from the primary tumour. 
     SUVmax-to-ADCmean ratio (STAR) was calculated by dividing the SUVmax by the ADCmean of the corresponding node. 
-    SUVmax-to-SA diameter ratio (STSA) was calculated by dividing the SUVmax by the SA diameter of each node for FDG-PET/CT and FEC-PET/CT.
+    SUVmax normalised to SA diameter (SNSA) was calculated by dividing the SUVmax by the SA diameter of each node for FDG-PET/CT and FEC-PET/CT.
     %Additionally, readings from left pelvis and right pelvis were combined into a 'pelvic' group and readings from left pelvis, right pelvis, and para-aortic regions were combined into an ‘all’ group for analysis.
     The Mann-Whitney U-test was selected to compare quantitative measures in histologically confirmed benign versus malignant lymph nodes.
     One-way ANOVA with Tukey's post-hoc test was used to determine significance when comparing left pelvic, right pelvic, and para-aortic regions.
@@ -169,7 +168,7 @@ This study forms part of the secondary analysis of the prospective UK MAPPING st
 
     To determine if a regression model could assist in diagnosing benign from malignant lymph nodes, univariate and multivariate logistic regression models were built. 
     Due to the low number of measurements for cervical cancer and FEC-PET/CT, only FDG-PET/CT and DW-MRI data from endometrial cancer was considered when building models.
-    Additionally, due to strong correlation between features, calculated variables (NTR, STAR, STSA) were excluded as features. 
+    Additionally, due to strong correlation between features, calculated variables (NTR, STAR, SNSA) were excluded as features. 
 
     A multivariate logistic regression model with L1 regularisation penalty (LASSO) was employed. %Logistic LASSO regression shrinks non-predictive coefficients to zero and often produces more powerful models, especially on smaller datasets. 
     Rows with any NAs were omitted prior to analysis, leaving a total of 57 nodes for analysis.
@@ -188,7 +187,7 @@ This study forms part of the secondary analysis of the prospective UK MAPPING st
     Optimal cut-offs for all quantitative measures were determined using the 'cutpointr' package in R. Direction was set to greater than or equal to for all measures except ADCmean and ADCmean NTR where direction was set to less than or equal to. Cutpoints were selected through maximisation of the F1 score. Stratified bootstrapping was repeated 2000 times. Out of bag estimates of area under the curve (AUC), sensitivity, and specificity were calculated. %check this makes sense 
     % with direction >= for FDG + FEC, and <= ADC
 
-    Receiver operating characteristic (ROC) analysis was applied, using the 'pROC' package in R, to each quantitative measure to generate ROC curves. 
+    Receiver operating characteristic (ROC) analysis was applied, using the 'pROC' package in R, for each quantitative measure to generate ROC curves. 
 
     % Interobserver agreement!!
     Interobserver agreement for each FDG-PET/CT, FEC-PET/CT, and DW-MRI was evaluated by calculating intraclass correlation coefficients (ICC) for endometrial and cervical cancer cohorts separately using the R package ‘irr’. A two-way model was used and agreement between readers was evaluated. Confidence level of the interval was set at 95\%.
@@ -237,7 +236,7 @@ This study forms part of the secondary analysis of the prospective UK MAPPING st
             (A) Quantitive and calculated measures on FDG-PET/CT were significantly higher in malignant (M) than benign (B) lymph nodes in endometrial cancer. 
             (B) SUVmax, short-axis diameter (SA), and SUVmax-to-ADCmean ratio (STAR) on FEC-PET/CT were significantly higher in malignant than benign lymph nodes in endometrial cancer. 
             (C) No significant difference was observed between quantitive measures from DW-MRI in endometrial cancer.
-            Nodes of all regions are pooled together for this analysis. Significance was tested between groups using Mann-Whitney U-test. ***, p $<$ 0.001, **, p $<$ 0.01, *, p $<$ 0.05.  B, benign; M, malignant; SA, short-axis diameter, LA, long-axis diameter; NTR, nodal-to-tumour ratio (SUVmax for FDG-PET/CT and FEC-PET/CT, and ADCmean for DW-MRI); STAR, SUVmax-to-ADCmean ratio; STSA, SUVmax-to-SA diameter ratio.
+            Nodes of all regions are pooled together for this analysis. Significance was tested between groups using Mann-Whitney U-test. ***, p $<$ 0.001, **, p $<$ 0.01, *, p $<$ 0.05.  B, benign; M, malignant; SA, short-axis diameter, LA, long-axis diameter; NTR, nodal-to-tumour ratio (SUVmax for FDG-PET/CT and FEC-PET/CT, and ADCmean for DW-MRI); STAR, SUVmax-to-ADCmean ratio; SNSA, SUVmax normalised to SA diameter.
              }
         \label{fig:quant_inEndo}
     \end{figure}
@@ -249,7 +248,7 @@ This study forms part of the secondary analysis of the prospective UK MAPPING st
             (A) No significant difference in quantitative measures was found between malignant (M) and benign (B) lymph nodes on FDG-PET/CT in cervical cancer. 
             (B) No significant difference in quantitative measures was found between malignant and benign lymph nodes on FEC-PET/CT in cervical cancer. 
             (C) ADCmean and nodal-to-tumour ratio (NTR) from DW-MRI were significantly decreased in malignant compared to benign nodes.
-            Nodes of all regions are pooled together for this analysis. Significance was tested between groups using Mann-Whitney U-test. *, p $<$ 0.05.  B, benign; M, malignant; SA, short-axis diameter, LA, long-axis diameter; NTR, nodal-to-tumour ratio (SUVmax for FDG-PET/CT and FEC-PET/CT, and ADCmean for DW-MRI); STAR, SUVmax-to-ADCmean ratio; STSA, SUVmax-to-SA diameter ratio.
+            Nodes of all regions are pooled together for this analysis. Significance was tested between groups using Mann-Whitney U-test. *, p $<$ 0.05.  B, benign; M, malignant; SA, short-axis diameter, LA, long-axis diameter; NTR, nodal-to-tumour ratio (SUVmax for FDG-PET/CT and FEC-PET/CT, and ADCmean for DW-MRI); STAR, SUVmax-to-ADCmean ratio; SNSA, SUVmax normalised to SA diameter.
              }
         \label{fig:quant_inCer}
     \end{figure}
