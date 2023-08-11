@@ -3,8 +3,8 @@ p_load(tidyverse, infer, ggpubr, ggsignif, pROC, cutpointr)
 
 data = readRDS('./data/quant_allPooled.rds')
 
-quant_row_1 = c('FDG_SUV', 'FDG_SA', 'FDG_LA', 'FDG_NTR', 'FDG_STAR', 'FDG_SNSA', 'ADC')
-quant_row_2 = c('FEC_SUV', 'FEC_SA', 'FEC_LA', 'FEC_NTR', 'FEC_STAR', 'FEC_SNSA', 'ADC_NTR')
+quant_row_1 = c('FDG_SUV', 'FDG_NTR', 'FDG_STAR', 'ADC')
+quant_row_2 = c('FEC_SUV', 'FEC_NTR', 'FEC_STAR', 'ADC_NTR')
 
 opt_cut = read_csv('./figures/tables/optimalCP_byMeasure.csv')
 
@@ -64,16 +64,34 @@ plot_myCustomGG = function(feature, show_opt_cut = F){
     p = paste('p = ', p)
   }
   
+  signif_ypos = max(plt_data[feature], na.rm = T) + (max(plt_data[feature], na.rm = T) * .02)
+  
+  n_obs = plt_data %>%
+    select(any_of(feature), HIST) %>%
+    filter(!is.na(unname(unlist(as.vector(.[feature]))))) %>%
+    group_by(HIST) %>%
+    count() %>%
+    mutate(n = paste0('n=',n))
+  
+  n_ypos = data.frame(ypos = c(signif_ypos * 1.2, signif_ypos * 1.2))
+  
+  n_obs = cbind(n_obs, n_ypos)
+  
   g = ggplot(plt_data,
          aes(x = HIST,
              y = !!rlang::sym(feature))) +
     geom_boxplot(outlier.shape = NA) +
     geom_point(position = position_jitter(width = 0.1), alpha = .7) +
     geom_signif(comparisons = list(c('0','1')),
-                annotations = c(p)) +
+                annotations = c(p),
+                y_position = c(signif_ypos)) +
     ylab(ylabs[feature]) +
     xlab('') +
     scale_x_discrete(label = c('B', 'M')) +
+    geom_text(data = n_obs,
+              aes(x = HIST,
+                  y = ypos,
+                  label = n)) +
     theme_classic()
   
   if(show_opt_cut){
@@ -122,8 +140,8 @@ g = ggarrange(plotlist = c(gg_endo_r1, gg_endo_r2),
               labels = c('A', rep('', length(gg_endo_r1) - 2), 'C', 'B')) 
 ggsave('./figures/fdg_fec_inEndo.png',
        g,
-       width = 13,
-       height =8,
+       width = 10,
+       height =6,
        units = 'in',
        dpi = 300,
        bg = 'white')
@@ -135,8 +153,8 @@ g = ggarrange(plotlist = c(gg_cer_r1, gg_cer_r2),
               labels = c('A', rep('', length(gg_cer_r1) - 2), 'C', 'B'))
 ggsave('./figures/fdg_fec_inCer.png',
        g,
-       width = 13,
-       height = 8,
+       width = 10,
+       height = 6,
        units = 'in',
        dpi = 300,
        bg = 'white')

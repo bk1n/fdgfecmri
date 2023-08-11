@@ -17,7 +17,7 @@
 \externaldocument{supplementary}
 
 
-\graphicspath{{../figures/}}
+% \graphicspath{{../figures/}}
 
 \usepackage{placeins}
 
@@ -203,7 +203,7 @@ This study forms part of the secondary analysis of the prospective UK MAPPING st
     \subsection{Quantitative measures in benign and malignant lymph nodes}
     \begin{figure}[h]
         \centering
-        \includegraphics[width=\textwidth]{FDG_FEC_ADC_byRegion_byCancer_combined}
+        \includegraphics[width=\textwidth]{../figures/FDG_FEC_ADC_byRegion_byCancer_combined}
         \caption{
             (A) Quantitative measures of measured lymph nodes of each region. One-way ANOVA with Tukey's post-hoc test was used to determine significance between regions. (B) Quantitative measures of measures lymph nodes in endometrial cancer and cervical cancer patients. Mann-Whitney U-test was used to determine significance between endometrial and cervical cancer. FDG-PET/CT (left), FEC-PET/CT (middle), and DW-MRI (right).}
         \label{fig:quant_byRegion_byCancer}
@@ -223,7 +223,7 @@ This study forms part of the secondary analysis of the prospective UK MAPPING st
 
     \begin{figure}[h]
         \centering
-        \includegraphics[width=\textwidth]{fdg_fec_inEndo}
+        \includegraphics[width=\textwidth]{../figures/fdg_fec_inEndo}
         \caption{
             Raw and calculated quantitative measures from benign (B) and malignant (M) lymph nodes in endometrial cancer. 
             Nodes of all regions are pooled together for this analysis.
@@ -236,7 +236,7 @@ This study forms part of the secondary analysis of the prospective UK MAPPING st
 
     \begin{figure}[h]
         \centering
-        \includegraphics[width=\textwidth]{fdg_fec_inCer}
+        \includegraphics[width=\textwidth]{../figures/fdg_fec_inCer}
         \caption{
             Raw and calculated quantitative measures from benign (B) and malignant (M) lymph nodes in cervical cancer.  
             Nodes of all regions are pooled together for this analysis. 
@@ -253,7 +253,7 @@ This study forms part of the secondary analysis of the prospective UK MAPPING st
 
     \begin{figure}[h]
         \centering
-        \includegraphics[width=0.75\textwidth]{pairwise_corr_raw}
+        \includegraphics[width=0.75\textwidth]{../figures/pairwise_corr_raw}
         \caption{Pairwise Pearson correlation coefficients between raw quantitative measures from FDG-PET/CT, FEC-PET/CT, and DW-MRI in endometrial cancer. ***, p $<$ 0.001, **, p $<$ 0.01, *, p $<$ 0.05.}
         \label{fig:pairwise_correlations}
     \end{figure}
@@ -269,14 +269,14 @@ This study forms part of the secondary analysis of the prospective UK MAPPING st
 
     \begin{figure}[h]
         \centering
-        \includegraphics[width=0.75\textwidth]{AllPerformance_byMeasure}
+        \includegraphics[width=0.75\textwidth]{../figures/AllPerformance_byMeasure}
         \caption{Performance of all raw and calculated quantitative measures from FDG-PET/CT, FEC-PET/CT, and DW-MRI as well as performance of the univariate logistic regression (LR) model trained on SUVmax from FDG-PET/CT in endometrial cancer. Red crosses on box and whisker plots represent mean performance from bootstrapped data.}
         \label{fig:all_performance}
     \end{figure}
 
     \begin{figure}[h]
         \centering
-        \includegraphics[width=0.75\textwidth]{ROC_byMeasure}
+        \includegraphics[width=0.75\textwidth]{../figures/ROC_byMeasure}
         \caption{ROC curves for quantitative measures from FDG-PET/CT (top left), FEC-PET/CT (top right), DW-MRI (bottom left), and the LR model (bottom right) in endometrial cancer. Line colour represents a quantitative measure for that imaging modality.}
         \label{fig:roc_curves}
     \end{figure}
@@ -291,7 +291,7 @@ This study forms part of the secondary analysis of the prospective UK MAPPING st
 
     \begin{figure}[h]
         \centering
-        \includegraphics[width=0.5\textwidth]{lr.model_plt_endo_SUV}
+        \includegraphics[width=0.5\textwidth]{../figures/lr.model_plt_endo_SUV.png}
         \caption{Predicted probability (blue line) of malignancy of lymph nodes from a logistic regression model trained on nodal SUVmax from FDG-PET/CT in endometrial cancer. The red dashedl line represents the optimal SUV cut-off. Points represent the SUVmax of benign (bottom) and malignant (top) lymph nodes the logistic regression model was trained on.}
         \label{fig:lr_model_probability}
     \end{figure}

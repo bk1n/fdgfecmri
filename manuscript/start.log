@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (MiKTeX 23.4) (preloaded format=pdflatex 2023.7.7)  12 JUL 2023 21:11
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (MiKTeX 23.4) (preloaded format=pdflatex 2023.7.7)  17 JUL 2023 14:37
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -791,10 +791,10 @@ Overfull \vbox (1.44444pt too high) has occurred while \output is active []
 
 Package hyperref Warning: Suppressing link with empty target on input line 201.
 
-<../figures//FDG_FEC_ADC_byRegion_byCancer_combined.png, id=157, 722.7pt x 361.35pt>
-File: ../figures//FDG_FEC_ADC_byRegion_byCancer_combined.png Graphic file (type png)
-<use ../figures//FDG_FEC_ADC_byRegion_byCancer_combined.png>
-Package pdftex.def Info: ../figures//FDG_FEC_ADC_byRegion_byCancer_combined.png  used on input line 206.
+<../figures/FDG_FEC_ADC_byRegion_byCancer_combined.png, id=157, 722.7pt x 361.35pt>
+File: ../figures/FDG_FEC_ADC_byRegion_byCancer_combined.png Graphic file (type png)
+<use ../figures/FDG_FEC_ADC_byRegion_byCancer_combined.png>
+Package pdftex.def Info: ../figures/FDG_FEC_ADC_byRegion_byCancer_combined.png  used on input line 206.
 (pdftex.def)             Requested size: 338.58778pt x 169.29417pt.
 
 LaTeX Warning: `h' float specifier changed to `ht'.
@@ -806,27 +806,27 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 Overfull \vbox (1.44444pt too high) has occurred while \output is active []
 
  [7]
-<../figures//fdg_fec_inEndo.png, id=173, 939.51pt x 578.16pt>
-File: ../figures//fdg_fec_inEndo.png Graphic file (type png)
-<use ../figures//fdg_fec_inEndo.png>
-Package pdftex.def Info: ../figures//fdg_fec_inEndo.png  used on input line 226.
+<../figures/fdg_fec_inEndo.png, id=173, 939.51pt x 578.16pt>
+File: ../figures/fdg_fec_inEndo.png Graphic file (type png)
+<use ../figures/fdg_fec_inEndo.png>
+Package pdftex.def Info: ../figures/fdg_fec_inEndo.png  used on input line 226.
 (pdftex.def)             Requested size: 338.58778pt x 208.35799pt.
 
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-<../figures//fdg_fec_inCer.png, id=174, 939.51pt x 578.16pt>
-File: ../figures//fdg_fec_inCer.png Graphic file (type png)
-<use ../figures//fdg_fec_inCer.png>
-Package pdftex.def Info: ../figures//fdg_fec_inCer.png  used on input line 239.
+<../figures/fdg_fec_inCer.png, id=174, 939.51pt x 578.16pt>
+File: ../figures/fdg_fec_inCer.png Graphic file (type png)
+<use ../figures/fdg_fec_inCer.png>
+Package pdftex.def Info: ../figures/fdg_fec_inCer.png  used on input line 239.
 (pdftex.def)             Requested size: 338.58778pt x 208.35799pt.
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-<../figures//pairwise_corr_raw.png, id=176, 433.62pt x 397.485pt>
-File: ../figures//pairwise_corr_raw.png Graphic file (type png)
-<use ../figures//pairwise_corr_raw.png>
-Package pdftex.def Info: ../figures//pairwise_corr_raw.png  used on input line 256.
+<../figures/pairwise_corr_raw.png, id=176, 433.62pt x 397.485pt>
+File: ../figures/pairwise_corr_raw.png Graphic file (type png)
+<use ../figures/pairwise_corr_raw.png>
+Package pdftex.def Info: ../figures/pairwise_corr_raw.png  used on input line 256.
 (pdftex.def)             Requested size: 253.94083pt x 232.77948pt.
 
 LaTeX Warning: `h' float specifier changed to `ht'.
@@ -840,40 +840,40 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 
 Overfull \vbox (1.44444pt too high) has occurred while \output is active []
 
- [8 <../figures//FDG_FEC_ADC_byRegion_byCancer_combined.png>]
+ [8 <../figures/FDG_FEC_ADC_byRegion_byCancer_combined.png>]
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
 
 Overfull \vbox (1.44444pt too high) has occurred while \output is active []
 
- [9 <../figures//fdg_fec_inEndo.png>]
+ [9 <../figures/fdg_fec_inEndo.png>]
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
 
 Overfull \vbox (1.44444pt too high) has occurred while \output is active []
 
- [10 <../figures//fdg_fec_inCer.png> <../figures//pairwise_corr_raw.png (PNG copy)>]
-<../figures//AllPerformance_byMeasure.png, id=200, 361.35pt x 650.43pt>
-File: ../figures//AllPerformance_byMeasure.png Graphic file (type png)
-<use ../figures//AllPerformance_byMeasure.png>
-Package pdftex.def Info: ../figures//AllPerformance_byMeasure.png  used on input line 272.
+ [10 <../figures/fdg_fec_inCer.png> <../figures/pairwise_corr_raw.png (PNG copy)>]
+<../figures/AllPerformance_byMeasure.png, id=200, 361.35pt x 650.43pt>
+File: ../figures/AllPerformance_byMeasure.png Graphic file (type png)
+<use ../figures/AllPerformance_byMeasure.png>
+Package pdftex.def Info: ../figures/AllPerformance_byMeasure.png  used on input line 272.
 (pdftex.def)             Requested size: 253.94083pt x 457.09427pt.
 
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-<../figures//ROC_byMeasure.png, id=201, 361.35pt x 361.35pt>
-File: ../figures//ROC_byMeasure.png Graphic file (type png)
-<use ../figures//ROC_byMeasure.png>
-Package pdftex.def Info: ../figures//ROC_byMeasure.png  used on input line 279.
+<../figures/ROC_byMeasure.png, id=201, 361.35pt x 361.35pt>
+File: ../figures/ROC_byMeasure.png Graphic file (type png)
+<use ../figures/ROC_byMeasure.png>
+Package pdftex.def Info: ../figures/ROC_byMeasure.png  used on input line 279.
 (pdftex.def)             Requested size: 253.94083pt x 253.94127pt.
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-<../figures//lr.model_plt_endo_SUV.png, id=205, 1505.625pt x 1505.625pt>
-File: ../figures//lr.model_plt_endo_SUV.png Graphic file (type png)
-<use ../figures//lr.model_plt_endo_SUV.png>
-Package pdftex.def Info: ../figures//lr.model_plt_endo_SUV.png  used on input line 294.
+<../figures/lr.model_plt_endo_SUV.png, id=205, 1505.625pt x 1505.625pt>
+File: ../figures/lr.model_plt_endo_SUV.png Graphic file (type png)
+<use ../figures/lr.model_plt_endo_SUV.png>
+Package pdftex.def Info: ../figures/lr.model_plt_endo_SUV.png  used on input line 294.
 (pdftex.def)             Requested size: 169.29388pt x 169.29509pt.
 
 LaTeX Warning: `h' float specifier changed to `ht'.
@@ -892,13 +892,13 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 
 Overfull \vbox (1.44444pt too high) has occurred while \output is active []
 
- [12 <../figures//AllPerformance_byMeasure.png>]
+ [12 <../figures/AllPerformance_byMeasure.png>]
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
 
 Overfull \vbox (1.44444pt too high) has occurred while \output is active []
 
- [13 <../figures//ROC_byMeasure.png> <../figures//lr.model_plt_endo_SUV.png>]
+ [13 <../figures/ROC_byMeasure.png> <../figures/lr.model_plt_endo_SUV.png>]
 Underfull \hbox (badness 1019) in paragraph at lines 301--302
 \OT1/cmr/m/n/10 modal-ity. FDG-PET/CT and FEC-PET/CT had excel-lent inter-ob-server
  []
@@ -932,10 +932,10 @@ Package rerunfilecheck Info: File `start.out' has not changed.
 (rerunfilecheck)             Checksum: FDBA7DFFFA0C4F1A2D912EA5C22F306E;3018.
  ) 
 Here is how much of TeX's memory you used:
- 14869 strings out of 476331
- 234508 string characters out of 5787766
+ 14862 strings out of 476331
+ 234469 string characters out of 5787766
  1863660 words of memory out of 5000000
- 34964 multiletter control sequences out of 15000+600000
+ 34953 multiletter control sequences out of 15000+600000
  535714 words of font info for 126 fonts, out of 8000000 for 9000
  1151 hyphenation exceptions out of 8191
  90i,11n,90p,872b,641s stack positions out of 10000i,1000n,20000p,200000b,200000s

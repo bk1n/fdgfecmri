@@ -1,20 +1,20 @@
 # Fdb version 4
-["bibtex start"] 1689192671 "start.aux" "start.bbl" "start" 1689192678 0
+["bibtex start"] 1689192671 "start.aux" "start.bbl" "start" 1689601085 0
   "./MAPPING.bib" 1689182501 66462 ba2bb09e9853e682ecc83d4e1ea26c41 ""
   "./sn-standardNature.bst" 1677903188 40039 5e3cf0e4d0a1950c09c302acd188d5f2 ""
-  "start.aux" 1689192677 11106 0688f6327573ee27f5ec509b204e5755 "pdflatex"
+  "start.aux" 1689601084 11106 0688f6327573ee27f5ec509b204e5755 "pdflatex"
   (generated)
   "start.bbl"
   "start.blg"
   (rewritten before read)
-["pdflatex"] 1689192671 "d:/Ben King/Documents/GitProjects/fdgpet-dwmri/manuscript/start.tex" "start.pdf" "start" 1689192678 0
-  "../figures//AllPerformance_byMeasure.png" 1689192101 238431 e2f8a351ecae130f5ab004e124635c9b ""
-  "../figures//FDG_FEC_ADC_byRegion_byCancer_combined.png" 1689178882 509207 8a2aae3b5a1493cd78f3c01e9c926df9 ""
-  "../figures//ROC_byMeasure.png" 1689192370 164838 5b12cee8aedadc1844d027656bce02f7 ""
-  "../figures//fdg_fec_inCer.png" 1689172073 444430 38a35104171751d2cbcd2552807119ca ""
-  "../figures//fdg_fec_inEndo.png" 1689176057 691931 4ef1b3d772ddb77210b85b1dc96383b8 ""
-  "../figures//lr.model_plt_endo_SUV.png" 1677903187 173187 53a38ace0404cdd2bc5772c126b75962 ""
-  "../figures//pairwise_corr_raw.png" 1689172857 75596 eb225daf5f38886b1694aa6e2121192e ""
+["pdflatex"] 1689601076 "d:/Ben King/Documents/GitProjects/fdgpet-dwmri/manuscript/start.tex" "start.pdf" "start" 1689601085 0
+  "../figures/AllPerformance_byMeasure.png" 1689192101 238431 e2f8a351ecae130f5ab004e124635c9b ""
+  "../figures/FDG_FEC_ADC_byRegion_byCancer_combined.png" 1689178882 509207 8a2aae3b5a1493cd78f3c01e9c926df9 ""
+  "../figures/ROC_byMeasure.png" 1689192370 164838 5b12cee8aedadc1844d027656bce02f7 ""
+  "../figures/fdg_fec_inCer.png" 1689172073 444430 38a35104171751d2cbcd2552807119ca ""
+  "../figures/fdg_fec_inEndo.png" 1689176057 691931 4ef1b3d772ddb77210b85b1dc96383b8 ""
+  "../figures/lr.model_plt_endo_SUV.png" 1677903187 173187 53a38ace0404cdd2bc5772c126b75962 ""
+  "../figures/pairwise_corr_raw.png" 1689172857 75596 eb225daf5f38886b1694aa6e2121192e ""
   "C:/Users/bgkin/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map" 1689176444 80909 eab91d9745dd2edfd62a31d53cd5fe15 ""
   "C:/Users/bgkin/AppData/Local/MiKTeX/fonts/tfm/public/rsfs/rsfs10.tfm" 1688742066 688 37338d6ab346c2f1466b29e195316aa4 ""
   "C:/Users/bgkin/AppData/Local/MiKTeX/fonts/tfm/public/rsfs/rsfs5.tfm" 1688742182 684 3a51bd4fd9600428d5264cf25f04bb9a ""
@@ -156,12 +156,12 @@
   "C:/Users/bgkin/AppData/Local/Programs/MiKTeX/tex/latex/wrapfig/wrapfig.sty" 1044406800 26220 3701aebf80ccdef248c0c20dd062fea9 ""
   "C:/Users/bgkin/AppData/Local/Programs/MiKTeX/tex/latex/xcolor/xcolor.sty" 1656236890 56148 51a9a8571c07b9921892ae11063ae853 ""
   "C:/Users/bgkin/AppData/Local/Programs/MiKTeX/tex/latex/xkeyval/xkeyval.sty" 1656236919 4937 4ce600ce9bd4ec84d0250eb6892fcf4f ""
-  "d:/Ben King/Documents/GitProjects/fdgpet-dwmri/manuscript/start.tex" 1689192661 32021 5c8ce896dccacc3a0364f4deac1ff86b ""
+  "d:/Ben King/Documents/GitProjects/fdgpet-dwmri/manuscript/start.tex" 1689600852 32104 75ed079514bc17c69912965237880052 ""
   "sn-jnl.cls" 1677903187 55655 e8cdd00203a1d4e5c9ac1176f605dde5 ""
-  "start.aux" 1689192677 11106 0688f6327573ee27f5ec509b204e5755 "pdflatex"
+  "start.aux" 1689601084 11106 0688f6327573ee27f5ec509b204e5755 "pdflatex"
   "start.bbl" 1689192671 11982 a4bef5a61b26b5df3dd96f2b4cf94f6e "bibtex start"
-  "start.out" 1689192677 3018 fdba7dfffa0c4f1a2d912ea5c22f306e "pdflatex"
-  "start.tex" 1689192661 32021 5c8ce896dccacc3a0364f4deac1ff86b ""
+  "start.out" 1689601084 3018 fdba7dfffa0c4f1a2d912ea5c22f306e "pdflatex"
+  "start.tex" 1689600852 32104 75ed079514bc17c69912965237880052 ""
   "supplementary.aux" 1689180118 813 b753d050264912262aba8da83c0dcc0c ""
   "supplementary.tex" 1689179644 1244 c8b8a56e64dc206409b38d33d9a8f940 ""
   (generated)
