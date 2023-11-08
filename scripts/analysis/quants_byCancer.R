@@ -2,6 +2,16 @@ library(pacman)
 p_load(tidyverse, infer, ggpubr, ggsignif, pROC, cutpointr)
 
 data = readRDS('./data/quant_allPooled.rds')
+clin = read_csv('./data/processed_clin_data.csv')
+
+data = data %>%
+  inner_join(clin, by = 'PATIENT_ID')
+
+cor.test(formula = ~ FDG_SUV + BMI, data = data %>% filter(CANC == 'endo', HIST == 1))
+ggplot(data %>% filter(CANC == 'endo', HIST == 1),
+       aes(x = BMI,
+           y = FDG_SUV)) +
+  geom_point()
 
 quant_row_1 = c('FDG_SUV', 'FDG_NTR', 'FDG_STAR', 'ADC')
 quant_row_2 = c('FEC_SUV', 'FEC_NTR', 'FEC_STAR', 'ADC_NTR')
@@ -81,7 +91,7 @@ plot_myCustomGG = function(feature, show_opt_cut = F){
          aes(x = HIST,
              y = !!rlang::sym(feature))) +
     geom_boxplot(outlier.shape = NA) +
-    geom_point(position = position_jitter(width = 0.1), alpha = .7) +
+    geom_point(aes(color = BMI), position = position_jitter(width = 0.1), alpha = .7) +
     geom_signif(comparisons = list(c('0','1')),
                 annotations = c(p),
                 y_position = c(signif_ypos)) +

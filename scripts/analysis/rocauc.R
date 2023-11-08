@@ -105,21 +105,29 @@ dp_df = read.csv('./figures/tables/optimalCP_byMeasure.csv')
 
 dp_df = dp_df %>%
   arrange(name) %>%
-  filter(!(name %in% c('FDG_SA', 'FDG_LA', 'FDG_SNSA', 'FEC_SA', 'FEC_LA', 'FEC_SNSA', 'LR_SA'))) %>%
+  filter(!(name %in% c('FDG_SA', 'FDG_LA', 'FDG_SNSA', 'FEC_SA', 'FEC_LA', 'FEC_SNSA', 'LR_SA', 'LR_SUV'))) %>%
   mutate(name = ylabs[name]) %>%
   mutate(name = factor(name, levels = name)) %>%
   mutate(measure_type = case_when(grepl('FDG', name) ~ 'FDG-PET/CT',
                                   grepl('FEC', name) ~ 'FEC-PET/CT',
                                   grepl('ADC', name) ~ 'DW-MRI',
-                                  grepl('LR', name) ~ 'LR')) 
+                                  grepl('LR', name) ~ 'LR')) %>%
+  mutate(measure_type = factor(measure_type, levels = c('FDG-PET/CT', 'FEC-PET/CT', 'DW-MRI')),
+         name = factor(name, levels = c('FDG SUVmax', 'FDG STAR', 'FDG SUVmax NTR',
+                                        'FEC SUVmax', 'FEC STAR', 'FEC SUVmax NTR',
+                                        'ADCmean', 'ADCmean NTR')))
 
 plt_df_full = plt_df_full %>%
   mutate(measure_type = case_when(grepl('FDG', name) ~ 'FDG-PET/CT',
                                   grepl('FEC', name) ~ 'FEC-PET/CT',
                                   grepl('ADC', name) ~ 'DW-MRI',
                                   grepl('LR', name) ~ 'LR')) %>%
-  filter(!(name %in% c('FDG_SA', 'FDG_LA', 'FDG_SNSA', 'FEC_SA', 'FEC_LA', 'FEC_SNSA', 'LR_SA'))) %>%
-  mutate(name = ylabs[name])
+  filter(!(name %in% c('FDG_SA', 'FDG_LA', 'FDG_SNSA', 'FEC_SA', 'FEC_LA', 'FEC_SNSA', 'LR_SA', 'LR_SUV'))) %>%
+  mutate(name = ylabs[name]) %>%
+  mutate(measure_type = factor(measure_type, levels = c('FDG-PET/CT', 'FEC-PET/CT', 'DW-MRI')),
+         name = factor(name, levels = c('FDG SUVmax', 'FDG STAR', 'FDG SUVmax NTR',
+                                        'FEC SUVmax', 'FEC STAR', 'FEC SUVmax NTR',
+                                        'ADCmean', 'ADCmean NTR')))
 
 g_opt = ggplot(dp_df,
        aes(x = name,
@@ -220,9 +228,9 @@ get_proc = function(measure){
 }
 
 roc_plt_df = do.call(rbind, lapply(cols_endo, get_proc))
-lr_suv = read.csv('./figures/tables/lr_roc_results_SUV.csv') %>% mutate(name = 'LR (SUV)')
+# lr_suv = read.csv('./figures/tables/lr_roc_results_SUV.csv') %>% mutate(name = 'LR (SUV)')
 # lr_sa = read.csv('./figures/tables/lr_roc_results_SA.csv') %>% mutate(name = 'LR (SA)')
-roc_plt_df = rbind(roc_plt_df, lr_suv)
+# roc_plt_df = rbind(roc_plt_df, lr_suv)
 
 roc_plt = roc_plt_df %>%
   filter(!(name %in% c('FDG_SA', 'FDG_LA', 'FDG_SNSA', 'FEC_SA', 'FEC_LA', 'FEC_SNSA', 'LR_SA'))) %>%
@@ -238,8 +246,8 @@ roc_plt = roc_plt_df %>%
                           name == 'LA' ~ 'LA (mm)',
                           name == 'ADC' ~ 'ADCmean',
                           .default = name)) %>%
-  mutate(measure_type = factor(measure_type, levels = c('FDG-PET/CT', 'FEC-PET/CT', 'DW-MRI', 'LR'))) %>%
-  mutate(name = factor(name, levels = c('SUVmax', 'STAR', 'NTR', 'ADCmean', 'LR (SUV)')))
+  mutate(measure_type = factor(measure_type, levels = c('FDG-PET/CT', 'FEC-PET/CT', 'DW-MRI'))) %>%
+  mutate(name = factor(name, levels = c('SUVmax', 'STAR', 'NTR', 'ADCmean')))
 
 g_roc = ggplot(roc_plt,
        aes(x = fpr,
@@ -267,7 +275,7 @@ g_roc
 
 ggsave('./figures/ROC_byMeasure.png',
        g_roc,
-       width = 5,
-       height = 5,
+       width = 7,
+       height = 4,
        units = 'in',
        dpi = 300)
