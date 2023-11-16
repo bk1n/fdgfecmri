@@ -50,88 +50,124 @@ get_p = function(figo_grp) {
 # correlate nodal FDG, FEC, ADC with Age cervical ####
 d = data %>%
   filter(CANC == 'cer') %>%
-  select(PATIENT_ID, FDG_SUV, FEC_SUV, ADC, DEMO_AGE) 
+  select(PATIENT_ID, HIST, FDG_SUV, FEC_SUV, ADC, DEMO_AGE) 
 d_plt = d %>% 
   pivot_longer(cols = c('FDG_SUV', 'FEC_SUV', 'ADC'))
 cor_res = list(
-  FDG_SUV = cor.test(~ FDG_SUV + DEMO_AGE, d),
-  FEC_SUV = cor.test(~ FEC_SUV + DEMO_AGE, d),
-  ADC = cor.test(~ ADC + DEMO_AGE, d)
+  FDG_SUV_benign = cor.test(~ FDG_SUV + DEMO_AGE, d %>% filter(HIST == 0)),
+  FEC_SUV_benign = cor.test(~ FEC_SUV + DEMO_AGE, d %>% filter(HIST == 0)),
+  ADC_benign = cor.test(~ ADC + DEMO_AGE, d %>% filter(HIST == 0)),
+  FDG_SUV_mal = cor.test(~ FDG_SUV + DEMO_AGE, d %>% filter(HIST == 1)),
+  FEC_SUV_mal = cor.test(~ FEC_SUV + DEMO_AGE, d %>% filter(HIST == 1)),
+  ADC_mal = cor.test(~ ADC + DEMO_AGE, d %>% filter(HIST == 1))
 )
-
-p_val = unlist(lapply(cor_res, function(c) c$p.value))
-p_adj = p.adjust(p_val, method = 'BH')
-for(i in 1:3){
-  cor_res[[i]]$p.value = p_adj[i]
-}
+cor_res = lapply(cor_res, function(c) {
+  c$p.value = p.adjust(c$p.value, method = 'bonferroni', n = 6)
+  return(c)
+})
 
 txt = lapply(cor_res, get_text)
 txt = data.frame(name = names(txt), 
                  value = unlist(txt))
+txt = txt %>%
+  mutate(HIST = if_else(grepl('_benign', name), 0, 1)) %>%
+  mutate(name = gsub('_[^_]+$', '', name)) %>%
+  mutate(HIST = factor(HIST)) %>%
+  rename(cor_txt = value)
+
 txt = d_plt %>% 
-  group_by(name) %>% 
-  summarise(x = min(value, na.rm  = T)) %>%
-  inner_join(txt, by = 'name')
+  group_by(name, HIST) %>% 
+  inner_join(txt, by = c('name' = 'name', 'HIST' = 'HIST')) %>%
+  group_by(name) %>%
+  mutate(x = min(value, na.rm = T),
+         y = max(d_plt$DEMO_AGE, na.rm = T) + 10,
+         y = if_else(HIST == 0, y * 1.05, y)) %>%
+  distinct(name, HIST, cor_txt, x, y)
 
 g = ggplot(d_plt,
        aes(x = value,
            y = DEMO_AGE)) +
-  geom_point() +
-  geom_smooth(method = 'lm') +
+  geom_point(aes(color = HIST),
+             alpha = .7) +
+  geom_smooth(aes(color = HIST),
+              method = 'lm') +
   geom_text(data = txt,
             aes(x = x,
-                y = max(d_plt$DEMO_AGE, na.rm = T) + 5,
-                label = value),
+                y = y,
+                label = cor_txt,
+                color = HIST),
             hjust = 0) + 
   facet_wrap(~ name, scales = 'free_x', labeller = as_labeller(labels)) +
+  theme_classic() +
+  scale_color_discrete(labels = c('Benign', 'Malignant')) +
   ylab('Patient Age (yrs)') +
-  xlab('') +
-  theme_classic() 
+  xlab('')
 ggsave('./figures/clinicaldata_figures/corr_age_cer.png',
        g,
-       width = 6,
-       height = 4,
+       width = 8,
+       height = 5,
        units = 'in',
        dpi = 300)
 
-# correlate nodal FDG,FEC, ADC with Age endo  ####
+# correlate nodal FDG, FEC, ADC with Age endo  ####
 d = data %>%
   filter(CANC == 'endo') %>%
-  select(PATIENT_ID, FDG_SUV, FEC_SUV, ADC, DEMO_AGE) 
+  select(PATIENT_ID, HIST, FDG_SUV, FEC_SUV, ADC, DEMO_AGE) 
 d_plt = d %>% 
   pivot_longer(cols = c('FDG_SUV', 'FEC_SUV', 'ADC'))
 cor_res = list(
-  FDG_SUV = cor.test(~ FDG_SUV + DEMO_AGE, d),
-  FEC_SUV = cor.test(~ FEC_SUV + DEMO_AGE, d),
-  ADC = cor.test(~ ADC + DEMO_AGE, d)
+  FDG_SUV_benign = cor.test(~ FDG_SUV + DEMO_AGE, d %>% filter(HIST == 0)),
+  FEC_SUV_benign = cor.test(~ FEC_SUV + DEMO_AGE, d %>% filter(HIST == 0)),
+  ADC_benign = cor.test(~ ADC + DEMO_AGE, d %>% filter(HIST == 0)),
+  FDG_SUV_mal = cor.test(~ FDG_SUV + DEMO_AGE, d %>% filter(HIST == 1)),
+  FEC_SUV_mal = cor.test(~ FEC_SUV + DEMO_AGE, d %>% filter(HIST == 1)),
+  ADC_mal = cor.test(~ ADC + DEMO_AGE, d %>% filter(HIST == 1))
 )
+cor_res = lapply(cor_res, function(c) {
+  c$p.value = p.adjust(c$p.value, method = 'bonferroni', n = 6)
+  return(c)
+})
 
 txt = lapply(cor_res, get_text)
 txt = data.frame(name = names(txt), 
                  value = unlist(txt))
+txt = txt %>%
+  mutate(HIST = if_else(grepl('_benign', name), 0, 1)) %>%
+  mutate(name = gsub('_[^_]+$', '', name)) %>%
+  mutate(HIST = factor(HIST)) %>%
+  rename(cor_txt = value)
+
 txt = d_plt %>% 
-  group_by(name) %>% 
-  summarise(x = min(value, na.rm  = T)) %>%
-  inner_join(txt, by = 'name')
+  group_by(name, HIST) %>% 
+  inner_join(txt, by = c('name' = 'name', 'HIST' = 'HIST')) %>%
+  group_by(name) %>%
+  mutate(x = min(value, na.rm = T),
+         y = max(d_plt$DEMO_AGE, na.rm = T) + 10,
+         y = if_else(HIST == 0, y * 1.05, y)) %>%
+  distinct(name, HIST, cor_txt, x, y)
 
 g = ggplot(d_plt,
            aes(x = value,
                y = DEMO_AGE)) +
-  geom_point() +
-  geom_smooth(method = 'lm') +
+  geom_point(aes(color = HIST),
+             alpha = .7) +
+  geom_smooth(aes(color = HIST),
+              method = 'lm') +
   geom_text(data = txt,
             aes(x = x,
-                y = max(d_plt$DEMO_AGE, na.rm = T) + 5,
-                label = value),
+                y = y,
+                label = cor_txt,
+                color = HIST),
             hjust = 0) + 
   facet_wrap(~ name, scales = 'free_x', labeller = as_labeller(labels)) +
+  theme_classic() +
+  scale_color_discrete(labels = c('Benign', 'Malignant')) +
   ylab('Patient Age (yrs)') +
-  xlab('') +
-  theme_classic() 
+  xlab('')
 ggsave('./figures/clinicaldata_figures/corr_age_endo.png',
        g,
-       width = 6,
-       height = 4,
+       width = 8,
+       height = 5,
        units = 'in',
        dpi = 300)
 # correlate BMI with FDG, FEC, ADC cervical ####
