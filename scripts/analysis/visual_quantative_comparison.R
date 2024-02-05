@@ -3,9 +3,62 @@ library(tidyverse)
 vis = read_csv('./data/visual_data.csv')
 quants = read_csv('./data/quant_allPooled.csv')
 
+q = quants %>%
+  filter(CANC == 'endo') %>%
+  select(ADC, HIST) %>%
+  filter(!is.na(ADC)) %>%
+  mutate(ADC_ = if_else(ADC >= cuts$optimal_cutpoint[cuts$name == 'ADC'], 1, 0)) %>%
+  mutate(across(everything(), function(x) factor(x, levels = c(1,0))))
+
 df = quants %>%
   left_join(vis, by = c('PATIENT_ID', 'region')) %>%
   mutate(across(contains('VIS'), ~ if_else(.x >= 5, 1, 0)))
+
+# mutate dataframe to x measure + visual corresponding 
+d = df %>%
+  filter(CANC == 'endo') %>%
+  mutate(FDG_SUV_ = if_else(FDG_SUV >= cuts$optimal_cutpoint[cuts$name == 'FDG_SUV'], 1, 0),
+         FEC_SUV_ = if_else(FEC_SUV >= cuts$optimal_cutpoint[cuts$name == 'FEC_SUV'], 1, 0),
+         ADC_ = if_else(ADC <= cuts$optimal_cutpoint[cuts$name == 'ADC'], 1, 0)) %>%
+  select(FDG_SUV_, FEC_SUV_, ADC_, VIS_FDG, VIS_FEC, VIS_MRI, HIST) %>%
+  mutate(across(everything(), function(x) factor(x, levels = c(1,0))))
+
+# select q measure, visual diagnosis, actual hist
+fdg = d %>%
+  select(FDG_SUV_, VIS_FDG, HIST) %>%
+  filter(!is.na(FDG_SUV_) & !is.na(VIS_FDG))
+
+fec = d %>%
+  select(FEC_SUV_, VIS_FEC, HIST) %>%
+  filter(!is.na(FEC_SUV_) & !is.na(VIS_FEC))
+
+adc = d %>%
+  select(ADC_, VIS_MRI, HIST) %>%
+  filter(!is.na(ADC_) & !is.na(VIS_MRI))
+
+# calculate sensitivity + specificity of both
+sens_spec = function(cm) {
+  tp = cm[1,1]
+  fn = cm[2,1]
+  fp = cm[1,2]
+  tn = cm[2,2]
+  
+  sens = (tp / (tp + fn))
+  spec = (tn / (fp + tn))
+  return(c(sens, spec))
+}
+
+# fdg
+sens_spec(table(fdg$FDG_SUV_, fdg$HIST))
+sens_spec(table(fdg$VIS_FDG, fdg$HIST))
+
+# fec
+sens_spec(table(fec$FEC_SUV_, fec$HIST))
+sens_spec(table(fec$VIS_FEC, fec$HIST))
+
+# mri
+sens_spec(table(adc$ADC_, adc$HIST))
+sens_spec(table(adc$VIS_MRI, adc$HIST))
 
 # McNemar's test
 # need to find + import cut-offs for each measure
