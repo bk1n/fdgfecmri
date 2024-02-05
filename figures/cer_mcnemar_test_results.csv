@@ -1,0 +1,17 @@
+"","v_correct_q_correct","v_correct_q_incorrect","v_incorrect_q_correct","v_incorrect_q_incorrect","pval"
+"FDG_SUV_pos",1,1,0,4,1
+"FDG_SUV_neg",24,0,0,0,NA
+"FDG_NTR_pos",0,1,1,2,1
+"FDG_NTR_neg",14,1,0,0,1
+"FDG_STAR_pos",1,1,1,3,1
+"FDG_STAR_neg",12,0,0,0,NA
+"FEC_SUV_pos",1,0,1,2,1
+"FEC_SUV_neg",15,1,0,0,1
+"FEC_NTR_pos",1,0,2,1,0.479500122186953
+"FEC_NTR_neg",7,4,0,0,0.133614402537715
+"FEC_STAR_pos",1,0,1,2,1
+"FEC_STAR_neg",6,2,0,0,0.479500122186953
+"ADC_pos",2,0,5,2,0.0736382701203028
+"ADC_neg",3,31,0,2,7.11830416471405e-08
+"ADC_NTR_pos",0,1,0,6,1
+"ADC_NTR_neg",6,14,2,0,0.00595952647010911
