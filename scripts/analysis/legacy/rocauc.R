@@ -63,10 +63,10 @@ plt_logit_sa$name = 'LR_SA'
 
 plt_df_full = plt_df %>%
   select(optimal_cutpoint, AUC_oob, sensitivity_oob, specificity_oob, name) %>%
-  rename(auc = AUC_oob,
-         sens = sensitivity_oob,
-         spec = specificity_oob) %>%
-  rbind(., plt_logit_suv, plt_logit_sa) %>%
+  rename(AUC_oob = auc,
+         sensitivity_oob = sens,
+         specificity_oob = spec) %>%
+  # rbind(., plt_logit_suv, plt_logit_sa) %>%
   mutate()
 
 dp_df = plt_df_full %>%
