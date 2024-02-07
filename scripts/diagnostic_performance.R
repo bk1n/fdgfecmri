@@ -1,5 +1,6 @@
 library(tidyverse)
 library(cutpointr)
+library(ggpubr)
 
 # filter data ----
 data = read.csv('./data/processed_data.csv')
@@ -36,13 +37,13 @@ get_opt_cut = function(data, measure) {
                       pos_class = 1,
                       neg_class = 0, 
                       direction = dir,
-                      boot_runs = 20,
+                      boot_runs = 2000,
                       boot_stratify = T)
   summary.opt_cut = summary(opt_cut)
   
   boot_data = summary.opt_cut$cutpointr[[1]]$boot[[1]]
   boot_data$name = measure
-  boot_data = relocate(boot_data, name)
+  boot_data = relocate(boot_data, 'name')
   boot_data = select(boot_data, -where(is.list))
 
   return(list(opt_cut = opt_cut,
@@ -52,7 +53,7 @@ get_opt_cut = function(data, measure) {
 }
 
 # run opt cut ----
-run_opt_cut = F
+run_opt_cut = T
 if(run_opt_cut) {
   run_cols = c('FDG_SUV', 'FDG_STAR', 'FDG_NTR',
                'FEC_SUV', 'FEC_STAR', 'FEC_NTR',
