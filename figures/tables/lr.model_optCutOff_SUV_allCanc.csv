@@ -1,2 +1,0 @@
-"","optimal_cutoff","optimal_SUVcutoff","acc","rmse","f1","auc","sens","spec","fnr","fpr","plr","nlr"
-"1",0.298,4.37,0.834,0.368,0.717,0.845,0.762,0.857,0.238,0.143,Inf,0.271

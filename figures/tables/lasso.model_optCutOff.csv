@@ -1,2 +1,0 @@
-"","optimal_cutoff","acc","rmse","f1","sens","spec","fnr","fpr","plr","nlr","best_lambda"
-"1",0.377,0.8,0.432,0.772,0.851,0.903,0.149,0.0973,Inf,0.181,0.061
