@@ -4,7 +4,6 @@ data = as_tibble(read.csv("./data/fdgpet_data.csv", header = T))
 vis = read_csv('./data/MAPPING_expert_assessment_scores.csv')
 clin_data = as_tibble(read.csv("./data/clinical_data.csv", header = T))
 
-
 # clean data ----
 data_clean  = data %>%
   #get means of all CR for FDG
@@ -62,13 +61,57 @@ data_clean  = data %>%
   mutate(across(FDG_SUV_PT:FDG_PALN_SA, ~ as.numeric(.x))) %>%
   mutate(across(HIST_LP:HIST_PALN, ~ as.factor(.x))) %>%
   
-  mutate(TRIAL_STATUS = ifelse(TRIAL_STATUS == "WITHDRAWN", NA, TRIAL_STATUS),
-         TRIAL_STATUS = ifelse(TRIAL_STATUS == "", NA, TRIAL_STATUS)) %>%
+  mutate(TRIAL_STATUS = ifelse(TRIAL_STATUS %in% c("WITHDRAWN", 'FDG DYN', 'FALLOPIAN CANCER'), NA, TRIAL_STATUS)) %>%
   
   filter(!is.na(CANC_ENDO) & !is.na(CANC_CER)) %>%
   
   mutate(CANC = as.factor(if_else(CANC_ENDO == 1, "endo", "cer"))) %>%
   select(-c(CANC_ENDO, CANC_CER))
+
+# build consort df ----
+# build from original data
+consort_lst = list(
+  initial_n_patients = nrow(data),
+  withdrawn = sum(data$TRIAL_STATUS == 'WITHDRAWN'),
+  fallopian = sum(data$TRIAL_STATUS == 'FALLOPIAN CANCER'),
+  fdg_dynamic = sum(data$TRIAL_STATUS == 'FDG DYN'),
+  no_cancer_diagnosis = sum(rowSums(is.na(dplyr::select(data, CANC_CER, CANC_ENDO))) == 2)
+)
+
+
+# data_filt
+data_filt = filter(data_clean, !is.na(TRIAL_STATUS))
+no_hist = sum(rowSums(is.na(dplyr::select(data_filt, contains('HIST')))) == 3)
+
+data_filt = filter(data_filt, !rowSums(is.na(dplyr::select(data_filt, contains('HIST')))) == 3)
+no_scans = sum(rowSums(is.na(dplyr::select(data_filt, FDG_SUV_RP:ADC_PALN))) == 11)
+
+data_filt = filter(data_filt, !rowSums(is.na(dplyr::select(data_filt, FDG_SUV_RP:ADC_PALN))) == 11)
+data_filt_endo = filter(data_filt, CANC == 'endo')
+data_filt_cer = filter(data_filt, CANC == 'cer')
+
+consort_lst = c(
+  consort_lst,
+  list(
+    no_hist = no_hist,
+    no_scans = no_scans,
+    
+    n_patients_endo = nrow(data_filt_endo),
+    n_patients_cer = nrow(data_filt_cer),
+    
+    n_patients_fdg = sum(rowSums(!is.na(dplyr::select(data_filt, FDG_SUV_RP:FDG_SUV_PALN))) > 0),
+    n_patients_fdg_endo = sum(rowSums(!is.na(dplyr::select(data_filt_endo, FDG_SUV_RP:FDG_SUV_PALN))) > 0),
+    n_patients_fdg_cer = sum(rowSums(!is.na(dplyr::select(data_filt_cer, FDG_SUV_RP:FDG_SUV_PALN))) > 0),
+    
+    n_patients_fec = sum(rowSums(!is.na(dplyr::select(data_filt, FEC_SUV_RP:FEC_SUV_PALN))) > 0),
+    n_patients_fec_endo = sum(rowSums(!is.na(dplyr::select(data_filt_endo, FEC_SUV_RP:FEC_SUV_PALN))) > 0),
+    n_patients_fec_cer = sum(rowSums(!is.na(dplyr::select(data_filt_cer, FEC_SUV_RP:FEC_SUV_PALN))) > 0),
+    
+    n_patients_adc = sum(rowSums(!is.na(dplyr::select(data_filt, ADC_RP:ADC_PALN))) > 0),
+    n_patients_adc_endo = sum(rowSums(!is.na(dplyr::select(data_filt_endo, ADC_RP:ADC_PALN))) > 0),
+    n_patients_adc_cer = sum(rowSums(!is.na(dplyr::select(data_filt_cer, ADC_RP:ADC_PALN))) > 0)
+  )
+)
 
 # regional data ----
 # convert data from wide format into longer (with a col for regions)
@@ -184,3 +227,44 @@ all = all %>%
 
 # save to csv ----
 write.csv(all, './data/processed_data.csv', row.names = F)
+
+# build consort df ----
+consort_lst = c(
+  consort_lst, 
+  list(
+    # fdg
+    n_regions_fdg_endo = nrow(dplyr::filter(all, CANC == 'endo' & !is.na(FDG_SUV))),
+    n_regions_fdg_endo_pelvic = nrow(dplyr::filter(all, CANC == 'endo' & !is.na(FDG_SUV) & region %in% c('lp', 'rp'))),
+    n_regions_fdg_endo_paln = nrow(dplyr::filter(all, CANC == 'endo' & !is.na(FDG_SUV) & region == 'paln')),
+
+    n_regions_fdg_cer = nrow(dplyr::filter(all, CANC == 'cer' & !is.na(FDG_SUV))),
+    n_regions_fdg_cer_pelvic = nrow(dplyr::filter(all, CANC == 'cer' & !is.na(FDG_SUV) & region %in% c('lp', 'rp'))),
+    n_regions_fdg_cer_paln = nrow(dplyr::filter(all, CANC == 'cer' & !is.na(FDG_SUV) & region == 'paln')),
+
+    # fec
+    n_regions_fec_endo = nrow(dplyr::filter(all, CANC == 'endo' & !is.na(FEC_SUV))),
+    n_regions_fec_endo_pelvic = nrow(dplyr::filter(all, CANC == 'endo' & !is.na(FEC_SUV) & region %in% c('lp', 'rp'))),
+    n_regions_fec_endo_paln = nrow(dplyr::filter(all, CANC == 'endo' & !is.na(FEC_SUV) & region == 'paln')),
+
+    n_regions_fec_cer = nrow(dplyr::filter(all, CANC == 'cer' & !is.na(FEC_SUV))),
+    n_regions_fec_cer_pelvic = nrow(dplyr::filter(all, CANC == 'cer' & !is.na(FEC_SUV) & region %in% c('lp', 'rp'))),
+    n_regions_fec_cer_paln = nrow(dplyr::filter(all, CANC == 'cer' & !is.na(FEC_SUV) & region == 'paln')),
+
+    # adc
+    n_regions_adc_endo = nrow(dplyr::filter(all, CANC == 'endo' & !is.na(ADC))),
+    n_regions_adc_endo_pelvic = nrow(dplyr::filter(all, CANC == 'endo' & !is.na(ADC) & region %in% c('lp', 'rp'))),
+    n_regions_adc_endo_paln = nrow(dplyr::filter(all, CANC == 'endo' & !is.na(ADC) & region == 'paln')),
+
+    n_regions_adc_cer = nrow(dplyr::filter(all, CANC == 'cer' & !is.na(ADC))),
+    n_regions_adc_cer_pelvic = nrow(dplyr::filter(all, CANC == 'cer' & !is.na(ADC) & region %in% c('lp', 'rp'))),
+    n_regions_adc_cer_paln = nrow(dplyr::filter(all, CANC == 'cer' & !is.na(ADC) & region == 'paln'))
+  )
+)
+
+consort_df = data.frame(
+  category = names(consort_lst), 
+  n = unlist(consort_lst),
+  row.names = NULL
+)
+
+write.csv(consort_df, 'figures/tables/consort_df.csv', row.names = F)

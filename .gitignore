@@ -43,3 +43,9 @@ vignettes/*.pdf
 
 # ppt
 *.pptx
+
+# figures
+figures/*
+
+# data
+data/*

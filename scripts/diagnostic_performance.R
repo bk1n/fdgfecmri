@@ -1,6 +1,7 @@
 library(tidyverse)
 library(cutpointr)
 library(ggpubr)
+library(caret)
 
 # filter data ----
 data = read.csv('./data/processed_data.csv')
@@ -53,7 +54,7 @@ get_opt_cut = function(data, measure) {
 }
 
 # run opt cut ----
-run_opt_cut = T
+run_opt_cut = F
 if(run_opt_cut) {
   run_cols = c('FDG_SUV', 'FDG_STAR', 'FDG_NTR',
                'FEC_SUV', 'FEC_STAR', 'FEC_NTR',
@@ -202,6 +203,9 @@ get_diagnostic_performance = function(measure,
   cm = table(measure = x, hist = y)
   
   # hist = cols, measure = rows
+  stopifnot(length(x) == length(y))
+  
+  num_regions = length(x)
   tp = cm["1","1"] 
   fn = cm["0", "1"] 
   fp = cm["1", "0"]
@@ -211,11 +215,18 @@ get_diagnostic_performance = function(measure,
   spec = tn / (tn + fp)
   ppv = tp / (tp + fp)
   npv = tn / (tn + fn)
+  f1 = 2*tp / (2*tp + fp + fn)
   
-  return(list(sens = sens,
+  return(list(num_regions = num_regions,
+              tp = tp,
+              fn = fn,
+              tn = tn,
+              fp = fp,
+              sens = sens,
               spec = spec,
               ppv = ppv,
-              npv = npv))
+              npv = npv,
+              f1 = f1))
 }
 
 measures = c('FDG_SUV', 'FDG_STAR', 'FDG_NTR', 
@@ -230,7 +241,7 @@ performance_df = do.call(rbind, performance)
 
 write.csv(performance_df, './figures/tables/diagnostic_performance_refit.csv', row.names = T)
 
-## mcnemars test ----
+# mcnemars test ----
 mcnemar_test = function(measure, data) {
   # given measure, get optimal cutpoint
   # mean_df = optimal cutpoints
@@ -268,6 +279,7 @@ mcnemar_test = function(measure, data) {
   return(
     list(measure = measure,
          vis_measure = vis_measure,
+         num_regions = length(q),
          sens_mcnemar = mcnemar.test(pos_cm)$p.value,
          spec_mcnemar = mcnemar.test(neg_cm)$p.value)
   )
