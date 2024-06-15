@@ -3,6 +3,16 @@ library(tidyverse)
 
 data = readRDS("./data/processed_quant_data.rds")
 
+data = read.csv('data/processed_data.csv')
+
+data = read.csv('data/fdgpet_data.csv')
+
+d = data %>%
+  select(contains('HIST')) 
+sum(rowSums(is.na(d)) == 3)
+
+d = read.csv('data/MPG_DATA_COMPILED.csv')
+
 # nodal status confirmed by histology
 data %>%
   select(contains('HIST')) %>%
