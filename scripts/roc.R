@@ -60,7 +60,7 @@ g_roc = ggplot(roc_plt,
                         values = c('solid', 'twodash', 'dotdash', 'dashed')) +
   facet_wrap(~ measure_type)
 
-ggsave('./figures/ROC_endo.png',
+ggsave('.outputs/ROC_endo.png',
        g_roc,
        width = 7,
        height = 4,
@@ -115,7 +115,7 @@ g_roc = ggplot(roc_plt,
                         values = c('solid', 'twodash', 'dotdash', 'dashed')) +
   facet_wrap(~ measure_type)
 
-ggsave('./figures/ROC_cer.png',
+ggsave('.outputs/ROC_cer.png',
        g_roc,
        width = 7,
        height = 4,

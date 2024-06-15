@@ -54,7 +54,7 @@ hm = Heatmap(pairwise_corr$r, col = col_fun,
             }}
         )
 
-png('./figures/pairwise_corr_raw.png',
+png('.outputs/pairwise_corr_raw.png',
     width = 6,
     height = 5.5,
     units = 'in',

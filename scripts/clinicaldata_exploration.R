@@ -103,7 +103,7 @@ g = ggplot(d_plt,
   scale_color_discrete(labels = c('Benign', 'Malignant')) +
   ylab('Patient Age (yrs)') +
   xlab('')
-ggsave('./figures/clinicaldata_figures/corr_age_cer.png',
+ggsave('.outputs/clinicaldata_figures/corr_age_cer.png',
        g,
        width = 8,
        height = 5,
@@ -166,7 +166,7 @@ g = ggplot(d_plt,
   scale_color_discrete(labels = c('Benign', 'Malignant')) +
   ylab('Patient Age (yrs)') +
   xlab('')
-ggsave('./figures/clinicaldata_figures/corr_age_endo.png',
+ggsave('.outputs/clinicaldata_figures/corr_age_endo.png',
        g,
        width = 8,
        height = 5,
@@ -228,7 +228,7 @@ g = ggplot(d_plt,
   xlab('') +
   theme_classic() +
   scale_color_discrete(labels = c('Benign', 'Malignant'))
-ggsave('./figures/clinicaldata_figures/corr_bmi_cer.png',
+ggsave('.outputs/clinicaldata_figures/corr_bmi_cer.png',
        g,
        width = 8,
        height = 5,
@@ -291,7 +291,7 @@ g = ggplot(d_plt,
   xlab('') +
   theme_classic() +
   scale_color_discrete(labels = c('Benign', 'Malignant'))
-ggsave('./figures/clinicaldata_figures/corr_bmi_endo.png',
+ggsave('.outputs/clinicaldata_figures/corr_bmi_endo.png',
        g,
        width = 8,
        height = 5,
@@ -395,7 +395,7 @@ g3 = ggplot(d,
 g = ggarrange(g1, g2, g3, 
           nrow = 1, 
           common.legend = T) 
-ggsave('./figures/clinicaldata_figures/boxplot_figo_cer.png',
+ggsave('.outputs/clinicaldata_figures/boxplot_figo_cer.png',
        g,
        width = 8,
        height = 4,
@@ -501,7 +501,7 @@ g3 = ggplot(d,
 g = ggarrange(g1,g2,g3, 
               nrow = 1, 
               common.legend = T) 
-ggsave('./figures/clinicaldata_figures/boxplot_figo_endo.png',
+ggsave('.outputs/clinicaldata_figures/boxplot_figo_endo.png',
        g,
        width = 8,
        height = 4,
@@ -613,7 +613,7 @@ g3 = ggplot(d,
 g = ggarrange(g1,g2,g3, 
               nrow = 1, 
               common.legend = T) 
-ggsave('./figures/clinicaldata_figures/boxplot_histology_cer.png',
+ggsave('.outputs/clinicaldata_figures/boxplot_histology_cer.png',
        g,
        width = 8,
        height = 4,
@@ -720,7 +720,7 @@ g3 = ggplot(d,
 g = ggarrange(g1,g2,g3, 
               nrow = 1, 
               common.legend = T) 
-ggsave('./figures/clinicaldata_figures/boxplot_histology_endo.png',
+ggsave('.outputs/clinicaldata_figures/boxplot_histology_endo.png',
        g,
        width = 8,
        height = 4,
