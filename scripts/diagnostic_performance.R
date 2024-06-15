@@ -66,9 +66,9 @@ if(run_opt_cut) {
   plt_df = do.call(rbind, lapply(cutpoint_res, function(r) r$boot_data))
   
   ## save opt cut res ----
-  write.csv(plt_df, './figures/tables/optimal_cutpoints.csv', row.names = F)
+  write.csv(plt_df, '.outputs/tables/optimal_cutpoints.csv', row.names = F)
 } else {
-  plt_df = read.csv('./figures/tables/optimal_cutpoints.csv')
+  plt_df = read.csv('.outputs/tables/optimal_cutpoints.csv')
 }
 
 ## plt opt cut res boxplots ----
@@ -121,7 +121,7 @@ mean_df_tidy = plt_df_tidy %>%
   ungroup
 
 # write mean results
-write.csv(mean_df_tidy, './figures/tables/optimal_cutpoints_avg.csv', row.names = F)
+write.csv(mean_df_tidy, '.outputs/tables/optimal_cutpoints_avg.csv', row.names = F)
 
 # plot boxplots
 g_auc = ggplot(plt_df_tidy,
@@ -239,7 +239,7 @@ names(performance) = measures
 
 performance_df = do.call(rbind, performance)
 
-write.csv(performance_df, './figures/tables/diagnostic_performance_refit.csv', row.names = T)
+write.csv(performance_df, '.outputs/tables/diagnostic_performance_refit.csv', row.names = T)
 
 # mcnemars test ----
 mcnemar_test = function(measure, data) {
@@ -298,4 +298,4 @@ mcnemar_res_df$sens_padj = p.adjust(mcnemar_res_df$sens_mcnemar)
 mcnemar_res_df$spec_padj = p.adjust(mcnemar_res_df$spec_mcnemar)
 
 ## save results
-write.csv(mcnemar_res_df, './figures/tables/diagnostic_performance_mcnemar_results.csv', row.names = F)
+write.csv(mcnemar_res_df, '.outputs/tables/diagnostic_performance_mcnemar_results.csv', row.names = F)

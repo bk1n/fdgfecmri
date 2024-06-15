@@ -267,4 +267,4 @@ consort_df = data.frame(
   row.names = NULL
 )
 
-write.csv(consort_df, 'figures/tables/consort_df.csv', row.names = F)
+write.csv(consort_df, 'outputs/tables/consort_df.csv', row.names = F)
