@@ -45,7 +45,7 @@ vignettes/*.pdf
 *.pptx
 
 # figures
-figures/*
+outputs
 
 # data
-data/*
+data
