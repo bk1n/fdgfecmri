@@ -68,51 +68,6 @@ data_clean  = data %>%
   mutate(CANC = as.factor(if_else(CANC_ENDO == 1, "endo", "cer"))) %>%
   select(-c(CANC_ENDO, CANC_CER))
 
-# build consort df ----
-# build from original data
-consort_lst = list(
-  initial_n_patients = nrow(data),
-  withdrawn = sum(data$TRIAL_STATUS == 'WITHDRAWN'),
-  fallopian = sum(data$TRIAL_STATUS == 'FALLOPIAN CANCER'),
-  fdg_dynamic = sum(data$TRIAL_STATUS == 'FDG DYN'),
-  no_cancer_diagnosis = sum(rowSums(is.na(dplyr::select(data, CANC_CER, CANC_ENDO))) == 2)
-)
-
-
-# data_filt
-data_filt = filter(data_clean, !is.na(TRIAL_STATUS))
-no_hist = sum(rowSums(is.na(dplyr::select(data_filt, contains('HIST')))) == 3)
-
-data_filt = filter(data_filt, !rowSums(is.na(dplyr::select(data_filt, contains('HIST')))) == 3)
-no_scans = sum(rowSums(is.na(dplyr::select(data_filt, FDG_SUV_RP:ADC_PALN))) == 11)
-
-data_filt = filter(data_filt, !rowSums(is.na(dplyr::select(data_filt, FDG_SUV_RP:ADC_PALN))) == 11)
-data_filt_endo = filter(data_filt, CANC == 'endo')
-data_filt_cer = filter(data_filt, CANC == 'cer')
-
-consort_lst = c(
-  consort_lst,
-  list(
-    no_hist = no_hist,
-    no_scans = no_scans,
-    
-    n_patients_endo = nrow(data_filt_endo),
-    n_patients_cer = nrow(data_filt_cer),
-    
-    n_patients_fdg = sum(rowSums(!is.na(dplyr::select(data_filt, FDG_SUV_RP:FDG_SUV_PALN))) > 0),
-    n_patients_fdg_endo = sum(rowSums(!is.na(dplyr::select(data_filt_endo, FDG_SUV_RP:FDG_SUV_PALN))) > 0),
-    n_patients_fdg_cer = sum(rowSums(!is.na(dplyr::select(data_filt_cer, FDG_SUV_RP:FDG_SUV_PALN))) > 0),
-    
-    n_patients_fec = sum(rowSums(!is.na(dplyr::select(data_filt, FEC_SUV_RP:FEC_SUV_PALN))) > 0),
-    n_patients_fec_endo = sum(rowSums(!is.na(dplyr::select(data_filt_endo, FEC_SUV_RP:FEC_SUV_PALN))) > 0),
-    n_patients_fec_cer = sum(rowSums(!is.na(dplyr::select(data_filt_cer, FEC_SUV_RP:FEC_SUV_PALN))) > 0),
-    
-    n_patients_adc = sum(rowSums(!is.na(dplyr::select(data_filt, ADC_RP:ADC_PALN))) > 0),
-    n_patients_adc_endo = sum(rowSums(!is.na(dplyr::select(data_filt_endo, ADC_RP:ADC_PALN))) > 0),
-    n_patients_adc_cer = sum(rowSums(!is.na(dplyr::select(data_filt_cer, ADC_RP:ADC_PALN))) > 0)
-  )
-)
-
 # regional data ----
 # convert data from wide format into longer (with a col for regions)
 #lp
@@ -229,6 +184,49 @@ all = all %>%
 write.csv(all, './data/processed_data.csv', row.names = F)
 
 # build consort df ----
+# build from original data
+consort_lst = list(
+  initial_n_patients = nrow(data),
+  withdrawn = sum(data$TRIAL_STATUS == 'WITHDRAWN'),
+  fallopian = sum(data$TRIAL_STATUS == 'FALLOPIAN CANCER'),
+  fdg_dynamic = sum(data$TRIAL_STATUS == 'FDG DYN'),
+  no_cancer_diagnosis = sum(rowSums(is.na(dplyr::select(data, CANC_CER, CANC_ENDO))) == 2)
+)
+
+# data_filt
+data_filt = filter(data_clean, !is.na(TRIAL_STATUS))
+no_hist = sum(rowSums(is.na(dplyr::select(data_filt, contains('HIST')))) == 3)
+
+data_filt = filter(data_filt, !rowSums(is.na(dplyr::select(data_filt, contains('HIST')))) == 3)
+no_scans = sum(rowSums(is.na(dplyr::select(data_filt, FDG_SUV_RP:ADC_PALN))) == 11)
+
+data_filt = filter(data_filt, !rowSums(is.na(dplyr::select(data_filt, FDG_SUV_RP:ADC_PALN))) == 11)
+data_filt_endo = filter(data_filt, CANC == 'endo')
+data_filt_cer = filter(data_filt, CANC == 'cer')
+
+consort_lst = c(
+  consort_lst,
+  list(
+    no_hist = no_hist,
+    no_scans = no_scans,
+    
+    n_patients_endo = nrow(data_filt_endo),
+    n_patients_cer = nrow(data_filt_cer),
+    
+    n_patients_fdg = sum(rowSums(!is.na(dplyr::select(data_filt, FDG_SUV_RP:FDG_SUV_PALN))) > 0),
+    n_patients_fdg_endo = sum(rowSums(!is.na(dplyr::select(data_filt_endo, FDG_SUV_RP:FDG_SUV_PALN))) > 0),
+    n_patients_fdg_cer = sum(rowSums(!is.na(dplyr::select(data_filt_cer, FDG_SUV_RP:FDG_SUV_PALN))) > 0),
+    
+    n_patients_fec = sum(rowSums(!is.na(dplyr::select(data_filt, FEC_SUV_RP:FEC_SUV_PALN))) > 0),
+    n_patients_fec_endo = sum(rowSums(!is.na(dplyr::select(data_filt_endo, FEC_SUV_RP:FEC_SUV_PALN))) > 0),
+    n_patients_fec_cer = sum(rowSums(!is.na(dplyr::select(data_filt_cer, FEC_SUV_RP:FEC_SUV_PALN))) > 0),
+    
+    n_patients_adc = sum(rowSums(!is.na(dplyr::select(data_filt, ADC_RP:ADC_PALN))) > 0),
+    n_patients_adc_endo = sum(rowSums(!is.na(dplyr::select(data_filt_endo, ADC_RP:ADC_PALN))) > 0),
+    n_patients_adc_cer = sum(rowSums(!is.na(dplyr::select(data_filt_cer, ADC_RP:ADC_PALN))) > 0)
+  )
+)
+
 consort_lst = c(
   consort_lst, 
   list(
@@ -268,3 +266,55 @@ consort_df = data.frame(
 )
 
 write.csv(consort_df, 'outputs/tables/consort_df.csv', row.names = F)
+
+# clinical data df
+cdf = data_filt %>%
+  left_join(clin_data, by = 'PATIENT_ID')
+
+cdf_cer = filter(cdf, CANC == 'cer')
+cdf_endo = filter(cdf, CANC == 'endo')
+
+clindata_lst = list(
+  age_median = median(cdf$DEMO_AGE, na.rm = T),
+  age_min = min(cdf$DEMO_AGE, na.rm = T),
+  age_max = max(cdf$DEMO_AGE, na.rm = T),
+
+  bmi_median = median(cdf$BMI, na.rm = T),
+  bmi_min = min(cdf$BMI, na.rm = T),
+  bmi_max = max(cdf$BMI, na.rm = T),
+
+  hist_cer_n = length(cdf_cer$CER_HIST),
+  hist_cer_n_adeno = sum(cdf_cer$CER_HIST == 'Adeno', na.rm = T),
+  hist_cer_n_adenosq = sum(cdf_cer$CER_HIST == 'Adenosquamous', na.rm = T),
+  hist_cer_n_squamous = sum(cdf_cer$CER_HIST == 'Squamous cell', na.rm = T),
+  hist_cer_n_unspecified = sum(cdf_cer$CER_HIST == 'Unspecified', na.rm = T),
+  hist_cer_n_NA = sum(is.na(cdf_cer$CER_HIST)),
+
+  hist_endo_n = length(cdf_endo$ENDO_HIST),
+  hist_endo_n_endo = sum(cdf_endo$ENDO_HIST == 'endo', na.rm = T),
+  hist_endo_n_other = sum(cdf_endo$ENDO_HIST == 'other', na.rm = T),
+  hist_endo_n_sercc = sum(cdf_endo$ENDO_HIST == 'sercc', na.rm = T),
+  hist_endo_n_NA = sum(is.na(cdf_endo$ENDO_HIST)),
+
+  figo_cer_1B1 = sum(cdf_cer$CER_FIGO == '1B1', na.rm = T),
+  figo_cer_1B2 = sum(cdf_cer$CER_FIGO == '1B2', na.rm = T),
+  figo_cer_2A1 = sum(cdf_cer$CER_FIGO == '2A1', na.rm = T),
+  figo_cer_2B = sum(cdf_cer$CER_FIGO == '2B', na.rm = T),
+  figo_cer_NA = sum(is.na(cdf_cer$CER_FIGO)),
+
+  figo_endo_1A = sum(cdf_endo$ENDO_FIGO == '1A', na.rm = T),
+  figo_endo_1B = sum(cdf_endo$ENDO_FIGO == '1B', na.rm = T),
+  figo_endo_2 = sum(cdf_endo$ENDO_FIGO == '2', na.rm = T),
+  figo_endo_3A = sum(cdf_endo$ENDO_FIGO == '3A', na.rm = T), 
+  figo_endo_3C = sum(cdf_endo$ENDO_FIGO == '3C', na.rm = T),
+  figo_endo_4B = sum(cdf_endo$ENDO_FIGO == '4B', na.rm = T),
+  figo_endo_NA = sum(is.na(cdf_endo$ENDO_FIGO))
+  )
+
+clindata_df = data.frame(
+  category = names(clindata_lst), 
+  n = unlist(clindata_lst),
+  row.names = NULL
+)
+
+write.csv(clindata_df, 'outputs/tables/clindata_df.csv', row.names = F)
