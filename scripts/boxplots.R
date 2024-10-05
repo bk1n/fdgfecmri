@@ -230,7 +230,7 @@ plot_myCustomGG = function(feature, show_opt_cut = F){
   
   if(show_opt_cut){
     oc = opt_cut %>%
-      filter(name == feature) %>%
+      filter(name == ylabs[feature]) %>%
       pull(optimal_cutpoint)
     g = g + 
       geom_hline(yintercept = oc,
@@ -242,6 +242,8 @@ plot_myCustomGG = function(feature, show_opt_cut = F){
   return(g)
 }
 
+opt_cut = read.csv('outputs/tables/optimal_cutpoints_avg.csv')
+
 canc = 'cer'
 gg_cer_pt = lapply(pt_features, plot_myCustomGG)
 gg_cer_r1 = lapply(quant_row_1, plot_myCustomGG)
@@ -249,9 +251,8 @@ gg_cer_r2 = lapply(quant_row_2, plot_myCustomGG)
 
 canc = 'endo'
 gg_endo_pt = lapply(pt_features, plot_myCustomGG)
-gg_endo_r1 = lapply(quant_row_1, plot_myCustomGG)
-gg_endo_r2 = lapply(quant_row_2, plot_myCustomGG)
-
+gg_endo_r1 = lapply(quant_row_1, plot_myCustomGG, show_opt_cut = T)
+gg_endo_r2 = lapply(quant_row_2, plot_myCustomGG, show_opt_cut = T)
 
 ## pt quants ----
 g = ggarrange(plotlist = c(gg_endo_pt, gg_cer_pt), 
@@ -271,7 +272,7 @@ g = ggarrange(plotlist = c(gg_endo_r1, gg_endo_r2),
               ncol = length(gg_endo_r1), 
               nrow = 2,
               labels = c('A', rep('', length(gg_endo_r1) - 2), 'C', 'B')) 
-ggsave('.outputs/boxplot_quants_endo.png',
+ggsave('outputs/boxplot_quants_endo.png',
        g,
        width = 10,
        height = 6,
@@ -284,7 +285,7 @@ g = ggarrange(plotlist = c(gg_cer_r1, gg_cer_r2),
               ncol = length(gg_cer_r1),
               nrow = 2,
               labels = c('A', rep('', length(gg_cer_r1) - 2), 'C', 'B'))
-ggsave('.outputs/boxplot_quants_cer.png',
+ggsave('outputs/boxplot_quants_cer.png',
        g,
        width = 10,
        height = 6,
