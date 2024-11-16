@@ -42,7 +42,8 @@ g_fec <- ggplot(
   ) +
   geom_signif(
     comparisons = list(c("cer", "endo")),
-    annotations = c(paste0("p = ", signif(wilcox.test(FEC_SUV ~ CANC, data = data, na.rm = TRUE, paired = FALSE, exact = FALSE, conf.int = TRUE)$p.value, 3), ""))
+    test = wilcox.test,
+    map_signif_level = function(p) paste0("p = ", signif(p, 3))
   ) +
   scale_x_discrete(label = c("Cervical", "Endometrial")) +
   ylab("FEC SUVmax") +
@@ -64,7 +65,8 @@ g_adc <- ggplot(
   ) +
   geom_signif(
     comparisons = list(c("cer", "endo")),
-    annotations = c(paste("p =", signif(wilcox.test(ADC ~ CANC, data = data, na.rm = TRUE, paired = FALSE, exact = FALSE, conf.int = TRUE)$p.value, 3)))
+    test = wilcox.test,
+    map_signif_level = function(p) paste0("p = ", signif(p, 3))
   ) +
   scale_x_discrete(label = c("Cervical", "Endometrial")) +
   ylab("ADCmean") +
@@ -249,7 +251,7 @@ plot_myCustomGG <- function(feature, show_opt_cut = F) {
   print(feature)
 
   # get yposition for signif bar
-  signif_ypos <- max(plt_data[feature], na.rm = T) + (max(plt_data[feature], na.rm = T) * .02)
+  signif_ypos <- max(plt_data[feature], na.rm = T) * 1.08
 
   # get n observations for each
   n_obs <- plt_data %>%
@@ -275,9 +277,9 @@ plot_myCustomGG <- function(feature, show_opt_cut = F) {
     geom_boxplot(outlier.shape = NA) +
     geom_point(position = position_jitter(width = 0.1), alpha = .7) +
     geom_signif(
-      comparisons = list(c("0", "1")),
-      test = wilcox.test,
-      map_signif_level = function(p) paste0("p = ", signif(p, 3)),
+      xmin = 1,
+      xmax = 2,
+      annotations = paste0("p=", signif(padj[[feature]], 3)),
       y_position = c(signif_ypos)
     ) +
     ylab(ylabs[feature]) +
@@ -309,14 +311,40 @@ plot_myCustomGG <- function(feature, show_opt_cut = F) {
   return(g)
 }
 
+run_wilcox <- function(feature) {
+  plt_data <- data %>%
+    filter(CANC == canc)
+  w <- wilcox.test(plt_data[[feature]] ~ HIST, plt_data)
+  return(w$p.value)
+}
 opt_cut <- read.csv("outputs/tables/optimal_cutpoints_avg.csv")
 
 canc <- "cer"
+r1 <- lapply(quant_row_1, run_wilcox)
+names(r1) <- quant_row_1
+r2 <- lapply(quant_row_2, run_wilcox)
+names(r2) <- quant_row_2
+pt <- lapply(pt_features, run_wilcox)
+names(pt) <- pt_features
+
+pval <- c(r1, r2, pt)
+padj <- p.adjust(pval, method = "BH")
+
 gg_cer_pt <- lapply(pt_features, plot_myCustomGG)
 gg_cer_r1 <- lapply(quant_row_1, plot_myCustomGG)
 gg_cer_r2 <- lapply(quant_row_2, plot_myCustomGG)
 
 canc <- "endo"
+r1 <- lapply(quant_row_1, run_wilcox)
+names(r1) <- quant_row_1
+r2 <- lapply(quant_row_2, run_wilcox)
+names(r2) <- quant_row_2
+pt <- lapply(pt_features, run_wilcox)
+names(pt) <- pt_features
+
+pval <- c(r1, r2, pt)
+padj <- p.adjust(pval, method = "BH")
+
 gg_endo_pt <- lapply(pt_features, plot_myCustomGG)
 gg_endo_r1 <- lapply(quant_row_1, plot_myCustomGG, show_opt_cut = T)
 gg_endo_r2 <- lapply(quant_row_2, plot_myCustomGG, show_opt_cut = T)
