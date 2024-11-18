@@ -4,7 +4,12 @@ library(tidyverse)
 data <- read.csv("./data/processed_data.csv")
 
 get_proc <- function(measure, data) {
-  proc <- cutpointr::roc(data, !!measure, HIST, pos_class = 1, neg_class = 0)
+  dir <- if (measure %in% c("ADC", "ADC_NTR")) "<=" else ">="
+
+  d <- data[c(measure, "HIST")]
+  d <- d[rowSums(is.na(d)) == 0, ]
+
+  proc <- cutpointr::roc(d, x = !!measure, class = HIST, pos_class = 1, neg_class = 0, direction = dir)
   proc$name <- measure
   return(proc)
 }
