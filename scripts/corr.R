@@ -36,7 +36,7 @@ ylabs <- c(
 colnames(pairwise_corr$r) <- ylabs[as.character(colnames(pairwise_corr$r))]
 rownames(pairwise_corr$r) <- ylabs[as.character(rownames(pairwise_corr$r))]
 
-col_fun <- circlize::colorRamp2(c(min(pairwise_corr$r), 0, max(pairwise_corr$r)), c("blue", "white", "red"))
+col_fun <- circlize::colorRamp2(c(-1, 0, 1), c("blue", "white", "red"))
 
 hm <- Heatmap(pairwise_corr$r,
   col = col_fun,
