@@ -73,7 +73,7 @@ cor_res <- list(
   ADC_mal = cor.test(~ ADC + DEMO_AGE, d %>% filter(HIST == 1))
 )
 cor_res <- lapply(cor_res, function(c) {
-  c$p.value <- p.adjust(c$p.value, method = "bonferroni", n = 6)
+  c$p.value <- p.adjust(c$p.value, method = "fdr", n = 6)
   return(c)
 })
 
@@ -152,7 +152,7 @@ cor_res <- list(
   ADC_mal = cor.test(~ ADC + DEMO_AGE, d %>% filter(HIST == 1))
 )
 cor_res <- lapply(cor_res, function(c) {
-  c$p.value <- p.adjust(c$p.value, method = "bonferroni", n = 6)
+  c$p.value <- p.adjust(c$p.value, method = "fdr", n = 6)
   return(c)
 })
 
@@ -229,7 +229,7 @@ cor_res <- list(
   ADC_mal = cor.test(~ ADC + BMI, d %>% filter(HIST == 1))
 )
 cor_res <- lapply(cor_res, function(c) {
-  c$p.value <- p.adjust(c$p.value, method = "bonferroni", n = 6)
+  c$p.value <- p.adjust(c$p.value, method = "fdr", n = 6)
   return(c)
 })
 
@@ -307,7 +307,7 @@ cor_res <- list(
   ADC_mal = cor.test(~ ADC + BMI, d %>% filter(HIST == 1))
 )
 cor_res <- lapply(cor_res, function(c) {
-  c$p.value <- p.adjust(c$p.value, method = "bonferroni", n = 6)
+  c$p.value <- p.adjust(c$p.value, method = "fdr", n = 6)
   return(c)
 })
 
