@@ -1,10 +1,24 @@
 library(tidyverse)
 library(ggpubr)
 
+source("scripts/tex.R")
+
 data <- read.csv("./data/processed_data.csv")
 
 data <- data %>%
-  mutate(PATIENT_ID = factor(PATIENT_ID))
+  mutate(PATIENT_ID = factor(PATIENT_ID)) %>%
+  mutate(
+    CER_HIST = case_when(
+      CER_HIST == "Adeno" ~ "Adenocarcinoma",
+      .default = CER_HIST
+    ),
+    ENDO_HIST = case_when(
+      ENDO_HIST == "endo" ~ "Endometrioid",
+      ENDO_HIST == "sercc" ~ "Serous/Clear Cell",
+      ENDO_HIST == "other" ~ "Other",
+      .default = ENDO_HIST
+    )
+  )
 
 labels <- c(
   "ADC" = "ADCmean",
@@ -405,7 +419,7 @@ g1 <- ggplot(
   theme_classic() +
   scale_color_discrete(labels = c("Benign", "Malignant")) +
   xlab("") +
-  ylab("FDG SUVmax") +
+  ylab(tex$fdg_suvmax) +
   geom_signif(
     color = "black",
     annotations = pvals,
@@ -437,7 +451,7 @@ g2 <- ggplot(
   theme_classic() +
   scale_color_discrete(labels = c("Benign", "Malignant")) +
   xlab("") +
-  ylab("FEC SUVmax") +
+  ylab(tex$fec_suvmax) +
   geom_signif(
     color = "black",
     annotations = pvals,
@@ -469,7 +483,7 @@ g3 <- ggplot(
   theme_classic() +
   scale_color_discrete(name = "Histology", labels = c("Benign", "Malignant")) +
   xlab("") +
-  ylab("ADCmean") +
+  ylab(tex$mri_adc) +
   geom_signif(
     color = "black",
     annotations = pvals,
@@ -532,7 +546,7 @@ g1 <- ggplot(
   theme_classic() +
   scale_color_discrete(labels = c("Benign", "Malignant")) +
   xlab("") +
-  ylab("FDG SUVmax") +
+  ylab(tex$fdg_suvmax) +
   geom_signif(
     color = "black",
     annotations = pvals,
@@ -564,7 +578,7 @@ g2 <- ggplot(
   theme_classic() +
   scale_color_discrete(labels = c("Benign", "Malignant")) +
   xlab("") +
-  ylab("FEC SUVmax") +
+  ylab(tex$fec_suvmax) +
   geom_signif(
     color = "black",
     annotations = pvals,
@@ -596,7 +610,7 @@ g3 <- ggplot(
   theme_classic() +
   scale_color_discrete(name = "Histology", labels = c("Benign", "Malignant")) +
   xlab("") +
-  ylab("ADCmean") +
+  ylab(tex$mri_adc) +
   geom_signif(
     color = "black",
     annotations = pvals,
@@ -662,7 +676,7 @@ g1 <- ggplot(
   theme_classic() +
   scale_color_discrete(labels = c("Benign", "Malignant")) +
   xlab("") +
-  ylab("FDG SUVmax") +
+  ylab(tex$fdg_suvmax) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
   geom_signif(
     color = "black",
@@ -695,7 +709,7 @@ g2 <- ggplot(
   theme_classic() +
   scale_color_discrete(labels = c("Benign", "Malignant")) +
   xlab("") +
-  ylab("FEC SUVmax") +
+  ylab(tex$fec_suvmax) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
   geom_signif(
     color = "black",
@@ -728,7 +742,7 @@ g3 <- ggplot(
   theme_classic() +
   scale_color_discrete(name = "Histology", labels = c("Benign", "Malignant")) +
   xlab("") +
-  ylab("ADCmean") +
+  ylab(tex$mri_adc) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
   geom_signif(
     color = "black",
@@ -792,7 +806,8 @@ g1 <- ggplot(
   theme_classic() +
   scale_color_discrete(labels = c("Benign", "Malignant")) +
   xlab("") +
-  ylab("FDG SUVmax") +
+  ylab(tex$fdg_suvmax) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
   geom_signif(
     color = "black",
     annotations = pvals,
@@ -824,7 +839,8 @@ g2 <- ggplot(
   theme_classic() +
   scale_color_discrete(labels = c("Benign", "Malignant")) +
   xlab("") +
-  ylab("FEC SUVmax") +
+  ylab(tex$fec_suvmax) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
   geom_signif(
     color = "black",
     annotations = pvals,
@@ -856,7 +872,8 @@ g3 <- ggplot(
   theme_classic() +
   scale_color_discrete(name = "Histology", labels = c("Benign", "Malignant")) +
   xlab("") +
-  ylab("ADCmean") +
+  ylab(tex$mri_adc) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
   geom_signif(
     color = "black",
     annotations = pvals,
