@@ -1,6 +1,9 @@
 library(tidyverse)
 library(ggsignif)
 library(ggpubr)
+library(latex2exp)
+
+source("scripts/tex.R")
 
 data <- read.csv("./data/processed_data.csv")
 
@@ -23,7 +26,7 @@ g_fdg <- ggplot(
     map_signif_level = function(p) paste0("p = ", signif(p, 3))
   ) +
   scale_x_discrete(label = c("Cervical", "Endometrial")) +
-  ylab("FDG SUVmax") +
+  ylab(tex$fdg_suvmax) +
   xlab("") +
   theme_classic() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 10))
@@ -46,7 +49,7 @@ g_fec <- ggplot(
     map_signif_level = function(p) paste0("p = ", signif(p, 3))
   ) +
   scale_x_discrete(label = c("Cervical", "Endometrial")) +
-  ylab("FEC SUVmax") +
+  ylab(tex$fec_suvmax) +
   xlab("") +
   theme_classic() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 10))
@@ -69,7 +72,7 @@ g_adc <- ggplot(
     map_signif_level = function(p) paste0("p = ", signif(p, 3))
   ) +
   scale_x_discrete(label = c("Cervical", "Endometrial")) +
-  ylab("ADCmean") +
+  ylab(tex$mri_adc) +
   xlab("") +
   theme_classic() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 10))
@@ -114,7 +117,7 @@ g_fdg <- ggplot(
   ) +
   theme_classic() +
   theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1, size = 10)) +
-  ylab("FDG SUVmax") +
+  ylab(tex$fdg_suvmax) +
   xlab("")
 
 # fec
@@ -146,7 +149,7 @@ g_fec <- ggplot(
   ) +
   theme_classic() +
   theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1, size = 10)) +
-  ylab("FEC SUVmax") +
+  ylab(tex$fec_suvmax) +
   xlab("")
 
 # adc
@@ -178,7 +181,7 @@ g_adc <- ggplot(
   ) +
   theme_classic() +
   theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1, size = 10)) +
-  ylab("ADCmean") +
+  ylab(tex$mri_adc) +
   xlab("")
 
 g <- ggarrange(g_fdg, g_fec, g_adc,
@@ -229,6 +232,26 @@ plot_myCustomGG <- function(feature, show_opt_cut = F) {
   )
 
   ylabs <- c(
+    "FDG_SUV_PT" = tex$fdg_suvmax,
+    "FEC_SUV_PT" = tex$fec_suvmax,
+    "ADC_PT" = tex$mri_adc,
+    "FDG_SUV" = tex$fdg_suvmax,
+    "FDG_SA" = "FDG SA (mm)",
+    "FDG_LA" = "FDG LA (mm)",
+    "FDG_NTR" = tex$fdg_suvmax_ntr,
+    "FDG_STAR" = tex$fdg_suvmax_star,
+    "FDG_SNSA" = "FDG SNSA",
+    "FEC_SUV" = tex$fec_suvmax,
+    "FEC_SA" = "FEC SA (mm)",
+    "FEC_LA" = "FEC LA (mm)",
+    "FEC_NTR" = tex$fec_suvmax_ntr,
+    "FEC_STAR" = tex$fec_suvmax_star,
+    "FEC_SNSA" = "FEC SNSA",
+    "ADC" = tex$mri_adc,
+    "ADC_NTR" = tex$mri_adc_ntr
+  )
+
+  ylabs_norm <- c(
     "FDG_SUV_PT" = "FDG SUVmax",
     "FEC_SUV_PT" = "FEC SUVmax",
     "ADC_PT" = "ADCmean",
@@ -297,7 +320,7 @@ plot_myCustomGG <- function(feature, show_opt_cut = F) {
 
   if (show_opt_cut) {
     oc <- opt_cut %>%
-      filter(name == ylabs[feature]) %>%
+      filter(name == ylabs_norm[feature]) %>%
       pull(optimal_cutpoint)
     g <- g +
       geom_hline(

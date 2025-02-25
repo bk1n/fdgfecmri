@@ -1,6 +1,8 @@
 library(pROC)
 library(tidyverse)
 
+source("scripts/tex.R")
+
 data <- read.csv("./data/processed_data.csv")
 
 get_proc <- function(measure, data) {
@@ -85,11 +87,11 @@ g_roc <- ggplot(
     name = "Measure Type",
     values = c("solid", "twodash", "dotdash", "dashed")
   ) +
-  facet_wrap(~measure_type)
+  facet_wrap(~measure_type, labeller = label_bquote(.(c(tex$fdg, tex$fec, tex$mri))))
 
 ggsave("outputs/ROC_endo.png",
   g_roc,
-  width = 7,
+  width = 8,
   height = 4,
   units = "in",
   dpi = 300
@@ -160,11 +162,11 @@ g_roc <- ggplot(
     name = "Measure Type",
     values = c("solid", "twodash", "dotdash", "dashed")
   ) +
-  facet_wrap(~measure_type)
+  facet_wrap(~measure_type, labeller = label_bquote(.(c(tex$fdg, tex$fec, tex$mri))))
 
 ggsave("outputs/ROC_cer.png",
   g_roc,
-  width = 7,
+  width = 8,
   height = 4,
   units = "in",
   dpi = 300

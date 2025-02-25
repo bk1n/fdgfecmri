@@ -86,25 +86,23 @@ if (run_opt_cut) {
 
 ## plt opt cut res boxplots ----
 ylabs <- c(
-  "FDG_SUV_PT" = "FDG SUVmax",
-  "FEC_SUV_PT" = "FEC SUVmax",
-  "ADC_PT" = "PT ADCmean",
-  "FDG_SUV" = "FDG SUVmax",
+  "FDG_SUV_PT" = tex$fdg_suvmax_pt,
+  "FEC_SUV_PT" = tex$fec_suvmax_pt,
+  "ADC_PT" = tex$mri_adc_pt,
+  "FDG_SUV" = tex$fdg_suvmax,
   "FDG_SA" = "FDG SA (mm)",
   "FDG_LA" = "FDG LA (mm)",
-  "FDG_NTR" = "FDG SUVmax NTR",
-  "FDG_STAR" = "FDG STAR",
+  "FDG_NTR" = tex$fdg_suvmax_ntr,
+  "FDG_STAR" = tex$fdg_suvmax_star,
   "FDG_SNSA" = "FDG SNSA",
-  "FEC_SUV" = "FEC SUVmax",
+  "FEC_SUV" = tex$fec_suvmax,
   "FEC_SA" = "FEC SA (mm)",
   "FEC_LA" = "FEC LA (mm)",
-  "FEC_NTR" = "FEC SUVmax NTR",
-  "FEC_STAR" = "FEC STAR",
+  "FEC_NTR" = tex$fec_suvmax_ntr,
+  "FEC_STAR" = tex$fec_suvmax_star,
   "FEC_SNSA" = "FEC SNSA",
-  "ADC" = "ADCmean",
-  "ADC_NTR" = "ADCmean NTR",
-  "LR_SUV" = "LR (SUV)",
-  "LR_SA" = "LR (SA)"
+  "ADC" = tex$mri_adc,
+  "ADC_NTR" = tex$mri_adc_ntr
 )
 
 # format plt_df
