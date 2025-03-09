@@ -6,6 +6,8 @@ library(cutpointr)
 library(ggpubr)
 library(caret)
 
+source("scripts/tex.R")
+
 # filter data ----
 data <- read.csv("./data/processed_data.csv")
 
@@ -67,6 +69,8 @@ get_opt_cut <- function(data, measure) {
 # run opt cut ----
 run_opt_cut <- F
 if (run_opt_cut) {
+  set.seed(42)
+
   run_cols <- c(
     "FDG_SUV", "FDG_STAR", "FDG_NTR",
     "FEC_SUV", "FEC_STAR", "FEC_NTR",
@@ -105,12 +109,32 @@ ylabs <- c(
   "ADC_NTR" = tex$mri_adc_ntr
 )
 
+ylabs_norm <- c(
+  "FDG_SUV_PT" = "FDG SUVmax",
+  "FEC_SUV_PT" = "FEC SUVmax",
+  "ADC_PT" = "ADCmean",
+  "FDG_SUV" = "FDG SUVmax",
+  "FDG_SA" = "FDG SA (mm)",
+  "FDG_LA" = "FDG LA (mm)",
+  "FDG_NTR" = "FDG SUVmax NTR",
+  "FDG_STAR" = "FDG STAR",
+  "FDG_SNSA" = "FDG SNSA",
+  "FEC_SUV" = "FEC SUVmax",
+  "FEC_SA" = "FEC SA (mm)",
+  "FEC_LA" = "FEC LA (mm)",
+  "FEC_NTR" = "FEC SUVmax NTR",
+  "FEC_STAR" = "FEC STAR",
+  "FEC_SNSA" = "FEC SNSA",
+  "ADC" = "ADCmean",
+  "ADC_NTR" = "ADCmean NTR"
+)
+
 # format plt_df
 plt_df_tidy <- plt_df %>%
   # select measures
   select(name, optimal_cutpoint, AUC_oob, sensitivity_oob, specificity_oob) %>%
   # convert names
-  mutate(name = ylabs[name]) %>%
+  mutate(name = ylabs_norm[name]) %>%
   # get measure type
   mutate(measure_type = case_when(
     grepl("FDG", name) ~ "FDG-PET/CT",
