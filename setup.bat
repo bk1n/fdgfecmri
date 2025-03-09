@@ -14,8 +14,8 @@ echo Working directory %cd%
 :: Check the hostname and execute commands accordingly
 if "%HOSTNAME%"=="BKPC" (
     echo Identified Home PC ^(BKPC^)
-    mklink /D "data" "D:\Ben King\Documents\OneDrive - University of Edinburgh\projects\MRes\data\" 
-    mklink /D "outputs" "D:\Ben King\Documents\OneDrive - University of Edinburgh\projects\MRes\outputs\"
+    mklink /D "data" "F:\Documents\OneDrive - University of Edinburgh\projects\MRes\data\" 
+    mklink /D "outputs" "F:\Documents\OneDrive - University of Edinburgh\projects\MRes\outputs\"
 ) else if "%HOSTNAME%"=="MVM-IGC-D0060" (
     echo Identified Work PC ^(MVM-IGC-D0060^)
     mklink /D "data" "C:\Users\s1754085\OneDrive - University of Edinburgh\projects\MRes\data\" 
