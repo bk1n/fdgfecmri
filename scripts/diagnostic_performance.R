@@ -79,12 +79,29 @@ r <- lapply(measures, function(m) {
     z
 })
 res <- do.call(rbind, r)
-res %>%
+d <- res %>%
     group_by(measure) %>%
     mutate(diff = visual - quant) %>%
-    summarise(sd = sd(diff))
+    filter(measure == "FDG_SUV")
+
+
+x <- d$visual
+x <- rnorm(100000)
+r <- (length(x) / 2) - (1.96 * sqrt(length(x)) / 2)
+s <- 1 + (length(x) / 2) + (1.96 * sqrt(length(x)) / 2)
+
+lci <- x[order(x)][round(r)]
+uci <- x[order(x)][round(s)]
+median(x)
+
+hist(x)
+abline(v = c(lci, median(x), uci))
+
+100 * ((1 - 0.95) / 2)
 
 hist(res$quant[res$measure == "FDG_SUV"])
+hist(res$visual[res$measure == "FDG_SUV"])
+
 
 
 # get bootstrap dataset
