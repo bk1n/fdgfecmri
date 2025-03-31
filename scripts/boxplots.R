@@ -211,66 +211,6 @@ plot_myCustomGG <- function(feature, show_opt_cut = F) {
   # convert hist to factor
   plt_data <- mutate(plt_data, HIST = factor(HIST, levels = c(0, 1)))
 
-  ylabs <- c(
-    "FDG_SUV_PT" = expression(FDG ~ SUV[max]),
-    "FEC_SUV_PT" = expression(FEC ~ SUV[max]),
-    "ADC_PT" = expression(ADC[mean]),
-    "FDG_SUV" = expression(FDG ~ SUV[max]),
-    "FDG_SA" = expression(FDG ~ SA ~ (mm)),
-    "FDG_LA" = expression(FDG ~ LA ~ (mm)),
-    "FDG_NTR" = expression(FDG ~ NTR),
-    "FDG_STAR" = expression(FDG ~ STAR),
-    "FDG_SNSA" = expression(FDG ~ SNSA),
-    "FEC_SUV" = expression(FEC ~ SUV[max]),
-    "FEC_SA" = expression(FEC ~ SA ~ (mm)),
-    "FEC_LA" = expression(FEC ~ LA ~ (mm)),
-    "FEC_NTR" = expression(FEC ~ NTR),
-    "FEC_STAR" = expression(FEC ~ STAR),
-    "FEC_SNSA" = expression(FEC ~ SNSA),
-    "ADC" = expression(ADC[mean]),
-    "ADC_NTR" = expression(ADC[mean] ~ NTR)
-  )
-
-  ylabs <- c(
-    "FDG_SUV_PT" = tex$fdg_suvmax,
-    "FEC_SUV_PT" = tex$fec_suvmax,
-    "ADC_PT" = tex$mri_adc,
-    "FDG_SUV" = tex$fdg_suvmax,
-    "FDG_SA" = "FDG SA (mm)",
-    "FDG_LA" = "FDG LA (mm)",
-    "FDG_NTR" = tex$fdg_suvmax_ntr,
-    "FDG_STAR" = tex$fdg_suvmax_star,
-    "FDG_SNSA" = "FDG SNSA",
-    "FEC_SUV" = tex$fec_suvmax,
-    "FEC_SA" = "FEC SA (mm)",
-    "FEC_LA" = "FEC LA (mm)",
-    "FEC_NTR" = tex$fec_suvmax_ntr,
-    "FEC_STAR" = tex$fec_suvmax_star,
-    "FEC_SNSA" = "FEC SNSA",
-    "ADC" = tex$mri_adc,
-    "ADC_NTR" = tex$mri_adc_ntr
-  )
-
-  ylabs_norm <- c(
-    "FDG_SUV_PT" = "FDG SUVmax",
-    "FEC_SUV_PT" = "FEC SUVmax",
-    "ADC_PT" = "ADCmean",
-    "FDG_SUV" = "FDG SUVmax",
-    "FDG_SA" = "FDG SA (mm)",
-    "FDG_LA" = "FDG LA (mm)",
-    "FDG_NTR" = "FDG SUVmax NTR",
-    "FDG_STAR" = "FDG STAR",
-    "FDG_SNSA" = "FDG SNSA",
-    "FEC_SUV" = "FEC SUVmax",
-    "FEC_SA" = "FEC SA (mm)",
-    "FEC_LA" = "FEC LA (mm)",
-    "FEC_NTR" = "FEC SUVmax NTR",
-    "FEC_STAR" = "FEC STAR",
-    "FEC_SNSA" = "FEC SNSA",
-    "ADC" = "ADCmean",
-    "ADC_NTR" = "ADCmean NTR"
-  )
-
   print(feature)
 
   # get yposition for signif bar
@@ -305,7 +245,7 @@ plot_myCustomGG <- function(feature, show_opt_cut = F) {
       annotations = paste0("p=", signif(padj[[feature]], 3)),
       y_position = c(signif_ypos)
     ) +
-    ylab(ylabs[feature]) +
+    ylab(ylabs_short[feature]) +
     xlab("") +
     scale_x_discrete(label = c("B", "M")) +
     geom_text(
@@ -320,15 +260,18 @@ plot_myCustomGG <- function(feature, show_opt_cut = F) {
 
   if (show_opt_cut) {
     oc <- opt_cut %>%
-      filter(name == ylabs_norm[feature]) %>%
-      pull(optimal_cutpoint)
+      select(measure, beta, median_oc) %>%
+      filter(measure == feature, beta %in% c(0.5, 1, 2)) %>%
+      mutate(beta = as.factor(beta^2))
     g <- g +
       geom_hline(
-        yintercept = oc,
-        color = "red",
-        linetype = "dashed",
+        data = oc,
+        aes(yintercept = median_oc, color = beta, linetype = beta),
+        # linetype = "dashed",
+        alpha = .7,
         linewidth = 1
-      )
+      ) +
+      labs(color = TeX("$\\beta^2"), linetype = TeX("$\\beta^2"))
   }
 
   return(g)
@@ -340,7 +283,7 @@ run_wilcox <- function(feature) {
   w <- wilcox.test(plt_data[[feature]] ~ HIST, plt_data)
   return(w$p.value)
 }
-opt_cut <- read.csv("outputs/tables/optimal_cutpoints_avg.csv")
+opt_cut <- read.csv("outputs/tables/diagnostic_performance.csv")
 
 canc <- "cer"
 r1 <- lapply(quant_row_1, run_wilcox)
@@ -377,7 +320,7 @@ g <- ggarrange(
   plotlist = c(gg_endo_pt, gg_cer_pt),
   ncol = length(pt_features),
   nrow = 2,
-  labels = c("A", rep("", length(pt_features) - 1), "B")
+  labels = c("a", rep("", length(pt_features) - 1), "b")
 )
 ggsave("outputs/boxplot_quants_pt.png",
   g,
@@ -393,7 +336,9 @@ g <- ggarrange(
   plotlist = c(gg_endo_r1, gg_endo_r2),
   ncol = length(gg_endo_r1),
   nrow = 2,
-  labels = c("A", rep("", length(gg_endo_r1) - 2), "C", "B")
+  align = "v",
+  labels = c("a", rep("", length(gg_endo_r1) - 2), "c", "b"),
+  common.legend = T
 )
 ggsave("outputs/boxplot_quants_endo.png",
   g,
@@ -409,7 +354,7 @@ g <- ggarrange(
   plotlist = c(gg_cer_r1, gg_cer_r2),
   ncol = length(gg_cer_r1),
   nrow = 2,
-  labels = c("A", rep("", length(gg_cer_r1) - 2), "C", "B")
+  labels = c("a", rep("", length(gg_cer_r1) - 2), "c", "b")
 )
 ggsave("outputs/boxplot_quants_cer.png",
   g,

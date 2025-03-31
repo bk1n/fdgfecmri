@@ -168,8 +168,7 @@ bootstrap <- function(x) {
 }
 
 # run pipeline
-# measures to be processed from data
-# 	S_j = Pr(Y=1|X_i) = ->
+
 # For each sample j in {1:,...,n}:
 #   1. Identify cut-off c_j on all samples except j: {1,...,j-1,j+1,...,n}
 #   2. If x_j >= O_j, Ŷ = 1 otherwise Ŷ = 0 (or <= for ADC measures)
@@ -229,9 +228,9 @@ run <- function(measures, beta = 1) {
     metrics
 }
 
-measures <- c("FDG_SUV", "FDG_STAR", "FDG_NTR", "FEC_SUV", "FEC_STAR", "FEC_NTR", "ADC", "ADC_NTR")
 
-# run pipeline, get full results
+# run pipeline, get full results ----
+measures <- c("FDG_SUV", "FDG_STAR", "FDG_NTR", "FEC_SUV", "FEC_STAR", "FEC_NTR", "ADC", "ADC_NTR")
 if (run_pipeline) {
     beta_res <- lapply(2^seq(-4, 5), run, measures = measures)
     beta_res <- do.call(rbind, beta_res)
@@ -243,6 +242,8 @@ if (run_pipeline) {
 } else {
     beta_res <- read.csv(file.path(out_path, "tables", "diagnostic_performance.csv"))
 }
+
+hist(log2(beta_res$beta))
 
 # prettify results
 x <- beta_res %>%
@@ -342,19 +343,20 @@ g <- ggpubr::ggarrange(
             rows = vars(name),
             cols = vars(measure),
             scales = "free_x",
-            labeller = label_bquote(cols = .(ylabs[match(levels(factor(plt$measure)), names(ylabs))]), rows = .(metric_translator[match(levels(factor(plt$name)), names(metric_translator))]))
+            labeller = label_bquote(cols = .(ylabs_short[match(levels(factor(plt$measure)), names(ylabs_short))]), rows = .(metric_translator[match(levels(factor(plt$name)), names(metric_translator))]))
         ) +
-        labs(x = TeX("$\\beta^2"), y = "") +
+        labs(x = TeX("$log_2(\\beta^2)"), y = "") +
         theme_bw() +
         scale_y_continuous(breaks = c(0, 0.5, 1)),
     ggplot(plt, aes(x = log2(signif(beta^2, 2)), y = median_oc)) +
         geom_line(aes(group = measure)) +
         geom_point() +
-        facet_wrap(~measure, nrow = 1, scales = "free_y", labeller = label_bquote(cols = .(ylabs[match(levels(factor(plt$measure)), names(ylabs))]))) +
-        labs(x = TeX("$\\beta^2"), y = "Median cut-off") +
+        facet_wrap(~measure, nrow = 1, scales = "free_y", labeller = label_bquote(cols = .(ylabs_short[match(levels(factor(plt$measure)), names(ylabs_short))]))) +
+        labs(x = TeX("$log_2(\\beta^2)"), y = "Median cut-off") +
         theme_bw(),
     nrow = 2,
-    heights = c(.8, .2)
+    heights = c(.8, .2),
+    labels = "auto"
 )
 
-ggsave(file.path(out_path, "diagnostic_performance_bybeta.png"), g, width = 18, height = 8, units = "in")
+ggsave(file.path(out_path, "diagnostic_performance_bybeta.png"), g, width = 14.4, height = 10, units = "in", dpi = 600)

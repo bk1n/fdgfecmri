@@ -37,6 +37,43 @@ ylabs <- c(
     "ADC_NTR" = tex$mri_adc_ntr
 )
 
+tex_short <- list(
+    "fdg" = TeX("$\\lbrack^{18}F\\rbrack$FDG"),
+    "fec" = TeX("$\\lbrack^{18}F\\rbrack$FEC"),
+    "mri" = TeX("DW-MRI"),
+    "fdg_suvmax" = TeX("$\\lbrack^{18}F\\rbrack$FDG  $SUV_{max}$"),
+    "fec_suvmax" = TeX("$\\lbrack^{18}F\\rbrack$FEC  $SUV_{max}$"),
+    "mri_adc" = TeX("DW-MRI $ADC_{mean}$"),
+    "fdg_suvmax_pt" = TeX("$\\lbrack^{18}F\\rbrack$FDG $SUV_{max}$ (PT)"),
+    "fec_suvmax_pt" = TeX("$\\lbrack^{18}F\\rbrack$FEC $SUV_{max}$ (PT)"),
+    "mri_adc_pt" = TeX("DW-MRI $ADC_{mean}$ (PT)"),
+    "fdg_suvmax_ntr" = TeX("$\\lbrack^{18}F\\rbrack$FDG $SUV_{max}$ NTR"),
+    "fec_suvmax_ntr" = TeX("$\\lbrack^{18}F\\rbrack$FEC $SUV_{max}$ NTR"),
+    "mri_adc_ntr" = TeX("DW-MRI $ADC_{mean}$ NTR"),
+    "fdg_suvmax_star" = TeX("$\\lbrack^{18}F\\rbrack$FDG $SUV_{max}$ STAR"),
+    "fec_suvmax_star" = TeX("$\\lbrack^{18}F\\rbrack$FEC $SUV_{max}$ STAR")
+)
+
+ylabs_short <- c(
+    "FDG_SUV_PT" = tex_short$fdg_suvmax_pt,
+    "FEC_SUV_PT" = tex_short$fec_suvmax_pt,
+    "ADC_PT" = tex_short$mri_adc_pt,
+    "FDG_SUV" = tex_short$fdg_suvmax,
+    "FDG_SA" = "FDG SA (mm)",
+    "FDG_LA" = "FDG LA (mm)",
+    "FDG_NTR" = tex_short$fdg_suvmax_ntr,
+    "FDG_STAR" = tex_short$fdg_suvmax_star,
+    "FDG_SNSA" = "FDG SNSA",
+    "FEC_SUV" = tex_short$fec_suvmax,
+    "FEC_SA" = "FEC SA (mm)",
+    "FEC_LA" = "FEC LA (mm)",
+    "FEC_NTR" = tex_short$fec_suvmax_ntr,
+    "FEC_STAR" = tex_short$fec_suvmax_star,
+    "FEC_SNSA" = "FEC SNSA",
+    "ADC" = tex_short$mri_adc,
+    "ADC_NTR" = tex_short$mri_adc_ntr
+)
+
 ylabs_norm <- c(
     "FDG_SUV_PT" = "FDG SUVmax",
     "FEC_SUV_PT" = "FEC SUVmax",
