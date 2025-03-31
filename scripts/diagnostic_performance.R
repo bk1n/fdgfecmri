@@ -5,374 +5,356 @@ library(tidyverse)
 library(cutpointr)
 library(ggpubr)
 library(caret)
+library(boot)
 
 source("scripts/tex.R")
+
+out_path <- "outputs/"
+
+run_pipeline <- F
 
 # filter data ----
 data <- read.csv("./data/processed_data.csv")
 
 data <- data %>%
-  select(
-    FDG_SUV, FDG_STAR, FDG_NTR,
-    FEC_SUV, FEC_STAR, FEC_NTR,
-    ADC, ADC_NTR,
-    VIS_FDG, VIS_FEC, VIS_MRI,
-    HIST, region, CANC
-  )
+    select(
+        FDG_SUV, FDG_STAR, FDG_NTR,
+        FEC_SUV, FEC_STAR, FEC_NTR,
+        ADC, ADC_NTR,
+        VIS_FDG, VIS_FEC, VIS_MRI,
+        HIST, region, CANC
+    )
 
 data <- data %>% dplyr::filter(CANC == "endo") # endo only
+# convert visual measures to binary
+data <- data %>%
+    mutate(across(VIS_FDG:VIS_MRI, .fn = function(x) if_else(x >= 5, 1, 0)))
 
-# opt cut func ----
-get_opt_cut <- function(data, measure) {
-  # filter df to patients w both visual and quants
-  vis_measure <- if (grepl("FDG", measure)) "VIS_FDG" else if (grepl("FEC", measure)) "VIS_FEC" else "VIS_MRI"
-
-  df <- data %>%
-    dplyr::filter(!is.na(!!rlang::sym(measure)) & !is.na(!!rlang::sym(vis_measure)))
-
-  print(paste("Getting cutpoint for:", measure))
-
-  x <- df[[measure]]
-  class <- df$HIST
-  if (grepl("ADC", measure)) {
-    dir <- "<="
-  } else {
-    dir <- ">="
-  }
-  opt_cut <- cutpointr(
-    x = x,
-    class = class,
-    na.rm = T,
-    method = maximize_metric,
-    metric = F1_score,
-    pos_class = 1,
-    neg_class = 0,
-    direction = dir,
-    boot_runs = 2000,
-    boot_stratify = T
-  )
-  summary.opt_cut <- summary(opt_cut)
-
-  boot_data <- summary.opt_cut$cutpointr[[1]]$boot[[1]]
-  boot_data$name <- measure
-  boot_data <- relocate(boot_data, "name")
-  boot_data <- select(boot_data, -where(is.list))
-
-  return(list(
-    opt_cut = opt_cut,
-    summary = summary.opt_cut,
-    boot_data = boot_data,
-    df = df
-  ))
-}
-
-# run opt cut ----
-run_opt_cut <- F
-if (run_opt_cut) {
-  set.seed(42)
-
-  run_cols <- c(
-    "FDG_SUV", "FDG_STAR", "FDG_NTR",
-    "FEC_SUV", "FEC_STAR", "FEC_NTR",
-    "ADC", "ADC_NTR"
-  )
-
-  cutpoint_res <- lapply(run_cols, get_opt_cut, data = data)
-  names(cutpoint_res) <- run_cols
-
-  plt_df <- do.call(rbind, lapply(cutpoint_res, function(r) r$boot_data))
-
-  ## save opt cut res ----
-  write.csv(plt_df, "outputs/tables/optimal_cutpoints.csv", row.names = F)
-} else {
-  plt_df <- read.csv("outputs/tables/optimal_cutpoints.csv")
-}
-
-## plt opt cut res boxplots ----
-ylabs <- c(
-  "FDG_SUV_PT" = tex$fdg_suvmax_pt,
-  "FEC_SUV_PT" = tex$fec_suvmax_pt,
-  "ADC_PT" = tex$mri_adc_pt,
-  "FDG_SUV" = tex$fdg_suvmax,
-  "FDG_SA" = "FDG SA (mm)",
-  "FDG_LA" = "FDG LA (mm)",
-  "FDG_NTR" = tex$fdg_suvmax_ntr,
-  "FDG_STAR" = tex$fdg_suvmax_star,
-  "FDG_SNSA" = "FDG SNSA",
-  "FEC_SUV" = tex$fec_suvmax,
-  "FEC_SA" = "FEC SA (mm)",
-  "FEC_LA" = "FEC LA (mm)",
-  "FEC_NTR" = tex$fec_suvmax_ntr,
-  "FEC_STAR" = tex$fec_suvmax_star,
-  "FEC_SNSA" = "FEC SNSA",
-  "ADC" = tex$mri_adc,
-  "ADC_NTR" = tex$mri_adc_ntr
+# helper funcs ----
+metric_translator <- c(
+    "f1" = "F1-score",
+    "fbeta" = TeX("$F_{\\beta}$"),
+    "npv" = "NPV",
+    "ppv" = "PPV",
+    "sens" = "Sensitivity",
+    "spec" = "Specificity"
 )
 
-ylabs_norm <- c(
-  "FDG_SUV_PT" = "FDG SUVmax",
-  "FEC_SUV_PT" = "FEC SUVmax",
-  "ADC_PT" = "ADCmean",
-  "FDG_SUV" = "FDG SUVmax",
-  "FDG_SA" = "FDG SA (mm)",
-  "FDG_LA" = "FDG LA (mm)",
-  "FDG_NTR" = "FDG SUVmax NTR",
-  "FDG_STAR" = "FDG STAR",
-  "FDG_SNSA" = "FDG SNSA",
-  "FEC_SUV" = "FEC SUVmax",
-  "FEC_SA" = "FEC SA (mm)",
-  "FEC_LA" = "FEC LA (mm)",
-  "FEC_NTR" = "FEC SUVmax NTR",
-  "FEC_STAR" = "FEC STAR",
-  "FEC_SNSA" = "FEC SNSA",
-  "ADC" = "ADCmean",
-  "ADC_NTR" = "ADCmean NTR"
-)
-
-# format plt_df
-plt_df_tidy <- plt_df %>%
-  # select measures
-  select(name, optimal_cutpoint, AUC_oob, sensitivity_oob, specificity_oob) %>%
-  # convert names
-  mutate(name = ylabs_norm[name]) %>%
-  # get measure type
-  mutate(measure_type = case_when(
-    grepl("FDG", name) ~ "FDG-PET/CT",
-    grepl("FEC", name) ~ "FEC-PET/CT",
-    grepl("ADC", name) ~ "DW-MRI",
-    grepl("LR", name) ~ "LR"
-  )) %>%
-  # mutate measure type
-  mutate(
-    measure_type = factor(measure_type, levels = c("FDG-PET/CT", "FEC-PET/CT", "DW-MRI")),
-    name = factor(name, levels = c(
-      "FDG SUVmax", "FDG STAR", "FDG SUVmax NTR",
-      "FEC SUVmax", "FEC STAR", "FEC SUVmax NTR",
-      "ADCmean", "ADCmean NTR"
-    ))
-  )
-
-# get mean of each measure
-mean_df <- plt_df %>%
-  group_by(name) %>%
-  summarise(across(where(is.numeric), ~ mean(.x, na.rm = T))) %>%
-  ungroup()
-
-mean_df_tidy <- plt_df_tidy %>%
-  group_by(name, measure_type) %>%
-  summarise(across(where(is.numeric), ~ mean(.x, na.rm = T))) %>%
-  ungroup()
-
-# write mean results
-write.csv(mean_df_tidy, "outputs/tables/optimal_cutpoints_avg.csv", row.names = F)
-
-# plot boxplots
-g_auc <- ggplot(
-  plt_df_tidy,
-  aes(
-    x = name,
-    y = AUC_oob
-  )
-) +
-  geom_boxplot(outlier.shape = NA) +
-  geom_point(
-    data = mean_df,
-    size = 3,
-    shape = 3,
-    color = "red"
-  ) +
-  theme_classic() +
-  xlab("") +
-  ylab("Area Under Curve (AUC)") +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
-  theme(axis.text.x = element_blank()) +
-  facet_grid(~measure_type, space = "free", scales = "free_x")
-
-g_sens <- ggplot(
-  plt_df_tidy,
-  aes(
-    x = name,
-    y = sensitivity_oob
-  )
-) +
-  geom_boxplot(outlier.shape = NA) +
-  geom_point(
-    data = mean_df,
-    size = 3,
-    shape = 3,
-    color = "red"
-  ) +
-  theme_classic() +
-  xlab("") +
-  ylab("Sensitivity") +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
-  theme(axis.text.x = element_blank()) +
-  facet_grid(~measure_type, space = "free", scales = "free_x")
-
-g_spec <- ggplot(
-  plt_df_tidy,
-  aes(
-    x = name,
-    y = specificity_oob
-  )
-) +
-  geom_boxplot(outlier.shape = NA) +
-  geom_point(
-    data = mean_df,
-    size = 3,
-    shape = 3,
-    color = "red"
-  ) +
-  theme_classic() +
-  xlab("") +
-  ylab("Specificity") +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
-  facet_grid(~measure_type, space = "free", scales = "free_x")
-
-g <- ggarrange(g_auc, g_sens, g_spec, nrow = 3, heights = c(0.8, 0.8, 1))
-
-# refit optimal cutpoints & calculate diagnostic performance ----
-get_diagnostic_performance <- function(measure,
-                                       data) {
-  # given measure, get optimal cutpoint
-  # mean_df = optimal cutpoints
-  cut <- mean_df$optimal_cutpoint[mean_df$name == measure]
-
-  # get vis measure
-  if (!(measure %in% c("VIS_FDG", "VIS_FEC", "VIS_MRI"))) {
-    vis_measure <- if (grepl("FDG", measure)) "VIS_FDG" else if (grepl("FEC", measure)) "VIS_FEC" else "VIS_MRI"
-    df <- data %>%
-      dplyr::filter(!is.na(!!rlang::sym(measure)) & !is.na(!!rlang::sym(vis_measure)))
-  } else {
-    vis_measure <- measure
-    alt_measure <- if (grepl("FDG", measure)) "FDG_SUV" else if (grepl("FEC", measure)) "FEC_SUV" else "ADC"
-    df <- data %>%
-      dplyr::filter(!is.na(!!rlang::sym(vis_measure)) & !is.na(!!rlang::sym(alt_measure)))
-  }
-
-  # get x (measure) and y (HIST)
-  x <- df[[measure]]
-  y <- df[["HIST"]]
-
-  # convert x
-  if (!(measure %in% c("VIS_FDG", "VIS_FEC", "VIS_MRI"))) {
-    x <- if (vis_measure != "VIS_MRI") as.numeric(x >= cut) else as.numeric(x <= cut)
-  } else {
-    x <- as.numeric(x >= 5)
-  }
-
-  cm <- table(measure = x, hist = y)
-
-  # hist = cols, measure = rows
-  stopifnot(length(x) == length(y))
-
-  num_regions <- length(x)
-  tp <- cm["1", "1"]
-  fn <- cm["0", "1"]
-  fp <- cm["1", "0"]
-  tn <- cm["0", "0"]
-
-  sens <- tp / (tp + fn)
-  spec <- tn / (tn + fp)
-  ppv <- tp / (tp + fp)
-  npv <- tn / (tn + fn)
-  f1 <- 2 * tp / (2 * tp + fp + fn)
-
-  return(list(
-    num_regions = num_regions,
-    tp = tp,
-    fn = fn,
-    tn = tn,
-    fp = fp,
-    sens = sens,
-    spec = spec,
-    ppv = ppv,
-    npv = npv,
-    f1 = f1
-  ))
+# custom metric function
+fbeta <- function(tp, fp, tn, fn, beta, ...) {
+    se <- tp / (tp + fn)
+    ppv <- tp / (tp + fp)
+    fbeta <- (1 + beta^2) * (2 * se * ppv) / (beta^2 * ppv + se)
+    fbeta
 }
 
-measures <- c(
-  "FDG_SUV", "FDG_STAR", "FDG_NTR",
-  "FEC_SUV", "FEC_STAR", "FEC_NTR",
-  "ADC", "ADC_NTR",
-  "VIS_FDG", "VIS_FEC", "VIS_MRI"
-)
-
-performance <- lapply(measures, get_diagnostic_performance, data = data)
-names(performance) <- measures
-
-performance_df <- do.call(rbind, performance)
-
-write.csv(performance_df, "outputs/tables/diagnostic_performance_refit.csv", row.names = T)
-
-# mcnemars test ----
-mcnemar_test <- function(measure, data) {
-  # given measure, get optimal cutpoint
-  # mean_df = optimal cutpoints
-  cut <- mean_df$optimal_cutpoint[mean_df$name == measure]
-
-  # get vis measure
-  vis_measure <- if (grepl("FDG", measure)) "VIS_FDG" else if (grepl("FEC", measure)) "VIS_FEC" else "VIS_MRI"
-  df <- data %>%
-    dplyr::filter(!is.na(!!rlang::sym(measure)) & !is.na(!!rlang::sym(vis_measure)))
-
-  # get x (measure) and y (HIST)
-  q <- df[[measure]]
-  v <- df[[vis_measure]]
-  y <- df[["HIST"]]
-
-  # convert q & v
-  q <- if (vis_measure != "VIS_MRI") as.numeric(q >= cut) else as.numeric(q <= cut)
-  v <- as.numeric(v >= 5)
-
-  pos <- list(
-    q = q[y == 1],
-    v = v[y == 1],
-    y = y[y == 1]
-  )
-
-  neg <- list(
-    q = q[y == 0],
-    v = v[y == 0],
-    y = y[y == 0]
-  )
-
-  pos_cm <- table(
-    quant = (pos$q == pos$y),
-    vis = (pos$v == pos$y)
-  )
-
-  neg_cm <- table(
-    quant = (neg$q == neg$y),
-    vis = (neg$v == neg$y)
-  )
-
-
-  return(
-    list(
-      measure = measure,
-      vis_measure = vis_measure,
-      num_regions = length(q),
-      sens_mcnemar = mcnemar.test(pos_cm)$p.value,
-      spec_mcnemar = mcnemar.test(neg_cm)$p.value
+calculate_metrics <- function(hist, preds, beta = 1) {
+    cm <- table(
+        hist = factor(hist, levels = c(0, 1)),
+        pred = factor(preds, levels = c(0, 1))
     )
-  )
+    tp <- cm[2, 2]
+    fp <- cm[1, 2]
+    tn <- cm[1, 1]
+    fn <- cm[2, 1]
+    sens <- tp / (tp + fn)
+    spec <- tn / (tn + fp)
+    ppv <- tp / (tp + fp)
+    npv <- tn / (tn + fn)
+    acc <- (tp + tn) / (tp + tn + fp + fn)
+    f1 <- (2 * sens * ppv) / (ppv + sens)
+    fbeta <- (1 + beta^2) * ((sens * ppv) / (beta^2 * ppv + sens))
+    data.frame(
+        tp, fn, tn, fp,
+        sens, spec, ppv, npv, f1, fbeta
+    )
 }
 
-measures <- c(
-  "FDG_SUV", "FDG_STAR", "FDG_NTR",
-  "FEC_SUV", "FEC_STAR", "FEC_NTR",
-  "ADC", "ADC_NTR"
+# for a given dataset with train_idx, split data and run cutpoint optimisation on measure
+# returns predictions
+cv.fun <- function(data, train_idx, measure, visual_measure, beta) {
+    m <- measure
+    vm <- visual_measure
+
+    train <- data[train_idx, ]
+    test <- data[-train_idx, ]
+
+    train_x <- train[[m]]
+    train_y <- train[["HIST"]]
+
+    dir <- if (grepl("ADC", m)) "<=" else ">="
+
+    oc <- cutpointr(
+        x = train_x,
+        class = train_y,
+        na.rm = T,
+        method = maximize_metric,
+        metric = fbeta, # TODO - select appropriate metric
+        pos_class = 1,
+        neg_class = 0,
+        direction = dir,
+        beta = beta
+    )
+    oc <- oc$optimal_cutpoint
+
+    test_y <- test[["HIST"]]
+
+    test_oc <- if (dir == ">=") as.numeric(test[[m]] >= oc) else as.numeric(test[[m]] <= oc)
+    test_vm <- test[[vm]]
+
+    c(oc = oc, hist = test_y, visual = test_vm, quant = test_oc)
+}
+
+# apply cv.fun across a set of measures
+# returns binded data.frame of predictions
+cv <- function(measures, beta = 1) {
+    r <- lapply(measures, function(m) {
+        # filter data to subset
+        vm <- if (grepl("FDG", m)) "VIS_FDG" else if (grepl("FEC", m)) "VIS_FEC" else "VIS_MRI"
+        x <- data %>% dplyr::filter(!is.na(!!rlang::sym(m)) & !is.na(!!rlang::sym(vm)))
+
+        # 100x 10-fold CV
+        cv <- caret::createFolds(y = x[["HIST"]], k = nrow(x), returnTrain = T) # LOO
+        z <- lapply(cv, function(cv_idx) {
+            cv.fun(data = x, train_idx = cv_idx, measure = m, visual_measure = vm, beta = beta)
+        })
+        z <- as.data.frame(do.call(rbind, z))
+        z$measure <- m
+        z$beta <- beta
+        z
+    })
+    res <- do.call(rbind, r)
+    res
+}
+
+# bootstrap predictions to get confidence intervals for different metrics
+# x should be a data.frame with hist, quant and beta columns (for fbeta)
+boot.fun <- function(x, i) {
+    x <- x[i, ]
+    qm_r <- unlist(calculate_metrics(x$hist, x$quant, unique(x$beta))[1, , drop = T])
+    vm_r <- unlist(calculate_metrics(x$hist, x$visual, unique(x$beta))[1, , drop = T])
+    names(qm_r) <- paste0("qm.", names(qm_r))
+    names(vm_r) <- paste0("vm.", names(vm_r))
+    c(qm_r, vm_r)
+}
+
+get.ci <- function(x, w, method = "perc") {
+    if (all(is.na(x$t[, w])) | all(x$t[, w] == 1, na.rm = T) | all(x$t[, w] == 0, na.rm = T)) {
+        return(data.frame(lwr = NA, upr = NA))
+    }
+    b1 <- boot.ci(x, index = w, type = method)
+    ## extract info for all CI types
+    tab <- t(sapply(b1[-(1:3)], function(x) tail(c(x), 2)))
+    ## combine with metadata: CI method, index
+    tab <- as.data.frame(tab)
+    colnames(tab) <- c("lwr", "upr")
+    tab
+}
+
+bootstrap <- function(x) {
+    bs <- boot::boot(x, boot.fun,
+        R = 1000,
+        sim = "ordinary"
+    )
+
+    ci <- do.call(rbind, lapply(1:length(bs$t0), function(i) get.ci(bs, w = i, method = "perc")))
+    ci$estimate <- bs$t0
+    ci$metric <- names(bs$t0)
+    ci$num_regions <- nrow(x)
+    ci$measure <- unique(x$measure)
+    ci$beta <- unique(x$beta)
+
+    ci
+}
+
+# run pipeline
+# measures to be processed from data
+# 	S_j = Pr(Y=1|X_i) = ->
+# For each sample j in {1:,...,n}:
+#   1. Identify cut-off c_j on all samples except j: {1,...,j-1,j+1,...,n}
+#   2. If x_j >= O_j, Ŷ = 1 otherwise Ŷ = 0 (or <= for ADC measures)
+#   3. Repeat for all samples to obtain predictions Ŷ = {Ŷ_1,...,Ŷ_n}
+# Bootstrap Ŷ 1000 times to estimate confidence intervals:
+#   1. From original predictions {Ŷ₁,...,Ŷₙ}, draw n samples with replacement
+#   2. Calculate performance metrics on this bootstrap sample
+#   3. Repeat 1000 times to generate empirical sampling distribution
+#   4. Extract 2.5th and 97.5th percentiles for 95% CI of each metric
+# Compare Ŷ to Y (predicted vs. actual values)
+# Calculate performance metrics:
+#   Sensitivity = P(Ŷ = 1 | Y = 1) = TP/(TP+FN)
+#   Specificity = P(Ŷ = 0 | Y = 0) = TN/(TN+FP)
+#   PPV = P(Y = 1 | Ŷ = 1) = TP/(TP+FP)
+#   NPV = P(Y = 0 | Ŷ = 0) = TN/(TN+FN)
+#   Fbeta = 2*(Sens*PPV)/(Sens+PPV) = 2TP/(2TP+FP+FN)
+run <- function(measures, beta = 1) {
+    preds <- cv(measures, beta = beta)
+
+    oc <- preds %>%
+        group_by(measure) %>%
+        summarise(mean_oc = mean(oc), median_oc = median(oc))
+
+    bs.metrics <- lapply(split(preds, preds$measure), function(r) {
+        bs <- bootstrap(r)
+        bs
+    })
+    bs.metrics <- do.call(rbind, bs.metrics)
+    rownames(bs.metrics) <- NULL
+
+    metrics <- bs.metrics %>%
+        dplyr::select(estimate, lwr, upr, metric, measure, num_regions, beta) %>%
+        pivot_wider(names_from = metric, values_from = c(estimate, lwr, upr))
+
+    # McNemar's test on predictions vs actual
+    mcnemar <- lapply(split(preds, preds$measure), function(r) {
+        pos_cm <- table(
+            qm = factor(as.numeric(r$quant[r$hist == 1] == 1), levels = c(0, 1)),
+            vm = factor(as.numeric(r$visual[r$hist == 1] == 1), levels = c(0, 1))
+        )
+        neg_cm <- table(
+            qm = factor(as.numeric(r$quant[r$hist == 0] == 0), levels = c(0, 1)),
+            vm = factor(as.numeric(r$visual[r$hist == 0] == 0), levels = c(0, 1))
+        )
+        data.frame(
+            sens_p = mcnemar.test(pos_cm)$p.value,
+            spec_p = mcnemar.test(neg_cm)$p.value
+        )
+    })
+    mcnemar <- do.call(rbind, mcnemar)
+    mcnemar$sens_padj <- p.adjust(mcnemar$sens_p, method = "fdr")
+    mcnemar$spec_padj <- p.adjust(mcnemar$spec_p, method = "fdr")
+    mcnemar$measure <- rownames(mcnemar)
+
+    metrics <- inner_join(metrics, mcnemar, by = "measure")
+    metrics <- inner_join(oc, metrics, by = "measure")
+    metrics
+}
+
+measures <- c("FDG_SUV", "FDG_STAR", "FDG_NTR", "FEC_SUV", "FEC_STAR", "FEC_NTR", "ADC", "ADC_NTR")
+
+# run pipeline, get full results
+if (run_pipeline) {
+    beta_res <- lapply(2^seq(-4, 5), run, measures = measures)
+    beta_res <- do.call(rbind, beta_res)
+    beta_res <- beta_res %>%
+        mutate(measure = factor(measure, levels = measures)) %>%
+        arrange(measure)
+
+    write.csv(beta_res, file.path(out_path, "tables", "diagnostic_performance.csv"))
+} else {
+    beta_res <- read.csv(file.path(out_path, "tables", "diagnostic_performance.csv"))
+}
+
+# prettify results
+x <- beta_res %>%
+    filter(beta == 1)
+
+## qm
+qm <- x %>%
+    select(estimate_qm.sens:estimate_qm.fbeta) %>%
+    mutate(across(everything(), function(x) gsub(" ", "", format(round(x * 100, 1), nsmall = 1)))) %>%
+    as.data.frame()
+qm.lwr <- x %>%
+    select(lwr_qm.sens:lwr_qm.fbeta) %>%
+    mutate(across(everything(), function(x) gsub(" ", "", format(round(x * 100, 1), nsmall = 1)))) %>%
+    as.data.frame()
+qm.upr <- x %>%
+    select(upr_qm.sens:upr_qm.fbeta) %>%
+    mutate(across(everything(), function(x) gsub(" ", "", format(round(x * 100, 1), nsmall = 1)))) %>%
+    as.data.frame()
+
+for (i in 1:nrow(qm)) {
+    for (j in 1:ncol(qm)) {
+        qm[i, j] <- paste0(qm[i, j], " (", qm.lwr[i, j], "-", qm.upr[i, j], ")")
+    }
+}
+
+## vm
+vm <- x %>%
+    select(estimate_vm.sens:estimate_vm.fbeta) %>%
+    mutate(across(everything(), function(x) gsub(" ", "", format(round(x * 100, 1), nsmall = 1)))) %>%
+    as.data.frame()
+vm.lwr <- x %>%
+    select(lwr_vm.sens:lwr_vm.fbeta) %>%
+    mutate(across(everything(), function(x) gsub(" ", "", format(round(x * 100, 1), nsmall = 1)))) %>%
+    as.data.frame()
+vm.upr <- x %>%
+    filter(beta == 1) %>%
+    select(upr_vm.sens:upr_vm.fbeta) %>%
+    mutate(across(everything(), function(x) gsub(" ", "", format(round(x * 100, 1), nsmall = 1)))) %>%
+    as.data.frame()
+
+for (i in 1:nrow(vm)) {
+    for (j in 1:ncol(vm)) {
+        vm[i, j] <- paste0(vm[i, j], " (", vm.lwr[i, j], "-", vm.upr[i, j], ")")
+    }
+}
+
+pretty <- cbind(
+    x[, c("measure", "median_oc")],
+    x[, c("estimate_qm.tp", "estimate_qm.fn", "estimate_qm.tn", "estimate_qm.fp")],
+    qm,
+    x[, c("estimate_vm.tp", "estimate_vm.fn", "estimate_vm.tn", "estimate_vm.fp")],
+    vm
+)
+write.csv(pretty, file.path(out_path, "tables", "diagnostic_performance_pretty.csv"))
+
+# plot diagnostic performance for differing levels of beta values
+plt <- beta_res %>%
+    dplyr::select(measure, beta, mean_oc, median_oc, contains("estimate")) %>%
+    pivot_longer(cols = contains("estimate")) %>%
+    filter(!grepl("_vm", name)) %>%
+    mutate(name = gsub("estimate_qm.", "", name)) %>%
+    filter(!name %in% c("tp", "fp", "tn", "fn"))
+
+sig <- rbind(
+    beta_res %>% select(measure, beta, estimate_qm.sens, sens_padj) %>% rename(value = estimate_qm.sens, padj = sens_padj) %>% mutate(name = "sens"),
+    beta_res %>% select(measure, beta, estimate_qm.spec, spec_padj) %>% rename(value = estimate_qm.spec, padj = spec_padj) %>% mutate(name = "spec")
+) %>%
+    mutate(sig = case_when(padj < 0.001 ~ "***", padj < 0.01 ~ "**", padj < 0.05 ~ "*"))
+
+vm <- beta_res %>%
+    dplyr::select(measure, beta, mean_oc, median_oc, contains("estimate")) %>%
+    pivot_longer(cols = contains("estimate")) %>%
+    filter(grepl("_vm", name)) %>%
+    mutate(name = gsub("estimate_vm.", "", name)) %>%
+    filter(!name %in% c("tp", "fp", "tn", "fn")) %>%
+    distinct(measure, beta, name, value) %>%
+    filter(name != "fbeta")
+
+plt.ci <- beta_res %>%
+    dplyr::select(measure, beta, colnames(.)[grepl("lwr|upr", colnames(.))]) %>%
+    pivot_longer(cols = colnames(.)[grepl("lwr|upr", colnames(.))]) %>%
+    filter(!grepl("_vm", name)) %>%
+    mutate(ci_type = str_split_i(name, "_", 1)) %>%
+    mutate(name = gsub("lwr_qm.|upr_qm.", "", name)) %>%
+    pivot_wider(names_from = ci_type, values_from = value) %>%
+    filter(!name %in% c("tp", "fp", "tn", "fn"))
+
+g <- ggpubr::ggarrange(
+    ggplot(plt, aes(x = log2(signif(beta^2, 2)), y = value)) +
+        # geom_bar(stat = "identity") +
+        geom_ribbon(data = plt.ci, aes(y = NULL, ymin = lwr, ymax = upr), fill = "black", alpha = .2) +
+        geom_line(aes(group = measure)) +
+        geom_hline(data = vm, aes(yintercept = value), color = "red", linetype = "dashed") +
+        geom_text(data = sig, aes(y = value + .2, label = sig), angle = 90, nudge_x = .1) +
+        geom_point() +
+        facet_grid(
+            rows = vars(name),
+            cols = vars(measure),
+            scales = "free_x",
+            labeller = label_bquote(cols = .(ylabs[match(levels(factor(plt$measure)), names(ylabs))]), rows = .(metric_translator[match(levels(factor(plt$name)), names(metric_translator))]))
+        ) +
+        labs(x = TeX("$\\beta^2"), y = "") +
+        theme_bw() +
+        scale_y_continuous(breaks = c(0, 0.5, 1)),
+    ggplot(plt, aes(x = log2(signif(beta^2, 2)), y = median_oc)) +
+        geom_line(aes(group = measure)) +
+        geom_point() +
+        facet_wrap(~measure, nrow = 1, scales = "free_y", labeller = label_bquote(cols = .(ylabs[match(levels(factor(plt$measure)), names(ylabs))]))) +
+        labs(x = TeX("$\\beta^2"), y = "Median cut-off") +
+        theme_bw(),
+    nrow = 2,
+    heights = c(.8, .2)
 )
 
-mcnemar_res <- lapply(measures, mcnemar_test, data = data)
-names(mcnemar_res) <- measures
-
-mcnemar_res_df <- do.call(rbind, lapply(mcnemar_res, data.frame))
-
-mcnemar_res_df$sens_padj <- p.adjust(mcnemar_res_df$sens_mcnemar)
-mcnemar_res_df$spec_padj <- p.adjust(mcnemar_res_df$spec_mcnemar)
-
-## save results
-write.csv(mcnemar_res_df, "outputs/tables/diagnostic_performance_mcnemar_results.csv", row.names = F)
+ggsave(file.path(out_path, "diagnostic_performance_bybeta.png"), g, width = 18, height = 8, units = "in")
