@@ -11,7 +11,7 @@ source("scripts/tex.R")
 
 out_path <- "outputs/"
 
-run_pipeline <- F
+run_pipeline <- T
 
 # filter data ----
 data <- read.csv("./data/processed_data.csv")
@@ -25,7 +25,7 @@ data <- data %>%
         HIST, region, CANC
     )
 
-data <- data %>% dplyr::filter(CANC == "endo") # endo only
+# data <- data %>% dplyr::filter(CANC == "endo") # endo only
 # convert visual measures to binary
 data <- data %>%
     mutate(across(VIS_FDG:VIS_MRI, .fn = function(x) if_else(x >= 5, 1, 0)))
@@ -107,7 +107,7 @@ cv.fun <- function(data, train_idx, measure, visual_measure, beta) {
 
 # apply cv.fun across a set of measures
 # returns binded data.frame of predictions
-cv <- function(measures, beta = 1) {
+cv <- function(data, measures, beta = 1) {
     r <- lapply(measures, function(m) {
         # filter data to subset
         vm <- if (grepl("FDG", m)) "VIS_FDG" else if (grepl("FEC", m)) "VIS_FEC" else "VIS_MRI"
@@ -185,8 +185,8 @@ bootstrap <- function(x) {
 #   PPV = P(Y = 1 | Ŷ = 1) = TP/(TP+FP)
 #   NPV = P(Y = 0 | Ŷ = 0) = TN/(TN+FN)
 #   Fbeta = 2*(Sens*PPV)/(Sens+PPV) = 2TP/(2TP+FP+FN)
-run <- function(measures, beta = 1) {
-    preds <- cv(measures, beta = beta)
+run <- function(data, measures, beta = 1) {
+    preds <- cv(data, measures, beta = beta)
 
     oc <- preds %>%
         group_by(measure) %>%
@@ -228,22 +228,31 @@ run <- function(measures, beta = 1) {
     metrics
 }
 
-
 # run pipeline, get full results ----
+canc <- c("endo", "cer")
 measures <- c("FDG_SUV", "FDG_STAR", "FDG_NTR", "FEC_SUV", "FEC_STAR", "FEC_NTR", "ADC", "ADC_NTR")
 if (run_pipeline) {
-    beta_res <- lapply(2^seq(-4, 5), run, measures = measures)
+    beta_res <- lapply(canc, function(c.) {
+        d. <- data %>%
+            filter(CANC == c.)
+        beta_res <- lapply(2^seq(-4, 5), run, data = d., measures = measures)
+        beta_res <- do.call(rbind, beta_res)
+        beta_res <- beta_res %>%
+            mutate(
+                measure = factor(measure, levels = measures),
+                cancer = c.
+            ) %>%
+            arrange(measure)
+        beta_res
+    })
     beta_res <- do.call(rbind, beta_res)
-    beta_res <- beta_res %>%
-        mutate(measure = factor(measure, levels = measures)) %>%
-        arrange(measure)
 
     write.csv(beta_res, file.path(out_path, "tables", "diagnostic_performance.csv"))
 } else {
     beta_res <- read.csv(file.path(out_path, "tables", "diagnostic_performance.csv"))
 }
 
-hist(log2(beta_res$beta))
+# hist(log2(beta_res$beta))
 
 # prettify results
 x <- beta_res %>%
@@ -291,7 +300,7 @@ for (i in 1:nrow(vm)) {
 }
 
 pretty <- cbind(
-    x[, c("measure", "median_oc")],
+    x[, c("cancer", "measure", "median_oc")],
     x[, c("estimate_qm.tp", "estimate_qm.fn", "estimate_qm.tn", "estimate_qm.fp")],
     qm,
     x[, c("estimate_vm.tp", "estimate_vm.fn", "estimate_vm.tn", "estimate_vm.fp")],
@@ -301,6 +310,7 @@ write.csv(pretty, file.path(out_path, "tables", "diagnostic_performance_pretty.c
 
 # plot diagnostic performance for differing levels of beta values
 plt <- beta_res %>%
+    dplyr::filter(cancer == "endo") %>%
     dplyr::select(measure, beta, mean_oc, median_oc, contains("estimate")) %>%
     pivot_longer(cols = contains("estimate")) %>%
     filter(!grepl("_vm", name)) %>%
@@ -314,6 +324,7 @@ sig <- rbind(
     mutate(sig = case_when(padj < 0.001 ~ "***", padj < 0.01 ~ "**", padj < 0.05 ~ "*"))
 
 vm <- beta_res %>%
+    dplyr::filter(cancer == "endo") %>%
     dplyr::select(measure, beta, mean_oc, median_oc, contains("estimate")) %>%
     pivot_longer(cols = contains("estimate")) %>%
     filter(grepl("_vm", name)) %>%
@@ -323,6 +334,7 @@ vm <- beta_res %>%
     filter(name != "fbeta")
 
 plt.ci <- beta_res %>%
+    dplyr::filter(cancer == "endo") %>%
     dplyr::select(measure, beta, colnames(.)[grepl("lwr|upr", colnames(.))]) %>%
     pivot_longer(cols = colnames(.)[grepl("lwr|upr", colnames(.))]) %>%
     filter(!grepl("_vm", name)) %>%
