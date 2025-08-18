@@ -11,7 +11,7 @@ source("scripts/tex.R")
 
 out_path <- "outputs/"
 
-run_pipeline <- T
+run_pipeline <- F
 
 # filter data ----
 data <- read.csv("./data/processed_data.csv")
@@ -247,7 +247,7 @@ if (run_pipeline) {
     })
     beta_res <- do.call(rbind, beta_res)
 
-    write.csv(beta_res, file.path(out_path, "tables", "diagnostic_performance.csv"))
+    write.csv(beta_res, file.path(out_path, "tables", "diagnostic_performance.csv"), row.names = FALSE)
 } else {
     beta_res <- read.csv(file.path(out_path, "tables", "diagnostic_performance.csv"))
 }
@@ -308,9 +308,11 @@ pretty <- cbind(
 )
 write.csv(pretty, file.path(out_path, "tables", "diagnostic_performance_pretty.csv"))
 
-# plot diagnostic performance for differing levels of beta values
+# plot diagnostic performance for differing levels of beta values (endo only)
+beta_res <- beta_res %>%
+    filter(cancer == "endo")
+
 plt <- beta_res %>%
-    dplyr::filter(cancer == "endo") %>%
     dplyr::select(measure, beta, mean_oc, median_oc, contains("estimate")) %>%
     pivot_longer(cols = contains("estimate")) %>%
     filter(!grepl("_vm", name)) %>%
@@ -324,7 +326,6 @@ sig <- rbind(
     mutate(sig = case_when(padj < 0.001 ~ "***", padj < 0.01 ~ "**", padj < 0.05 ~ "*"))
 
 vm <- beta_res %>%
-    dplyr::filter(cancer == "endo") %>%
     dplyr::select(measure, beta, mean_oc, median_oc, contains("estimate")) %>%
     pivot_longer(cols = contains("estimate")) %>%
     filter(grepl("_vm", name)) %>%
@@ -334,7 +335,6 @@ vm <- beta_res %>%
     filter(name != "fbeta")
 
 plt.ci <- beta_res %>%
-    dplyr::filter(cancer == "endo") %>%
     dplyr::select(measure, beta, colnames(.)[grepl("lwr|upr", colnames(.))]) %>%
     pivot_longer(cols = colnames(.)[grepl("lwr|upr", colnames(.))]) %>%
     filter(!grepl("_vm", name)) %>%
@@ -343,32 +343,69 @@ plt.ci <- beta_res %>%
     pivot_wider(names_from = ci_type, values_from = value) %>%
     filter(!name %in% c("tp", "fp", "tn", "fn"))
 
-g <- ggpubr::ggarrange(
-    ggplot(plt, aes(x = log2(signif(beta^2, 2)), y = value)) +
+source("scripts/labeller.R")
+
+g <- lapply(seq_along(measures), function(i) {
+    m <- measures[i]
+
+    print(rlang::caller_env())
+    print(rlang::env_parent())
+
+    plt. <- plt %>% filter(measure == m, name %in% c("ppv", "npv", "sens", "spec"))
+    plt.ci. <- plt.ci %>% filter(measure == m, name %in% c("ppv", "npv", "sens", "spec"))
+    vm. <- vm %>% filter(measure == m, name %in% c("ppv", "npv", "sens", "spec"))
+    sig. <- sig %>% filter(measure == m)
+
+    g1 <- ggplot(plt., aes(x = log2(signif(beta, 2)), y = value)) +
         # geom_bar(stat = "identity") +
-        geom_ribbon(data = plt.ci, aes(y = NULL, ymin = lwr, ymax = upr), fill = "black", alpha = .2) +
+        geom_ribbon(data = plt.ci., aes(y = NULL, ymin = lwr, ymax = upr), fill = "black", alpha = .2) +
         geom_line(aes(group = measure)) +
-        geom_hline(data = vm, aes(yintercept = value), color = "red", linetype = "dashed") +
-        geom_text(data = sig, aes(y = value + .2, label = sig), angle = 90, nudge_x = .1) +
+        geom_hline(data = vm., aes(yintercept = value), color = "red", linetype = "dashed") +
+        geom_vline(xintercept = 0, color = "blue", linetype = "dashed") +
+        geom_text(data = sig., aes(y = value + .2, label = sig), angle = 90, vjust = 0.65) +
         geom_point() +
         facet_grid(
             rows = vars(name),
             cols = vars(measure),
             scales = "free_x",
-            labeller = label_bquote(cols = .(ylabs_short[match(levels(factor(plt$measure)), names(ylabs_short))]), rows = .(metric_translator[match(levels(factor(plt$name)), names(metric_translator))]))
+            labeller = label_bquote(cols = .(ylabs_short[m]), rows = .(metric_translator[match(levels(factor(plt.$name)), names(metric_translator))]))
         ) +
-        labs(x = TeX("$log_2(\\beta^2)"), y = "") +
+        labs(x = TeX("$log_2(\\beta)"), y = "Diagnostic Performance") +
         theme_bw() +
-        scale_y_continuous(breaks = c(0, 0.5, 1)),
-    ggplot(plt, aes(x = log2(signif(beta^2, 2)), y = median_oc)) +
-        geom_line(aes(group = measure)) +
-        geom_point() +
-        facet_wrap(~measure, nrow = 1, scales = "free_y", labeller = label_bquote(cols = .(ylabs_short[match(levels(factor(plt$measure)), names(ylabs_short))]))) +
-        labs(x = TeX("$log_2(\\beta^2)"), y = "Median cut-off") +
-        theme_bw(),
-    nrow = 2,
-    heights = c(.8, .2),
-    labels = "auto"
-)
+        scale_y_continuous(breaks = c(0, 0.5, 1))
 
-ggsave(file.path(out_path, "diagnostic_performance_bybeta.png"), g, width = 14.4, height = 10, units = "in", dpi = 600)
+    g2 <- ggplot(plt., aes(x = log2(signif(beta, 2)), y = median_oc)) +
+        geom_line(aes(group = measure)) +
+        geom_vline(xintercept = 0, color = "blue", linetype = "dashed") +
+        geom_point() +
+        facet_wrap(~measure, nrow = 1, scales = "free_y", labeller = label_bquote(cols = .(ylabs_short[m]))) +
+        labs(x = TeX("$log_2(\\beta)"), y = "Median cut-off") +
+        theme_bw()
+
+    if (i != 1) {
+        g1 <- g1 +
+            theme(axis.title.y = element_blank())
+
+        g2 <- g2 +
+            theme(axis.title.y = element_blank())
+    }
+    if (i != length(measures)) {
+        g1 <- g1 +
+            theme(strip.text.y = element_blank())
+    }
+
+    labels <- if (i == 1) c("a", "b") else NULL
+
+    cowplot::plot_grid(
+        g1, g2,
+        nrow = 2,
+        rel_heights = c(.8, .2),
+        labels = labels,
+        label_y = c(1, 1.1),
+        align = "v",
+        axis = "lr"
+    )
+})
+g <- cowplot::plot_grid(plotlist = g, ncol = length(measures))
+
+ggsave(file.path(out_path, "diagnostic_performance_bybeta.png"), g, width = 16, height = 7, units = "in", dpi = 600)

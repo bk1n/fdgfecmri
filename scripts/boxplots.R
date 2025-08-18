@@ -260,9 +260,9 @@ plot_myCustomGG <- function(feature, show_opt_cut = F) {
 
   if (show_opt_cut) {
     oc <- opt_cut %>%
-      select(measure, beta, median_oc) %>%
-      filter(measure == feature, beta %in% c(0.5, 1, 2)) %>%
-      mutate(beta = as.factor(beta^2))
+      select(measure, beta, median_oc, cancer) %>%
+      filter(measure == feature, beta %in% c(0.5, 1, 2), cancer == canc) %>%
+      mutate(beta = as.factor(beta))
     g <- g +
       geom_hline(
         data = oc,
@@ -271,7 +271,7 @@ plot_myCustomGG <- function(feature, show_opt_cut = F) {
         alpha = .7,
         linewidth = 1
       ) +
-      labs(color = TeX("$\\beta^2"), linetype = TeX("$\\beta^2"))
+      labs(color = TeX("$\\beta"), linetype = TeX("$\\beta"))
   }
 
   return(g)
